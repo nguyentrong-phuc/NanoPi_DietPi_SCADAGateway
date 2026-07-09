@@ -81,7 +81,7 @@ const frontendDistPath = path.join(__dirname, 'public');
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
   // Catch-all route for React Router (SPA)
-  app.get('*', (req, res) => {
+  app.use((req, res) => {
     res.sendFile(path.join(frontendDistPath, 'index.html'));
   });
 } else {
