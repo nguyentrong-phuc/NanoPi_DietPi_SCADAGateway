@@ -59,39 +59,39 @@ const Overview = () => {
 
   // Reusable components
   const CardHeader = ({ title }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #e0e0e0', paddingBottom: '8px' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px' }}></span>
-        <span style={{ fontWeight: 600, fontSize: '15px', color: '#333' }}>{title}</span>
+        <span style={{ display: 'inline-block', width: '4px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
+        <span style={{ fontWeight: 700, fontSize: '18px', color: '#111' }}>{title}</span>
       </div>
-      <span style={{ color: 'var(--primary-color)', fontSize: '12px', cursor: 'pointer' }}>Settings</span>
+      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
     </div>
   );
 
   const SubCardHeader = ({ title }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px' }}></span>
-        <span style={{ fontWeight: 600, fontSize: '14px', color: '#333' }}>{title}</span>
+        <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px', borderRadius: '1.5px' }}></span>
+        <span style={{ fontWeight: 700, fontSize: '16px', color: '#222' }}>{title}</span>
       </div>
-      <span style={{ color: 'var(--primary-color)', fontSize: '12px', cursor: 'pointer' }}>Settings</span>
+      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
     </div>
   );
 
-  const FieldRow = ({ label, value, valueColor = '#333' }) => (
-    <div style={{ display: 'flex', marginBottom: '15px', fontSize: '13px' }}>
-      <span style={{ width: '130px', color: '#666' }}>{label}</span>
+  const FieldRow = ({ label, value, valueColor = '#444' }) => (
+    <div style={{ display: 'flex', marginBottom: '12px', fontSize: '14px' }}>
+      <span style={{ width: '135px', color: '#333', fontWeight: 600 }}>{label}</span>
       <span style={{ color: valueColor, flex: 1, wordBreak: 'break-all' }}>{value}</span>
     </div>
   );
 
   const ProgressBar = ({ label, percentage }) => (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', fontSize: '13px' }}>
-      <span style={{ width: '60px', color: '#666' }}>{label}:</span>
-      <div style={{ flex: 1, backgroundColor: '#f0f0f0', height: '14px', borderRadius: '7px', overflow: 'hidden', position: 'relative' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', fontSize: '14px' }}>
+      <span style={{ width: '70px', color: '#333', fontWeight: 600 }}>{label}:</span>
+      <div style={{ flex: 1, backgroundColor: '#e9ecef', height: '16px', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
         <div style={{ width: `${percentage}%`, backgroundColor: percentage > 0 ? 'var(--primary-color)' : 'transparent', height: '100%', transition: 'width 0.3s ease' }}></div>
-        {percentage > 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '10px', color: 'white', lineHeight: '14px' }}>{percentage}%</span>}
-        {percentage === 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '10px', color: '#666', lineHeight: '14px' }}>0%</span>}
+        {percentage > 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '11px', color: 'white', lineHeight: '16px', fontWeight: 600 }}>{percentage}%</span>}
+        {percentage === 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '11px', color: '#666', lineHeight: '16px', fontWeight: 600 }}>0%</span>}
       </div>
     </div>
   );
@@ -150,9 +150,9 @@ const Overview = () => {
 
       {/* Bottom Section - Device Status */}
       <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-           <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px' }}></span>
-           <span style={{ fontWeight: 600, fontSize: '16px', color: '#333' }}>Device Status</span>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+           <span style={{ display: 'inline-block', width: '4px', height: '18px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
+           <span style={{ fontWeight: 700, fontSize: '18px', color: '#111' }}>Device Status</span>
         </div>
 
         {/* 2-Column Grid for Device Status items */}

@@ -73,7 +73,7 @@ const Layout = () => {
       {/* Top Horizontal Bar */}
       <div className="top-bar">
         <div className="top-bar-logo">
-          <img src="/Raitek_round_logo.png" alt="Logo" style={{ height: '32px', borderRadius: '50%' }} onError={(e) => e.target.style.display='none'} />
+          <img src="/Raitek_round_logo.png" alt="Logo" style={{ height: '24px', marginRight: '8px' }} onError={(e) => e.target.style.display='none'} />
           RaitekEdge
         </div>
         <div className="top-bar-nav">
