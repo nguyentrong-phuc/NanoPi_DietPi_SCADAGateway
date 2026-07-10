@@ -85,7 +85,7 @@ const EthernetPort = () => {
         <div style={{ height: '15px', backgroundColor: '#eaedf2', margin: '0 -20px 20px -20px' }}></div>
 
         <div>
-          <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+          <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
             apply
           </button>
         </div>

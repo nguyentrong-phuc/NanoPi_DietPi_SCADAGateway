@@ -181,7 +181,7 @@ const LAN = () => {
               </div>
 
               <div style={{ marginTop: '40px', paddingLeft: '15px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#e0e0e0', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading} style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   {loading ? 'Applying...' : 'apply'}
                 </button>
               </div>
@@ -252,7 +252,7 @@ const LAN = () => {
             </div>
 
             <div style={{ marginTop: '20px', paddingLeft: '15px' }}>
-              <button style={{ backgroundColor: '#e0e0e0', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+              <button style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                 apply
               </button>
             </div>
