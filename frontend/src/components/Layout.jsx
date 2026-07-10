@@ -37,13 +37,16 @@ const Layout = () => {
     if (topLevel === 'edge-computing') {
       return (
         <div className="sub-sidebar">
-          <NavLink to="/edge-computing/wizard" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Wizard</NavLink>
           <NavLink to="/edge-computing/edge-mode" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Edge Mode</NavLink>
-          <NavLink to="/edge-computing/extension-io" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Extension IO</NavLink>
           <NavLink to="/edge-computing/io-module" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>IO Module</NavLink>
           <NavLink to="/edge-computing/data-point" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Data Point</NavLink>
           <NavLink to="/edge-computing/protocol" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Protocol</NavLink>
-          <NavLink to="/edge-computing/edge-gateway" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Edge Gateway</NavLink>
+          <div className="sidebar-item" style={{color: '#999'}}>Edge Gateway</div>
+          <NavLink to="/edge-computing/serial-port" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Serial Port</NavLink>
+          <NavLink to="/edge-computing/communication" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Communication</NavLink>
+          <NavLink to="/edge-computing/data-query-control" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Data Query/Control</NavLink>
+          <NavLink to="/edge-computing/data-reporting" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Data Reporting</NavLink>
+          <NavLink to="/edge-computing/linkage-control" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Linkage Control</NavLink>
         </div>
       );
     }
@@ -58,9 +61,6 @@ const Layout = () => {
           <NavLink to="/system-management/firmware" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Firmware Upgrade</NavLink>
           <NavLink to="/system-management/user" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>User Management</NavLink>
           <NavLink to="/system-management/reboot" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Reboot</NavLink>
-          <NavLink to="/system-management/remote" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Remote Management</NavLink>
-          <NavLink to="/system-management/access" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Access Tools</NavLink>
-          <NavLink to="/system-management/location" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Location</NavLink>
         </div>
       );
     }

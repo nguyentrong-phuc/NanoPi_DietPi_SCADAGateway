@@ -8,7 +8,21 @@ import NetworkLAN from './pages/network/LAN';
 import EthernetPort from './pages/network/EthernetPort';
 import Routing from './pages/network/Routing';
 import Diagnostics from './pages/network/Diagnostics';
+
+// Edge Computing
+import EdgeMode from './pages/edge/EdgeMode';
+import IOModule from './pages/edge/IOModule';
+import DataPoint from './pages/edge/DataPoint';
 import Protocol from './pages/edge/Protocol';
+import SerialPort from './pages/edge/SerialPort';
+import Communication from './pages/edge/Communication';
+import DataQueryControl from './pages/edge/DataQueryControl';
+import DataReporting from './pages/edge/DataReporting';
+import LinkageControl from './pages/edge/LinkageControl';
+
+// System Management
+import SystemTime from './pages/system/SystemTime';
+import Log from './pages/system/Log';
 import SystemConfig from './pages/system/SystemConfig';
 
 // Placeholder for unimplemented routes
@@ -42,15 +56,28 @@ const App = () => {
 
           {/* Edge Computing Routes */}
           <Route path="edge-computing">
-            <Route index element={<Navigate to="/edge-computing/protocol" replace />} />
+            <Route index element={<Navigate to="/edge-computing/edge-mode" replace />} />
+            <Route path="edge-mode" element={<EdgeMode />} />
+            <Route path="io-module" element={<IOModule />} />
+            <Route path="data-point" element={<DataPoint />} />
             <Route path="protocol" element={<Protocol />} />
+            <Route path="serial-port" element={<SerialPort />} />
+            <Route path="communication" element={<Communication />} />
+            <Route path="data-query-control" element={<DataQueryControl />} />
+            <Route path="data-reporting" element={<DataReporting />} />
+            <Route path="linkage-control" element={<LinkageControl />} />
             <Route path="*" element={<Placeholder name="Edge Computing Module" />} />
           </Route>
 
           {/* System Management Routes */}
           <Route path="system-management">
-            <Route index element={<Navigate to="/system-management/configuration" replace />} />
+            <Route index element={<Navigate to="/system-management/time" replace />} />
+            <Route path="time" element={<SystemTime />} />
+            <Route path="log" element={<Log />} />
             <Route path="configuration" element={<SystemConfig />} />
+            <Route path="firmware" element={<Placeholder name="Firmware Upgrade" />} />
+            <Route path="user" element={<Placeholder name="User Management" />} />
+            <Route path="reboot" element={<Placeholder name="Reboot" />} />
             <Route path="*" element={<Placeholder name="System Management Module" />} />
           </Route>
         </Route>

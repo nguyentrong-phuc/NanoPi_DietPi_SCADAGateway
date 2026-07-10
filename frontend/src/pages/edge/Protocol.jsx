@@ -1,112 +1,121 @@
 import React, { useState } from 'react';
 
 const Protocol = () => {
-  const [activeProtocol, setActiveProtocol] = useState('Modbus TCP');
-  const [enabled, setEnabled] = useState(true);
+  const [activeTab, setActiveTab] = useState('Modbus RTU');
 
-  // Mock data from previous implementation
-  const [nodes, setNodes] = useState([
-    { id: 1, name: 'Temperature Sensor 1', type: 'Holding Register', address: '40001', value: '25.5' },
-    { id: 2, name: 'Pressure Valve A', type: 'Coil', address: '00001', value: 'ON' }
-  ]);
+  return (
+    <div className="page-content" style={{ padding: '20px' }}>
+      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #e5e7eb' }}>
+        Protocol
+      </h2>
 
-  const renderContent = () => {
-    if (!enabled) {
-      return (
-        <div style={{ textAlign: 'center', padding: '100px 0' }}>
-          <div style={{ fontSize: '48px', color: '#ccc', marginBottom: '20px' }}>📦</div>
-          <h3 style={{ color: '#333' }}>Function Close</h3>
-          <button className="btn" style={{ color: 'var(--primary-color)', background: 'none', textDecoration: 'underline' }} onClick={() => setEnabled(true)}>Open</button>
-        </div>
-      );
-    }
-
-    if (activeProtocol === 'Modbus TCP' || activeProtocol === 'IEC104') {
-      return (
-        <div style={{ marginTop: '20px' }}>
-          <div className="flex justify-between items-center" style={{ marginBottom: '15px' }}>
-             <h4>{activeProtocol} Node Mapping</h4>
-             <button className="btn btn-primary" style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}>+ Add Node</button>
+      <div style={{ display: 'flex' }}>
+        {/* Sub-sidebar for protocols */}
+        <div style={{ width: '150px', borderRight: '1px solid #e5e7eb', marginRight: '20px' }}>
+          <div 
+            onClick={() => setActiveTab('Modbus RTU')}
+            style={{ padding: '10px', cursor: 'pointer', backgroundColor: activeTab === 'Modbus RTU' ? '#fff3e0' : 'var(--bg-dark)', color: activeTab === 'Modbus RTU' ? 'var(--primary-color)' : 'var(--text-dark)', borderRight: activeTab === 'Modbus RTU' ? '3px solid var(--primary-color)' : '3px solid transparent', fontWeight: activeTab === 'Modbus RTU' ? 600 : 'normal' }}
+          >
+            Modbus RTU
           </div>
-          <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white', border: '1px solid var(--border-color)' }}>
-            <thead style={{ backgroundColor: '#f9f9f9', borderBottom: '1px solid var(--border-color)' }}>
-              <tr>
-                <th style={{ padding: '12px', textAlign: 'left' }}>ID</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Node Name</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Register Type</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Address</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Current Value</th>
-                <th style={{ padding: '12px', textAlign: 'left' }}>Action</th>
+          <div 
+            onClick={() => setActiveTab('Modbus TCP')}
+            style={{ padding: '10px', cursor: 'pointer', backgroundColor: activeTab === 'Modbus TCP' ? '#fff3e0' : 'var(--bg-dark)', color: activeTab === 'Modbus TCP' ? 'var(--primary-color)' : 'var(--text-dark)', borderRight: activeTab === 'Modbus TCP' ? '3px solid var(--primary-color)' : '3px solid transparent', fontWeight: activeTab === 'Modbus TCP' ? 600 : 'normal' }}
+          >
+            Modbus TCP
+          </div>
+          <div 
+            onClick={() => setActiveTab('OPC UA')}
+            style={{ padding: '10px', cursor: 'pointer', backgroundColor: activeTab === 'OPC UA' ? '#fff3e0' : 'var(--bg-dark)', color: activeTab === 'OPC UA' ? 'var(--primary-color)' : 'var(--text-dark)', borderRight: activeTab === 'OPC UA' ? '3px solid var(--primary-color)' : '3px solid transparent', fontWeight: activeTab === 'OPC UA' ? 600 : 'normal' }}
+          >
+            OPC UA
+          </div>
+        </div>
+
+        {/* Content */}
+        <div style={{ flex: 1, backgroundColor: 'white', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '4px' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '15px' }}>
+            <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
+            <span style={{ fontWeight: 600, fontSize: '14px', flex: 1 }}>{activeTab}</span>
+            <div style={{ width: '36px', height: '18px', backgroundColor: 'var(--primary-color)', borderRadius: '10px', position: 'relative' }}>
+              <div style={{ width: '14px', height: '14px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', top: '2px', right: '2px' }}></div>
+            </div>
+          </div>
+
+          <div style={{ color: '#666', fontSize: '14px', fontWeight: 600, marginBottom: '15px' }}>Basic settings</div>
+          
+          <div style={{ maxWidth: '500px', border: '1px solid red', padding: '15px', borderRadius: '4px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Protocol:</span>
+              <select style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="TCP Server">
+                <option value="TCP Server">TCP Server</option>
+                <option value="TCP Client">TCP Client</option>
+              </select>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Local Port:</span>
+              <input type="text" style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="502" />
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Slave Address:</span>
+              <input type="text" style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="5" />
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                <span style={{ width: '120px', color: '#666', fontSize: '13px' }}>* 32 bit float order:</span>
+                <select style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}>
+                  <option value="AB CD">AB CD</option>
+                  <option value="CD AB">CD AB</option>
+                </select>
+              </div>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                <span style={{ width: '120px', color: '#666', fontSize: '13px' }}>* 32 bit int order:</span>
+                <select style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}>
+                  <option value="AB CD">AB CD</option>
+                  <option value="CD AB">CD AB</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div style={{ marginLeft: '150px', marginBottom: '30px' }}>
+            <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer' }}>apply</button>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '15px', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
+              <span style={{ fontWeight: 600, fontSize: '14px' }}>Node mapping table</span>
+            </div>
+            <div>
+              <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '5px 15px', borderRadius: '3px', cursor: 'pointer', marginRight: '10px' }}>Add</button>
+              <button style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '5px 15px', borderRadius: '3px', cursor: 'pointer' }}>Delete</button>
+            </div>
+          </div>
+
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center', backgroundColor: 'white' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#e2e6eb', color: '#333' }}>
+                <th style={{ padding: '10px', width: '40px' }}><input type="checkbox" /></th>
+                <th style={{ padding: '10px' }}>ID</th>
+                <th style={{ padding: '10px' }}>Position Name</th>
+                <th style={{ padding: '10px' }}>Source(slave)</th>
+                <th style={{ padding: '10px' }}>Data Type</th>
+                <th style={{ padding: '10px' }}>Mapping Address</th>
+                <th style={{ padding: '10px' }}>Operation</th>
               </tr>
             </thead>
             <tbody>
-              {nodes.map(node => (
-                <tr key={node.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                  <td style={{ padding: '12px' }}>{node.id}</td>
-                  <td style={{ padding: '12px' }}>{node.name}</td>
-                  <td style={{ padding: '12px' }}>{node.type}</td>
-                  <td style={{ padding: '12px' }}>{node.address}</td>
-                  <td style={{ padding: '12px' }}>{node.value}</td>
-                  <td style={{ padding: '12px' }}>
-                    <button className="btn" style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--danger-color)' }}>Delete</button>
-                  </td>
-                </tr>
-              ))}
+              <tr>
+                <td colSpan="7" style={{ padding: '20px', color: '#999' }}>No data yet</td>
+              </tr>
             </tbody>
           </table>
-          <div style={{ marginTop: '20px' }}>
-            <button className="btn btn-primary" style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}>Apply Configuration</button>
-          </div>
-        </div>
-      );
-    }
 
-    return (
-      <div style={{ padding: '40px', textAlign: 'center', color: '#888' }}>
-        Configuration for {activeProtocol} is not implemented yet.
-      </div>
-    );
-  };
-
-  return (
-    <div className="fade-in flex">
-      {/* Protocol Inner Sidebar */}
-      <div style={{ width: '200px', borderRight: '1px solid var(--border-color)', paddingRight: '15px', marginRight: '20px' }}>
-        {['Modbus RTU', 'Modbus TCP', 'OPC UA', 'Json', 'BACnet', 'IEC104', 'IEC61850', 'HJ212', 'DNP3', 'SNMP'].map(proto => (
-          <div 
-            key={proto}
-            onClick={() => setActiveProtocol(proto)}
-            style={{
-              padding: '10px 15px',
-              cursor: 'pointer',
-              color: activeProtocol === proto ? 'var(--primary-color)' : 'var(--text-dark)',
-              backgroundColor: activeProtocol === proto ? '#fff3ed' : 'transparent',
-              borderLeft: activeProtocol === proto ? '3px solid var(--primary-color)' : '3px solid transparent',
-              marginBottom: '5px'
-            }}
-          >
-            {proto}
-          </div>
-        ))}
-      </div>
-      
-      {/* Protocol Content */}
-      <div style={{ flex: 1 }}>
-        <h2 style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--border-color)', marginBottom: '20px' }}>Protocol</h2>
-        
-        <div className="w-card">
-          <div className="w-card-header">
-            <span className="w-card-title flex items-center">
-              {activeProtocol} 
-              <label className="toggle-switch" style={{ marginLeft: '15px' }}>
-                <input type="checkbox" checked={enabled} onChange={() => setEnabled(!enabled)} />
-                <span className="toggle-slider"></span>
-              </label>
-            </span>
-          </div>
-          <div className="w-card-body">
-             {renderContent()}
-          </div>
         </div>
       </div>
     </div>
