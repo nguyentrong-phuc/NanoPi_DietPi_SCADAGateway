@@ -20,7 +20,7 @@ const EthernetPort = () => {
           {/* Port 1 */}
           <div style={{ flex: '1', minWidth: '300px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Ethernet Port 1</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -53,7 +53,7 @@ const EthernetPort = () => {
           {/* Port 2 */}
           <div style={{ flex: '1', minWidth: '300px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Ethernet Port 2</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

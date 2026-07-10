@@ -15,7 +15,7 @@ const Routing = () => {
 
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
             <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Routing table</span>
           </div>
           
@@ -83,11 +83,11 @@ const Routing = () => {
         <div style={{ marginBottom: '30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Static IPv4 Routes</span>
             </div>
             <div>
-              <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Add</button>
+              <button style={{ backgroundColor: '#e29724', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Add</button>
               <button style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Delete</button>
             </div>
           </div>
@@ -112,7 +112,7 @@ const Routing = () => {
           </table>
         </div>
 
-        <button className="btn btn-primary" style={{ backgroundColor: '#f39c12', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>apply</button>
+        <button className="btn btn-primary" style={{ backgroundColor: '#e29724', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>apply</button>
       </div>
     </div>
   );

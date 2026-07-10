@@ -39,23 +39,23 @@ const WAN = () => {
           {/* Status Section */}
           <div style={{ marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
               <span style={{ backgroundColor: '#10b981', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{config.status || 'connected'}</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '100px' }}>Network Type:</span> <span style={{ color: '#555' }}>DHCP</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '80px' }}>WAN IP:</span> <span style={{ color: '#555' }}>172.31.5.26</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '90px' }}>Gateway IP:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '60px' }}>MAC:</span> <span style={{ color: '#555' }}>D4:AD:20:F9:3F:CD</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '100px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>DHCP</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>172.31.5.26</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>D4:AD:20:F9:3F:CD</span></div>
               
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '100px' }}>Netmask:</span> <span style={{ color: '#555' }}>255.255.255.0</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '80px' }}>DNS:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '90px' }}>Receive:</span> <span style={{ color: '#555' }}>4.6 MB(67828)</span></div>
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '60px' }}>Send:</span> <span style={{ color: '#555' }}>7.0 MB(76584)</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '100px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>255.255.255.0</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>4.6 MB(67828)</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>7.0 MB(76584)</span></div>
               
-              <div style={{ display: 'flex' }}><span style={{ color: '#333', fontWeight: 600, width: '100px' }}>Connection Time:</span> <span style={{ color: '#555' }}>20:39:43</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>20:39:43</span></div>
             </div>
           </div>
           
@@ -65,7 +65,7 @@ const WAN = () => {
           {/* Configure Section */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Configure</span>
             </div>
 
@@ -75,13 +75,30 @@ const WAN = () => {
                 <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Network Mode:</label>
                 <select value={config.mode} onChange={(e) => handleChange(e, 'mode')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }}>
                   <option value="DHCP">DHCP</option>
-                  <option value="Static">Static IP</option>
+                  <option value="Static IP">Static IP</option>
                 </select>
               </div>
+
+              {config.mode === 'Static IP' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Static IP:</label>
+                    <input type="text" value={config.staticIp || '192.168.0.7'} onChange={(e) => handleChange(e, 'staticIp')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Netmask:</label>
+                    <input type="text" value={config.netmask || '255.255.255.0'} onChange={(e) => handleChange(e, 'netmask')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Gateway:</label>
+                    <input type="text" value={config.gateway || '192.168.0.1'} onChange={(e) => handleChange(e, 'gateway')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                  </div>
+                </>
+              )}
               
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                 <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>DNS Mode:</label>
-                <select value={config.dnsMode} onChange={(e) => handleChange(e, 'dnsMode')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }}>
+                <select value={config.dnsMode} onChange={(e) => handleChange(e, 'dnsMode')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333', borderColor: config.dnsMode === 'Manual' ? '#5cadff' : '#ddd' }}>
                   <option value="Manual">Manual</option>
                   <option value="Auto">Auto</option>
                 </select>
@@ -101,12 +118,12 @@ const WAN = () => {
               )}
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
-                <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>MTU</label>
+                <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>MTU:</label>
                 <input type="text" value={config.mtu} onChange={(e) => handleChange(e, 'mtu')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
 
               <div style={{ marginLeft: '-50px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#f39c12', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading} style={{ backgroundColor: '#e29724', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   apply
                 </button>
               </div>

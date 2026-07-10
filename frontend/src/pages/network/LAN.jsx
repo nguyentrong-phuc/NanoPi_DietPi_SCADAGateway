@@ -66,7 +66,7 @@ const LAN = () => {
         {/* Status Section */}
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px' }}></span>
+            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
             <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
             <span style={{ backgroundColor: '#10b981', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{lanConfig.status || 'connected'}</span>
           </div>
@@ -88,8 +88,8 @@ const LAN = () => {
         {/* Configure Section */}
         <div>
           <div style={{ borderBottom: '1px solid #e0e0e0', marginBottom: '20px' }}>
-            <div style={{ borderBottom: '2px solid #f39c12', display: 'inline-block', paddingBottom: '10px', marginBottom: '-1px', fontWeight: 700, color: '#f39c12', cursor: 'pointer', paddingRight: '20px', paddingLeft: '10px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#f39c12', marginRight: '10px', verticalAlign: 'middle', marginTop: '-2px' }}></span>
+            <div style={{ borderBottom: '2px solid #e29724', display: 'inline-block', paddingBottom: '10px', marginBottom: '-1px', fontWeight: 700, color: '#e29724', cursor: 'pointer', paddingRight: '20px', paddingLeft: '10px' }}>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px', verticalAlign: 'middle', marginTop: '-2px' }}></span>
               Configure
             </div>
             <div style={{ display: 'inline-block', color: '#666', border: 'none', marginLeft: '20px', cursor: 'pointer', fontWeight: 600 }}>
@@ -145,7 +145,7 @@ const LAN = () => {
               )}
 
               <div style={{ marginLeft: '-50px', marginTop: '40px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#f39c12', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading} style={{ backgroundColor: '#e29724', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   {loading ? 'Applying...' : 'apply'}
                 </button>
               </div>
