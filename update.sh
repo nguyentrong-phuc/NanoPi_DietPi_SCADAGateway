@@ -1,10 +1,10 @@
 #!/bin/bash
 # ==============================================================================
-# RaitekSCADAEdge Gateway - Auto Update Script
+# RaitekEdge Gateway - Auto Update Script
 # ==============================================================================
 
 echo "========================================================"
-echo "  Starting Update: RaitekSCADAEdge UI"
+echo "  Starting Update: RaitekEdge UI"
 echo "========================================================"
 
 if [ "$EUID" -ne 0 ]; then

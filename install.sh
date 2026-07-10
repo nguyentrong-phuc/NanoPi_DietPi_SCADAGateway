@@ -1,10 +1,10 @@
 #!/bin/bash
 # ==============================================================================
-# RaitekSCADAEdge Gateway - Auto Installation Script for DietPi/Debian
+# RaitekEdge Gateway - Auto Installation Script for DietPi/Debian
 # ==============================================================================
 
 echo "========================================================"
-echo "  Starting Installation: RaitekSCADAEdge UI"
+echo "  Starting Installation: RaitekEdge UI"
 echo "========================================================"
 
 # 1. Require root privileges
@@ -38,7 +38,7 @@ npm install --production
 echo "[4/4] Configuring auto-start service (Systemd)..."
 cat <<EOF > /etc/systemd/system/scada-gateway.service
 [Unit]
-Description=RaitekSCADAEdge Web UI
+Description=RaitekEdge Web UI
 After=network.target
 
 [Service]
