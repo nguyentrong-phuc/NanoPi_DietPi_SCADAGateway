@@ -90,8 +90,7 @@ const Overview = () => {
       <span style={{ width: '70px', color: '#333', fontWeight: 600 }}>{label}:</span>
       <div style={{ flex: 1, backgroundColor: '#e9ecef', height: '16px', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}>
         <div style={{ width: `${percentage}%`, backgroundColor: percentage > 0 ? 'var(--primary-color)' : 'transparent', height: '100%', transition: 'width 0.3s ease' }}></div>
-        {percentage > 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '11px', color: 'white', lineHeight: '16px', fontWeight: 600 }}>{percentage}%</span>}
-        {percentage === 0 && <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '11px', color: '#666', lineHeight: '16px', fontWeight: 600 }}>0%</span>}
+        <span style={{ position: 'absolute', right: '10px', top: '0', fontSize: '12px', color: '#333', lineHeight: '16px', fontWeight: 700 }}>{percentage}%</span>
       </div>
     </div>
   );
