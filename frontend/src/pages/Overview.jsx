@@ -191,22 +191,23 @@ const Overview = () => {
           {/* Column 2: Ethernet Ports & Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
-            {/* Ethernet Port 1 & 2 Box */}
+            {/* Ethernet Port 1 */}
             <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
-              {/* Ethernet Port 1 */}
               <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px'}}></span> Ethernet Port 1
                  </div>
                  <span style={{color: 'var(--primary-color)', fontSize: '12px', cursor: 'pointer', fontWeight: 'normal'}}>Settings</span>
               </div>
-              <div style={{fontSize: '13px', paddingBottom: '10px'}}>
+              <div style={{fontSize: '13px'}}>
                 <div style={{display: 'flex', marginBottom: '15px'}}><span style={{width: '100px', color: '#666'}}>Mode:</span> <span>WAN</span></div>
                 <div style={{display: 'flex', marginBottom: '15px'}}><span style={{width: '100px', color: '#666'}}>Status:</span> <span className={networkInfo.lan1.status === 'Connected' ? 'text-primary' : 'text-danger'}>{networkInfo.lan1.status}</span></div>
               </div>
+            </div>
 
-              {/* Ethernet Port 2 */}
-              <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', borderTop: '1px dashed #eee', paddingTop: '15px', paddingBottom: '10px', marginBottom: '15px', display: 'flex', alignItems: 'center'}}>
+            {/* Ethernet Port 2 */}
+            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
+              <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', alignItems: 'center'}}>
                  <span style={{display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px'}}></span> Ethernet Port 2
               </div>
               <div style={{fontSize: '13px'}}>

@@ -5,6 +5,9 @@ import Login from './pages/Login';
 import Overview from './pages/Overview';
 import NetworkWAN from './pages/network/WAN';
 import NetworkLAN from './pages/network/LAN';
+import EthernetPort from './pages/network/EthernetPort';
+import Routing from './pages/network/Routing';
+import Diagnostics from './pages/network/Diagnostics';
 import Protocol from './pages/edge/Protocol';
 import SystemConfig from './pages/system/SystemConfig';
 
@@ -28,9 +31,12 @@ const App = () => {
           
           {/* Network Routes */}
           <Route path="network">
-            <Route index element={<Navigate to="/network/wan" replace />} />
+            <Route index element={<Navigate to="/network/ethernet-port" replace />} />
+            <Route path="ethernet-port" element={<EthernetPort />} />
             <Route path="wan" element={<NetworkWAN />} />
             <Route path="lan" element={<NetworkLAN />} />
+            <Route path="routing" element={<Routing />} />
+            <Route path="diagnostics" element={<Diagnostics />} />
             <Route path="*" element={<Placeholder name="Network Module" />} />
           </Route>
 
