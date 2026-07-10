@@ -20,7 +20,7 @@ const EdgeMode = () => {
             <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#333', fontWeight: 600 }}>
               Edge Computing:
             </div>
-            <div style={{ fontSize: '14px', color: '#333', padding: '8px 0' }}>
+            <div style={{ fontSize: '14px', color: '#333' }}>
               NodeRED
             </div>
           </div>
@@ -39,7 +39,7 @@ const EdgeMode = () => {
                 </button>
                 <button style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>Export</button>
                 <button style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>Delete</button>
-                <button style={{ backgroundColor: '#22c55e', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>change password</button>
+                <button style={{ backgroundColor: '#22c55e', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>Change Password</button>
               </div>
             </div>
             <div style={{ paddingLeft: '175px' }}>
