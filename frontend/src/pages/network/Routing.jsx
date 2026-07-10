@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Routing = () => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
       
@@ -87,7 +89,7 @@ const Routing = () => {
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Static IPv4 Routes</span>
             </div>
             <div>
-              <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Add</button>
+              <button onClick={() => setIsAddModalOpen(true)} style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Add</button>
               <button style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Delete</button>
             </div>
           </div>
@@ -114,6 +116,66 @@ const Routing = () => {
 
         <button className="btn btn-primary" style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>apply</button>
       </div>
+
+      {isAddModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.4)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'white', width: '500px', borderRadius: '4px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', display: 'flex', flexDirection: 'column' }}>
+            
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 20px', borderBottom: '1px solid #f0f0f0' }}>
+              <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Add</span>
+              <span onClick={() => setIsAddModalOpen(false)} style={{ cursor: 'pointer', color: '#999', fontSize: '20px' }}>&times;</span>
+            </div>
+            
+            {/* Modal Body */}
+            <div style={{ padding: '30px 40px 20px 20px' }}>
+              <form>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                  <div style={{ width: '130px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                    <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Interface:
+                  </div>
+                  <select style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#999', appearance: 'none', background: 'url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23999\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'/%3E%3C/svg%3E") no-repeat right 10px center', backgroundColor: 'white' }}>
+                    <option value="">Please select</option>
+                  </select>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                  <div style={{ width: '130px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                    <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Target:
+                  </div>
+                  <input type="text" placeholder="Please enter" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                  <div style={{ width: '130px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                    <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>IPv4-Netmask:
+                  </div>
+                  <input type="text" placeholder="Please enter" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                  <div style={{ width: '130px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                    <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>IPv4-Gateway:
+                  </div>
+                  <input type="text" placeholder="Please enter" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
+                  <div style={{ width: '130px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                    Metric:
+                  </div>
+                  <input type="number" defaultValue="0" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                </div>
+                
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                  <button type="button" onClick={() => setIsAddModalOpen(false)} style={{ backgroundColor: 'white', color: '#666', border: '1px solid #ddd', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontSize: '13px' }}>cancel</button>
+                  <button type="button" style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontSize: '13px' }}>sure</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
