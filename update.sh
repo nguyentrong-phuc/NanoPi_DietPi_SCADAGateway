@@ -22,10 +22,29 @@ fi
 echo "[1/4] Installing missing dependencies..."
 apt-get install -y dnsmasq
 
-echo "[2/4] Pulling latest code from GitHub..."
+echo "[2/4] Checking and pulling latest code from GitHub..."
 cd $INSTALL_DIR
-# Loại bỏ các thay đổi cục bộ (nếu có) và kéo bản mới nhất từ Github
-git fetch --all
+
+# Kéo thông tin bản cập nhật mới nhất từ Github
+git fetch origin main
+
+# Lấy thông tin commit và dung lượng thay đổi
+LOCAL_COMMIT=$(git rev-parse HEAD)
+REMOTE_COMMIT=$(git rev-parse origin/main)
+
+if [ "$LOCAL_COMMIT" = "$REMOTE_COMMIT" ]; then
+    echo "  -> He thong da o phien ban moi nhat!"
+else
+    echo "  -> Phat hien ban cap nhat moi!"
+    echo "  --------------------------------------------------------"
+    echo "  Thong tin ban cap nhat: $(git log -1 --format="%s" origin/main)"
+    echo "  Ngay phat hanh:         $(git log -1 --format="%cd" --date=local origin/main)"
+    echo "  Dung luong (Thay doi):  "
+    git diff --stat HEAD..origin/main
+    echo "  --------------------------------------------------------"
+fi
+
+# Loại bỏ các thay đổi cục bộ (nếu có) và áp dụng bản mới nhất từ Github
 git reset --hard origin/main
 
 echo "[3/4] Updating Node.js packages..."
