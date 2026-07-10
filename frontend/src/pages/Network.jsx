@@ -25,9 +25,15 @@ const Network = () => {
   const [activeTab, setActiveTab] = useState('lan1');
   const [loading, setLoading] = useState(false);
 
-  // In a real app, you would fetch from the backend API here
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
   useEffect(() => {
-    // fetch('/api/network/lan').then(...)
+    fetch(`${API_URL}/api/network`)
+      .then(res => res.json())
+      .then(data => {
+        setLanConfig(data);
+      })
+      .catch(err => console.error("Error fetching network config:", err));
   }, []);
 
   const handleChange = (e, field) => {
@@ -44,11 +50,23 @@ const Network = () => {
   const handleApply = (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      alert(`Applied configuration for ${activeTab.toUpperCase()}!`);
-      setLoading(false);
-    }, 1000);
+    
+    fetch(`${API_URL}/api/network`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lanConfig)
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || `Applied configuration for ${activeTab.toUpperCase()}!`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Failed to apply configuration.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const currentConfig = lanConfig[activeTab];
@@ -75,16 +93,16 @@ const Network = () => {
 
         <div style={{ padding: '1.5rem' }}>
           <div style={{ marginBottom: '2rem', padding: '1rem', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
-            <h4 style={{ margin: '0 0 1rem 0' }}>Status: <span className="text-success">Connected</span></h4>
+            <h4 style={{ margin: '0 0 1rem 0' }}>Status: <span className={currentConfig.status === 'Connected' ? "text-success" : "text-danger"}>{currentConfig.status || 'Unknown'}</span></h4>
             <div className="grid grid-cols-3 grid-gap">
               <div>
-                <span className="text-muted">IP:</span> <strong>{currentConfig.ip}</strong>
+                <span className="text-muted">IP:</span> <strong>{currentConfig.ip || 'N/A'}</strong>
               </div>
               <div>
-                <span className="text-muted">Netmask:</span> <strong>{currentConfig.netmask}</strong>
+                <span className="text-muted">Netmask:</span> <strong>{currentConfig.netmask || 'N/A'}</strong>
               </div>
               <div>
-                <span className="text-muted">MAC:</span> <strong>D4:AD:20:F9:3F:{activeTab === 'lan1' ? 'C9' : 'CA'}</strong>
+                <span className="text-muted">MAC:</span> <strong>{currentConfig.mac || 'N/A'}</strong>
               </div>
             </div>
           </div>

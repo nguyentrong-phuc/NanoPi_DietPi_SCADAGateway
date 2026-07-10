@@ -19,17 +19,20 @@ if [ ! -d "$INSTALL_DIR" ]; then
   exit 1
 fi
 
-echo "[1/3] Pulling latest code from GitHub..."
+echo "[1/4] Installing missing dependencies..."
+apt-get install -y dnsmasq
+
+echo "[2/4] Pulling latest code from GitHub..."
 cd $INSTALL_DIR
 # Loại bỏ các thay đổi cục bộ (nếu có) và kéo bản mới nhất từ Github
 git fetch --all
 git reset --hard origin/main
 
-echo "[2/3] Updating Node.js packages..."
+echo "[3/4] Updating Node.js packages..."
 cd $INSTALL_DIR/backend
 npm install --production
 
-echo "[3/3] Restarting background service..."
+echo "[4/4] Restarting background service..."
 systemctl restart scada-gateway.service
 
 echo "========================================================"

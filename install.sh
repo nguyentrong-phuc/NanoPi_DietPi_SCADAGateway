@@ -14,9 +14,9 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # 2. Update and install dependencies
-echo "[1/4] Installing dependencies (Node.js, npm, git)..."
+echo "[1/4] Installing dependencies (Node.js, npm, git, dnsmasq)..."
 apt-get update -y
-apt-get install -y curl git
+apt-get install -y curl git dnsmasq
 # Install Node.js 18.x (Recommended for modern apps)
 curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 apt-get install -y nodejs
