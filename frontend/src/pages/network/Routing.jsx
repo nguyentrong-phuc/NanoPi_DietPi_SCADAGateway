@@ -2,7 +2,7 @@ import React from 'react';
 
 const Routing = () => {
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: '#f0f2f5', display: 'flex', flexDirection: 'column' }}>
       {/* Breadcrumb Header */}
       <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> Routing
@@ -15,9 +15,9 @@ const Routing = () => {
         </h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
+      <div style={{ padding: '20px', flex: 1 }}>
 
-      <div style={{ marginBottom: '30px' }}>
+      <div style={{ backgroundColor: 'white', padding: '20px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
           <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
           <span style={{ fontWeight: 600, fontSize: '14px' }}>Routing table</span>
@@ -81,7 +81,7 @@ const Routing = () => {
         </table>
       </div>
 
-      <div style={{ marginBottom: '30px' }}>
+      <div style={{ backgroundColor: 'white', padding: '20px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>

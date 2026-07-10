@@ -52,7 +52,7 @@ const LAN = () => {
   };
 
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: '#f0f2f5', display: 'flex', flexDirection: 'column' }}>
       {/* Breadcrumb Header */}
       <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> LAN
@@ -65,11 +65,13 @@ const LAN = () => {
         </h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
+      <div style={{ padding: '20px', flex: 1 }}>
       
-      <div className="w-card">
-        <div className="w-card-header">
-          <span className="w-card-title">Status <span className={`status-badge ${lanConfig.status === 'Connected' ? 'status-connected' : 'status-disconnected'}`} style={{marginLeft: '10px'}}>{lanConfig.status || 'disconnected'}</span></span>
+      <div style={{ backgroundColor: 'white', padding: '20px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+          <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
+          <span style={{ fontWeight: 700, fontSize: '15px', color: '#333', marginRight: '10px' }}>Status</span>
+          <span style={{ backgroundColor: '#10b981', color: 'white', padding: '2px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{lanConfig.status || 'connected'}</span>
         </div>
         <div className="w-card-body grid grid-cols-4 grid-gap-4">
           <div><div className="text-muted" style={{marginBottom: '5px'}}>IP:</div> <div>{lanConfig.ip || '--'}</div></div>
@@ -81,14 +83,16 @@ const LAN = () => {
         </div>
       </div>
 
-      <div className="w-card">
-        <div className="w-card-header" style={{ borderBottom: '2px solid var(--primary-color)', display: 'inline-block', borderRadius: 0, paddingBottom: '10px', marginBottom: '-1px' }}>
-           Configure
+      <div style={{ backgroundColor: 'white', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div style={{ borderBottom: '1px solid #e0e0e0', marginBottom: '20px' }}>
+          <div style={{ borderBottom: '2px solid var(--primary-color)', display: 'inline-block', paddingBottom: '10px', marginBottom: '-1px', fontWeight: 600, color: '#f39c12', cursor: 'pointer', paddingRight: '20px' }}>
+            Configure
+          </div>
+          <div style={{ display: 'inline-block', color: '#666', border: 'none', marginLeft: '20px', cursor: 'pointer', fontWeight: 600 }}>
+             DHCP Server List
+          </div>
         </div>
-        <div className="w-card-header" style={{ display: 'inline-block', color: 'var(--text-muted)', border: 'none', marginLeft: '20px' }}>
-           DHCP Server List
-        </div>
-        <div className="w-card-body" style={{ borderTop: '1px solid var(--border-color)' }}>
+        <div style={{ paddingTop: '10px' }}>
           <form onSubmit={handleApply} style={{ maxWidth: '500px', margin: '0 auto', paddingTop: '20px' }}>
             
             <div className="form-group flex items-center justify-between">

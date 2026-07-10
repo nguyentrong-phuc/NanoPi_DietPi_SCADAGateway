@@ -4,7 +4,7 @@ const Diagnostics = () => {
   const [activeTab, setActiveTab] = useState('Ping');
 
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: '#f0f2f5', display: 'flex', flexDirection: 'column' }}>
       {/* Breadcrumb Header */}
       <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> Diagnostics
@@ -17,9 +17,10 @@ const Diagnostics = () => {
         </h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
+      <div style={{ padding: '20px', flex: 1 }}>
 
-      <div style={{ display: 'flex', borderBottom: '2px solid #eee', marginBottom: '20px' }}>
+      <div style={{ backgroundColor: 'white', padding: '20px', marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div style={{ display: 'flex', borderBottom: '2px solid #eee', marginBottom: '20px' }}>
         <div 
           onClick={() => setActiveTab('Ping')}
           style={{ padding: '10px 20px', cursor: 'pointer', color: activeTab === 'Ping' ? 'var(--primary-color)' : '#666', borderBottom: activeTab === 'Ping' ? '2px solid var(--primary-color)' : 'none', marginBottom: '-2px', fontWeight: activeTab === 'Ping' ? 600 : 'normal' }}
@@ -38,8 +39,9 @@ const Diagnostics = () => {
         <input type="text" placeholder="Please enter IP or Domain" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ccc', borderRadius: '4px' }} />
         <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '8px 20px', borderRadius: '4px', cursor: 'pointer' }}>Send</button>
       </div>
+      </div>
 
-      <div>
+      <div style={{ backgroundColor: 'white', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
           <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
           <span style={{ fontWeight: 600, fontSize: '14px' }}>Medicng Result</span>
