@@ -78,9 +78,9 @@ const Overview = () => {
     </div>
   );
 
-  const FieldRow = ({ label, value, valueColor = '#444' }) => (
+  const FieldRow = ({ label, value, valueColor = '#444', labelWidth = '110px' }) => (
     <div style={{ display: 'flex', marginBottom: '12px', fontSize: '14px' }}>
-      <span style={{ width: '135px', color: '#333', fontWeight: 600 }}>{label}</span>
+      <span style={{ width: labelWidth, color: '#333', fontWeight: 600 }}>{label}</span>
       <span style={{ color: valueColor, flex: 1, wordBreak: 'break-all' }}>{value}</span>
     </div>
   );
@@ -104,26 +104,26 @@ const Overview = () => {
         {/* System Information */}
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <CardHeader title="System Information" />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-            <div>
-              <FieldRow label="Name:" value={sysInfo.name} />
-              <FieldRow label="Model:" value={sysInfo.model} />
-              <FieldRow label="Version:" value={sysInfo.version} />
-              <FieldRow label="OS:" value={sysInfo.os} />
-              <FieldRow label="SN:" value={sysInfo.sn} />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ flex: '0 0 28%' }}>
+              <FieldRow labelWidth="80px" label="Name:" value={sysInfo.name} />
+              <FieldRow labelWidth="80px" label="Model:" value={sysInfo.model} />
+              <FieldRow labelWidth="80px" label="Version:" value={sysInfo.version} />
+              <FieldRow labelWidth="80px" label="OS:" value={sysInfo.os} />
+              <FieldRow labelWidth="80px" label="SN:" value={sysInfo.sn} />
             </div>
-            <div>
-              <FieldRow label="IMEI:" value={sysInfo.imei || '--'} />
-              <FieldRow label="MAC-1:" value={sysInfo.mac1} />
-              <FieldRow label="MAC-2:" value={sysInfo.mac2} />
-              <FieldRow label="Device Time:" value={sysInfo.deviceTime} />
-              <FieldRow label="Operation Time:" value={sysInfo.operationTime} />
+            <div style={{ flex: '0 0 40%' }}>
+              <FieldRow labelWidth="120px" label="IMEI:" value={sysInfo.imei || '--'} />
+              <FieldRow labelWidth="120px" label="MAC-1:" value={sysInfo.mac1} />
+              <FieldRow labelWidth="120px" label="MAC-2:" value={sysInfo.mac2} />
+              <FieldRow labelWidth="120px" label="Device Time:" value={sysInfo.deviceTime} />
+              <FieldRow labelWidth="120px" label="Operation Time:" value={sysInfo.operationTime} />
             </div>
-            <div>
-              <FieldRow label="Edge Gateway:" value={sysInfo.edgeGateway} valueColor="var(--primary-color)" />
-              <FieldRow label="Graph:" value={sysInfo.graph} valueColor="var(--primary-color)" />
-              <FieldRow label="Link-1:" value={sysInfo.link1} valueColor="#ff4d4f" />
-              <FieldRow label="Link-2:" value={sysInfo.link2} valueColor="#ff4d4f" />
+            <div style={{ flex: '0 0 25%' }}>
+              <FieldRow labelWidth="110px" label="Edge Gateway:" value={sysInfo.edgeGateway} valueColor="var(--primary-color)" />
+              <FieldRow labelWidth="110px" label="Graph:" value={sysInfo.graph} valueColor="var(--primary-color)" />
+              <FieldRow labelWidth="110px" label="Link-1:" value={sysInfo.link1} valueColor="#ff4d4f" />
+              <FieldRow labelWidth="110px" label="Link-2:" value={sysInfo.link2} valueColor="#ff4d4f" />
             </div>
           </div>
         </div>
