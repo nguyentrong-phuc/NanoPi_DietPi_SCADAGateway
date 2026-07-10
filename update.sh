@@ -43,7 +43,7 @@ else
     echo "  Thong tin ban cap nhat: $(git log -1 --format="%s" origin/main)"
     echo "  Ngay phat hanh:         $(git log -1 --format="%cd" --date=local origin/main)"
     echo "  Dung luong (Thay doi):  "
-    git --no-pager diff --stat HEAD..origin/main
+    git --no-pager diff --stat HEAD..origin/main | cat
     echo "  --------------------------------------------------------"
 fi
 
