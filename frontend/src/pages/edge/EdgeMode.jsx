@@ -1,15 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const EdgeMode = () => {
-  const [initialMode, setInitialMode] = useState('Nodered+Edge');
-  const [mode, setMode] = useState(initialMode);
-  const hasChanges = mode !== initialMode;
-
-  const handleApply = () => {
-    setInitialMode(mode);
-    alert('Applied Edge Mode configuration!');
-  };
-
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
       <div style={{ backgroundColor: '#eaedf2', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
@@ -55,15 +46,6 @@ const EdgeMode = () => {
               <p style={{ color: '#ef4444', fontSize: '13px', margin: '0 0 8px 0' }}>Enable Graphical Design, it can be used normally after the device restarts 2 minutes.</p>
               <p style={{ color: '#ef4444', fontSize: '13px', margin: 0 }}>Default username:admin,default password:admin</p>
             </div>
-          </div>
-
-          <div style={{ marginTop: '50px', paddingLeft: '15px' }}>
-            <button 
-              disabled={!hasChanges}
-              onClick={handleApply}
-              style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '10px 40px', borderRadius: '4px', fontWeight: 600, fontSize: '15px' }}>
-              apply
-            </button>
           </div>
         </div>
       </div>
