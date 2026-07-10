@@ -147,14 +147,14 @@ const Overview = () => {
           <span className="w-card-title">Device Status</span>
         </div>
         
-        {/* Adjusted to 2-column layout (minmax 300px for responsiveness) */}
-        <div className="w-card-body" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', backgroundColor: '#fafafa' }}>
+        {/* Adjusted to strict 2-column layout for perfect alignment */}
+        <div className="w-card-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', backgroundColor: '#fafafa' }}>
           
           {/* Column 1: WAN & LAN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* WAN */}
-            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px'}}>
+            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
               <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px'}}></span> WAN
@@ -172,7 +172,7 @@ const Overview = () => {
             </div>
 
             {/* LAN */}
-            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px'}}>
+            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
               <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span style={{display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px'}}></span> LAN
@@ -192,7 +192,7 @@ const Overview = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             
             {/* Ethernet Port 1 & 2 Box */}
-            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px'}}>
+            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
               {/* Ethernet Port 1 */}
               <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                  <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -216,7 +216,7 @@ const Overview = () => {
             </div>
 
             {/* Location */}
-            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px'}}>
+            <div style={{border: '1px solid var(--border-color)', backgroundColor: 'white', padding: '15px', borderRadius: '4px', flex: 1}}>
               <div style={{fontWeight: 600, borderBottom: '1px solid var(--border-color)', paddingBottom: '10px', marginBottom: '15px', display: 'flex', alignItems: 'center'}}>
                  <span style={{display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px'}}></span> Location
               </div>

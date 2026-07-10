@@ -25,16 +25,11 @@ const Layout = () => {
     if (topLevel === 'network') {
       return (
         <div className="sub-sidebar">
-          <NavLink to="/network/switching" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Network Switching</NavLink>
-          <NavLink to="/network/cellular" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Cellular</NavLink>
-          <NavLink to="/network/wireless" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Wireless Client</NavLink>
           <NavLink to="/network/ethernet-port" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Ethernet Port</NavLink>
           <NavLink to="/network/wan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>WAN</NavLink>
           <NavLink to="/network/lan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>LAN</NavLink>
           <NavLink to="/network/routing" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Routing</NavLink>
-          <NavLink to="/network/vpn" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>VPN</NavLink>
           <NavLink to="/network/diagnostics" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Diagnostics</NavLink>
-          <NavLink to="/network/firewall" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Firewall</NavLink>
         </div>
       );
     }
@@ -78,7 +73,8 @@ const Layout = () => {
       {/* Top Horizontal Bar */}
       <div className="top-bar">
         <div className="top-bar-logo">
-          RaitekSCADAEdge
+          <img src="/Raitek_round_logo.png" alt="Logo" style={{ height: '32px', borderRadius: '50%' }} onError={(e) => e.target.style.display='none'} />
+          RaitekEdge
         </div>
         <div className="top-bar-nav">
           <NavLink to="/overview" className={({isActive}) => `top-bar-item ${isActive || topLevel === 'overview' ? 'active' : ''}`}>
