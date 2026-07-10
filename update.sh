@@ -12,6 +12,9 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+export GIT_PAGER=cat
+
+
 INSTALL_DIR="/opt/scada-gateway"
 
 if [ ! -d "$INSTALL_DIR" ]; then
