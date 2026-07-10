@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Overview = () => {
+  const navigate = useNavigate();
   // Mock data states
   const [sysInfo] = useState({
     name: 'USR-M300',
@@ -68,13 +70,13 @@ const Overview = () => {
     </div>
   );
 
-  const SubCardHeader = ({ title }) => (
+  const SubCardHeader = ({ title, onSettingsClick }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px', borderRadius: '1.5px' }}></span>
         <span style={{ fontWeight: 700, fontSize: '16px', color: '#222' }}>{title}</span>
       </div>
-      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
+      <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
     </div>
   );
 
@@ -162,7 +164,7 @@ const Overview = () => {
           {/* Column 1: WAN & LAN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
-              <SubCardHeader title="WAN" />
+              <SubCardHeader title="WAN" onSettingsClick={() => navigate('/network/wan')} />
               <FieldRow label="Mode:" value={networkInfo.wan.mode} />
               <FieldRow label="WAN IP:" value={networkInfo.wan.ip} />
               <FieldRow label="Netmask:" value={networkInfo.wan.netmask} />
@@ -172,7 +174,7 @@ const Overview = () => {
             </div>
             
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px', flex: 1 }}>
-              <SubCardHeader title="LAN" />
+              <SubCardHeader title="LAN" onSettingsClick={() => navigate('/network/lan')} />
               <FieldRow label="LAN IP:" value={networkInfo.lan.ip} />
               <FieldRow label="Netmask:" value={networkInfo.lan.netmask} />
               <FieldRow label="DHCP Service:" value={networkInfo.lan.dhcpService} valueColor="#ff4d4f" />
@@ -182,13 +184,13 @@ const Overview = () => {
           {/* Column 2: Ethernet Ports & Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
-              <SubCardHeader title="Ethernet Port 1" />
+              <SubCardHeader title="Ethernet Port 1" onSettingsClick={() => navigate('/network/ethernet-port')} />
               <FieldRow label="Mode:" value={networkInfo.eth1.mode} />
               <FieldRow label="Status:" value={networkInfo.eth1.status} valueColor="var(--primary-color)" />
             </div>
             
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
-              <SubCardHeader title="Ethernet Port 2" />
+              <SubCardHeader title="Ethernet Port 2" onSettingsClick={() => navigate('/network/ethernet-port')} />
               <FieldRow label="Mode:" value={networkInfo.eth2.mode} />
               <FieldRow label="Status:" value={networkInfo.eth2.status} valueColor="var(--primary-color)" />
             </div>
