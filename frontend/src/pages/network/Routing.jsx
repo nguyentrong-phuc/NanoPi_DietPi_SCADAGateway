@@ -19,17 +19,17 @@ const Routing = () => {
             <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Routing table</span>
           </div>
           
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center', backgroundColor: 'white', border: '1px solid #dee2e6' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center' }}>
             <thead>
-              <tr style={{ backgroundColor: '#f9fafb', color: '#333' }}>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Target</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Gateway</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Netmask</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Flag</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Metric</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Ref</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Use</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Interface</th>
+              <tr style={{ backgroundColor: '#e0e2e5', color: '#333' }}>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Target</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Gateway</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Netmask</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Flag</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Metric</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Ref</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Use</th>
+                <th style={{ padding: '12px 10px', fontWeight: 600 }}>Interface</th>
               </tr>
             </thead>
             <tbody>
@@ -43,7 +43,7 @@ const Routing = () => {
                 <td style={{ color: '#555' }}>0</td>
                 <td style={{ color: '#555' }}>wan</td>
               </tr>
-              <tr style={{ borderBottom: '1px solid #eee', backgroundColor: '#fbfbfb' }}>
+              <tr style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '12px 10px', color: '#555' }}>0.0.0.0</td>
                 <td style={{ color: '#555' }}>172.31.5.25</td>
                 <td style={{ color: '#555' }}>0.0.0.0</td>
@@ -63,7 +63,7 @@ const Routing = () => {
                 <td style={{ color: '#555' }}>0</td>
                 <td style={{ color: '#555' }}>wan</td>
               </tr>
-              <tr style={{ borderBottom: '1px solid #eee', backgroundColor: '#fbfbfb' }}>
+              <tr style={{ borderBottom: '1px solid #eee' }}>
                 <td style={{ padding: '12px 10px', color: '#555' }}>192.168.1.0</td>
                 <td style={{ color: '#555' }}>0.0.0.0</td>
                 <td style={{ color: '#555' }}>255.255.255.0</td>
@@ -92,16 +92,16 @@ const Routing = () => {
             </div>
           </div>
           
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center', backgroundColor: 'white', border: '1px solid #dee2e6' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center' }}>
             <thead>
-              <tr style={{ backgroundColor: '#f9fafb', color: '#333' }}>
-                <th style={{ padding: '12px 10px', width: '40px', borderBottom: '1px solid #dee2e6' }}><input type="checkbox" /></th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Interface</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Object</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>IPv4-Netmask</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>IPv4-Gateway</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Metric</th>
-                <th style={{ padding: '12px 10px', borderBottom: '1px solid #dee2e6', fontWeight: 600 }}>Operation</th>
+              <tr style={{ backgroundColor: '#e0e2e5', color: '#333' }}>
+                <th style={{ padding: '12px 10px', width: '40px', borderRight: '2px solid white' }}><input type="checkbox" style={{ margin: 0, verticalAlign: 'middle' }} /></th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Interface</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Object</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>IPv4-Netmask</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>IPv4-Gateway</th>
+                <th style={{ padding: '12px 10px', borderRight: '2px solid white', fontWeight: 600 }}>Metric</th>
+                <th style={{ padding: '12px 10px', fontWeight: 600 }}>Operation</th>
               </tr>
             </thead>
             <tbody>
