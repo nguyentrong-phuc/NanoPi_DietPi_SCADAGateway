@@ -27,14 +27,18 @@ const WAN = () => {
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
       {/* Breadcrumb Header */}
-      <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center' }}>
+      <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> WAN
       </div>
 
-      <div style={{ padding: '20px 30px', flex: 1 }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', marginBottom: '20px' }}>
+      {/* Gray Title Bar */}
+      <div style={{ backgroundColor: '#eaedf2', padding: '12px 20px', borderTop: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#333', margin: 0 }}>
           WAN
         </h2>
+      </div>
+
+      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
 
           {/* Status Section */}
           <div style={{ marginBottom: '30px' }}>
