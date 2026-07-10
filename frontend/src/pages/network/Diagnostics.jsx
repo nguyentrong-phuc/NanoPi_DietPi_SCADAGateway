@@ -4,10 +4,20 @@ const Diagnostics = () => {
   const [activeTab, setActiveTab] = useState('Ping');
 
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #e5e7eb' }}>
-        Diagnostics
-      </h2>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+      {/* Breadcrumb Header */}
+      <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> Diagnostics
+      </div>
+
+      {/* Gray Title Bar */}
+      <div style={{ backgroundColor: '#eaedf2', padding: '12px 20px', borderTop: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#333', margin: 0 }}>
+          Diagnostics
+        </h2>
+      </div>
+
+      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
 
       <div style={{ display: 'flex', borderBottom: '2px solid #eee', marginBottom: '20px' }}>
         <div 
@@ -37,6 +47,7 @@ const Diagnostics = () => {
         <div style={{ backgroundColor: '#f5f5f5', border: '1px solid #e0e0e0', minHeight: '300px', borderRadius: '4px', padding: '15px' }}>
           {/* Results will appear here */}
         </div>
+      </div>
       </div>
     </div>
   );

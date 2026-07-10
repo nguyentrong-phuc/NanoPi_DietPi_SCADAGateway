@@ -52,8 +52,20 @@ const LAN = () => {
   };
 
   return (
-    <div className="fade-in">
-      <h2 style={{ padding: '0 0 15px 0', borderBottom: '1px solid var(--border-color)', marginBottom: '20px' }}>LAN</h2>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+      {/* Breadcrumb Header */}
+      <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> LAN
+      </div>
+
+      {/* Gray Title Bar */}
+      <div style={{ backgroundColor: '#eaedf2', padding: '12px 20px', borderTop: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#333', margin: 0 }}>
+          LAN
+        </h2>
+      </div>
+
+      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
       
       <div className="w-card">
         <div className="w-card-header">
@@ -130,6 +142,7 @@ const LAN = () => {
             </div>
           </form>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -2,10 +2,20 @@ import React from 'react';
 
 const Routing = () => {
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #e5e7eb' }}>
-        Routing
-      </h2>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+      {/* Breadcrumb Header */}
+      <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center' }}>
+        <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> Routing
+      </div>
+
+      {/* Gray Title Bar */}
+      <div style={{ backgroundColor: '#eaedf2', padding: '12px 20px', borderTop: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#333', margin: 0 }}>
+          Routing
+        </h2>
+      </div>
+
+      <div style={{ padding: '20px 20px', flex: 1, backgroundColor: 'white' }}>
 
       <div style={{ marginBottom: '30px' }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
@@ -104,6 +114,7 @@ const Routing = () => {
       </div>
 
       <button className="btn btn-primary" style={{ backgroundColor: '#e0e0e0', color: '#999', cursor: 'not-allowed', border: 'none' }}>apply</button>
+      </div>
     </div>
   );
 };
