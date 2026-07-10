@@ -12,7 +12,12 @@ const WAN = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e, field) => {
-    setConfig({ ...config, [field]: e.target.value });
+    const value = e.target.value;
+    if (field === 'mode') {
+      setConfig({ ...config, mode: value, dnsMode: value === 'Static IP' ? 'Manual' : config.dnsMode });
+    } else {
+      setConfig({ ...config, [field]: value });
+    }
   };
 
   const handleApply = (e) => {
@@ -45,12 +50,12 @@ const WAN = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '100px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>DHCP</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>DHCP</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>172.31.5.26</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>D4:AD:20:F9:3F:CD</span></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '100px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>255.255.255.0</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>255.255.255.0</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>4.6 MB(67828)</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>7.0 MB(76584)</span></div>
@@ -98,7 +103,7 @@ const WAN = () => {
               
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                 <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>DNS Mode:</label>
-                <select value={config.dnsMode} onChange={(e) => handleChange(e, 'dnsMode')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333', borderColor: config.dnsMode === 'Manual' ? '#5cadff' : '#ddd' }}>
+                <select value={config.dnsMode} onChange={(e) => handleChange(e, 'dnsMode')} disabled={config.mode === 'Static IP'} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: config.mode === 'Static IP' ? '#999' : '#333', backgroundColor: config.mode === 'Static IP' ? '#f5f5f5' : 'white', borderColor: config.dnsMode === 'Manual' ? '#5cadff' : '#ddd' }}>
                   <option value="Manual">Manual</option>
                   <option value="Auto">Auto</option>
                 </select>
