@@ -40,11 +40,11 @@ const EthernetPort = () => {
                 </button>
               </div>
             </div>
-            {port1Mode === 'LAN' && (
-              <div style={{ textAlign: 'right', marginTop: '15px', color: '#0d47a1', fontSize: '13px', fontWeight: 500 }}>
-                ⇌ Changed to LAN
-              </div>
-            )}
+            <div style={{ textAlign: 'right', marginTop: '15px' }}>
+              <span onClick={() => alert(`Ethernet Port 1 changed to ${port1Mode} mode`)} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                ⇌ Change Mode
+              </span>
+            </div>
           </div>
 
           {/* Vertical Divider */}
@@ -73,11 +73,11 @@ const EthernetPort = () => {
                 </button>
               </div>
             </div>
-            {port2Mode === 'LAN' && (
-              <div style={{ textAlign: 'right', marginTop: '15px', color: '#0d47a1', fontSize: '13px', fontWeight: 500 }}>
-                ⇌ Changed to LAN
-              </div>
-            )}
+            <div style={{ textAlign: 'right', marginTop: '15px' }}>
+              <span onClick={() => alert(`Ethernet Port 2 changed to ${port2Mode} mode`)} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                ⇌ Change Mode
+              </span>
+            </div>
           </div>
         </div>
 
