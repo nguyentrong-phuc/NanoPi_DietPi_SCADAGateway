@@ -25,17 +25,16 @@ const WAN = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#f0f2f5' }}>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
       {/* Breadcrumb Header */}
       <div style={{ backgroundColor: 'white', padding: '12px 20px', fontSize: '13px', color: '#666', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center' }}>
         <span style={{ marginRight: '8px', color: '#ccc' }}>&gt;</span> WAN
       </div>
 
-      <div style={{ padding: '20px', flex: 1 }}>
-        <div style={{ backgroundColor: 'white', borderTop: '3px solid #d1d5db', padding: '20px', minHeight: '400px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', marginBottom: '20px' }}>
-            WAN
-          </h2>
+      <div style={{ padding: '20px 30px', flex: 1 }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', marginBottom: '20px' }}>
+          WAN
+        </h2>
 
           {/* Status Section */}
           <div style={{ marginBottom: '30px' }}>
@@ -112,7 +111,6 @@ const WAN = () => {
               </div>
             </form>
           </div>
-        </div>
       </div>
     </div>
   );
