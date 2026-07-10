@@ -63,10 +63,10 @@ const LAN = () => {
       
         {/* Status Section */}
         <div style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
+          <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '15px', borderBottom: '1px solid #e0e0e0', marginBottom: '15px' }}>
+            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
             <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
-            <span style={{ backgroundColor: '#10b981', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{lanConfig.status || 'connected'}</span>
+            <span style={{ backgroundColor: (lanConfig.status || 'connected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{lanConfig.status || 'connected'}</span>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
@@ -88,11 +88,11 @@ const LAN = () => {
           <div 
             onClick={() => setActiveTab('Configure')}
             style={{ 
-              borderBottom: activeTab === 'Configure' ? '2px solid #e29724' : '2px solid transparent', 
+              borderBottom: activeTab === 'Configure' ? '2px solid #003fb4' : '2px solid transparent', 
               paddingBottom: '10px', 
               marginBottom: '-1px', 
               fontWeight: 700, 
-              color: activeTab === 'Configure' ? '#e29724' : '#666', 
+              color: activeTab === 'Configure' ? '#003fb4' : '#666', 
               cursor: 'pointer', 
               paddingRight: '20px', 
               paddingLeft: '10px' 
@@ -103,11 +103,11 @@ const LAN = () => {
           <div 
             onClick={() => setActiveTab('DHCP Server List')}
             style={{ 
-              borderBottom: activeTab === 'DHCP Server List' ? '2px solid #e29724' : '2px solid transparent', 
+              borderBottom: activeTab === 'DHCP Server List' ? '2px solid #003fb4' : '2px solid transparent', 
               paddingBottom: '10px', 
               marginBottom: '-1px', 
               fontWeight: 700, 
-              color: activeTab === 'DHCP Server List' ? '#e29724' : '#666', 
+              color: activeTab === 'DHCP Server List' ? '#003fb4' : '#666', 
               cursor: 'pointer', 
               paddingRight: '20px', 
               paddingLeft: '20px' 
@@ -195,7 +195,7 @@ const LAN = () => {
             {/* DHCP Host List */}
             <div style={{ marginBottom: '40px' }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
+                <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
                 <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>DHCP Host List</span>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -221,11 +221,11 @@ const LAN = () => {
             <div style={{ marginBottom: '40px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
+                  <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
                   <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>Static IP List</span>
                 </div>
                 <div>
-                  <button style={{ backgroundColor: '#e29724', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Add</button>
+                  <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Add</button>
                   <button style={{ backgroundColor: '#e71562', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Delete</button>
                 </div>
               </div>

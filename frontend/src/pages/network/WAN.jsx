@@ -43,10 +43,10 @@ const WAN = () => {
 
           {/* Status Section */}
           <div style={{ marginBottom: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
+            <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '15px', borderBottom: '1px solid #e0e0e0', marginBottom: '15px' }}>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
-              <span style={{ backgroundColor: '#10b981', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{config.status || 'connected'}</span>
+              <span style={{ backgroundColor: (config.status || 'connected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{config.status || 'connected'}</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
@@ -70,7 +70,7 @@ const WAN = () => {
           {/* Configure Section */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e29724', marginRight: '10px' }}></span>
+              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Configure</span>
             </div>
 
@@ -128,7 +128,7 @@ const WAN = () => {
               </div>
 
               <div style={{ marginLeft: '-50px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#e29724', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading} style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   apply
                 </button>
               </div>
