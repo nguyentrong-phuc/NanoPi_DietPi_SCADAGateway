@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const EdgeMode = () => {
-  const [initialMode, setInitialMode] = useState('Graphical Programming');
+  const [initialMode, setInitialMode] = useState('Nodered+Edge');
   const [mode, setMode] = useState(initialMode);
   const hasChanges = mode !== initialMode;
 
@@ -34,21 +34,31 @@ const EdgeMode = () => {
               onChange={(e) => setMode(e.target.value)}
               style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }}
             >
-              <option value="Edge Gateway">Edge Gateway</option>
-              <option value="Graphical Programming">Graphical Programming</option>
+              <option value="Nodered+Edge">Nodered+Edge</option>
             </select>
           </div>
 
-          {mode === 'Graphical Programming' && (
+          {mode === 'Nodered+Edge' && (
             <div style={{ marginBottom: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
                   Design Flow:
                 </div>
-                <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>Graphical Design</button>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button 
+                    onClick={() => window.open(`http://${window.location.hostname}:1880`, '_blank')}
+                    style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}
+                  >
+                    Graphical Design
+                  </button>
+                  <button style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>Export</button>
+                  <button style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>Delete</button>
+                  <button style={{ backgroundColor: '#22c55e', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>change password</button>
+                </div>
               </div>
-              <div style={{ paddingLeft: '160px' }}>
-                <p style={{ color: '#ef4444', fontSize: '12px', margin: 0 }}>* The parameters you modify take effect only after reboot (approx 2 mins).</p>
+              <div style={{ paddingLeft: '175px' }}>
+                <p style={{ color: '#ef4444', fontSize: '12px', margin: '0 0 5px 0' }}>Enable Graphical Design, it can be used normally after the device restarts 2 minutes.</p>
+                <p style={{ color: '#ef4444', fontSize: '12px', margin: 0 }}>Default username:admin,default password:admin</p>
               </div>
             </div>
           )}
