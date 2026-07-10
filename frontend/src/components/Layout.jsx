@@ -78,7 +78,7 @@ const Layout = () => {
       {/* Top Horizontal Bar */}
       <div className="top-bar">
         <div className="top-bar-logo">
-          WukongEdge
+          RaitekSCADAEdge
         </div>
         <div className="top-bar-nav">
           <NavLink to="/overview" className={({isActive}) => `top-bar-item ${isActive || topLevel === 'overview' ? 'active' : ''}`}>
