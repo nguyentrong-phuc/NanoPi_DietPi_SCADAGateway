@@ -131,10 +131,12 @@ const Overview = () => {
         {/* Flow Usage Monitoring */}
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
           <CardHeader title="Flow Usage Monitoring" />
-          <FieldRow label="Data Usage(Day):" value={flow.dataUsageDay} />
-          <FieldRow label="Alarm value(Day):" value={flow.alarmDay} />
-          <FieldRow label="Data Usage(Month):" value={flow.dataUsageMonth} />
-          <FieldRow label="Alarm value(Month):" value={flow.alarmMonth} />
+          <div style={{ paddingTop: '5px' }}>
+            <FieldRow labelWidth="150px" label="Data Usage(Day):" value={flow.dataUsageDay} />
+            <FieldRow labelWidth="150px" label="Alarm value(Day):" value={flow.alarmDay} />
+            <FieldRow labelWidth="150px" label="Data Usage(Month):" value={flow.dataUsageMonth} />
+            <FieldRow labelWidth="150px" label="Alarm value(Month):" value={flow.alarmMonth} />
+          </div>
         </div>
 
         {/* Performance */}
