@@ -24,50 +24,44 @@ const EdgeMode = () => {
           <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Configure</span>
         </div>
 
-        <div style={{ maxWidth: '600px', marginLeft: '50px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-            <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
-              <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Edge Computing:
+        <div style={{ maxWidth: '800px', marginLeft: '50px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '25px' }}>
+            <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#333', fontWeight: 600 }}>
+              Edge Computing:
             </div>
-            <select 
-              value={mode} 
-              onChange={(e) => setMode(e.target.value)}
-              style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }}
-            >
-              <option value="Nodered+Edge">Nodered+Edge</option>
-            </select>
+            <div style={{ fontSize: '14px', color: '#333', padding: '8px 0' }}>
+              NodeRED
+            </div>
           </div>
 
-          {mode === 'Nodered+Edge' && (
-            <div style={{ marginBottom: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
-                  Design Flow:
-                </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button 
-                    onClick={() => window.open(`http://${window.location.hostname}:1880`, '_blank')}
-                    style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}
-                  >
-                    Graphical Design
-                  </button>
-                  <button style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>Export</button>
-                  <button style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>Delete</button>
-                  <button style={{ backgroundColor: '#22c55e', color: 'white', border: 'none', padding: '6px 15px', borderRadius: '2px', cursor: 'pointer', fontSize: '13px' }}>change password</button>
-                </div>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+              <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#333', fontWeight: 600 }}>
+                Design Flow:
               </div>
-              <div style={{ paddingLeft: '175px' }}>
-                <p style={{ color: '#ef4444', fontSize: '12px', margin: '0 0 5px 0' }}>Enable Graphical Design, it can be used normally after the device restarts 2 minutes.</p>
-                <p style={{ color: '#ef4444', fontSize: '12px', margin: 0 }}>Default username:admin,default password:admin</p>
+              <div style={{ display: 'flex', gap: '15px' }}>
+                <button 
+                  onClick={() => window.open(`http://${window.location.hostname}:1880`, '_blank')}
+                  style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
+                >
+                  Graphical Design
+                </button>
+                <button style={{ backgroundColor: '#f59e0b', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>Export</button>
+                <button style={{ backgroundColor: '#ef4444', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>Delete</button>
+                <button style={{ backgroundColor: '#22c55e', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}>change password</button>
               </div>
             </div>
-          )}
+            <div style={{ paddingLeft: '175px' }}>
+              <p style={{ color: '#ef4444', fontSize: '13px', margin: '0 0 8px 0' }}>Enable Graphical Design, it can be used normally after the device restarts 2 minutes.</p>
+              <p style={{ color: '#ef4444', fontSize: '13px', margin: 0 }}>Default username:admin,default password:admin</p>
+            </div>
+          </div>
 
-          <div style={{ marginTop: '40px', paddingLeft: '15px' }}>
+          <div style={{ marginTop: '50px', paddingLeft: '15px' }}>
             <button 
               disabled={!hasChanges}
               onClick={handleApply}
-              style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+              style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '10px 40px', borderRadius: '4px', fontWeight: 600, fontSize: '15px' }}>
               apply
             </button>
           </div>
