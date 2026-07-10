@@ -41,8 +41,8 @@ const Overview = () => {
       ip: '172.31.5.26',
       netmask: '255.255.255.0',
       gateway: '172.31.5.25',
-      dns1: '172.31.5.25',
-      dns2: '--'
+      dns1: '8.8.8.8',
+      dns2: '8.8.4.4'
     },
     lan: {
       ip: '192.168.1.199',
@@ -50,7 +50,7 @@ const Overview = () => {
       dhcpService: 'OFF'
     },
     eth1: { mode: 'WAN', status: 'Connected' },
-    eth2: { mode: 'LAN', status: 'Connected' },
+    eth2: { mode: 'WAN', status: 'Connected' },
     location: {
       longitude: '--',
       latitude: '--',
