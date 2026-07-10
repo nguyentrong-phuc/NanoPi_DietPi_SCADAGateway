@@ -74,8 +74,8 @@ const Layout = () => {
     <div className="app-container">
       {/* Top Horizontal Bar */}
       <div className="top-bar">
-        <div className="top-bar-logo" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <img src="/Raitek_round_logo.png" alt="Logo" style={{ height: '28px' }} onError={(e) => e.target.style.display='none'} />
+        <div className="top-bar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src="/Raitek_round_logo.png" alt="Logo" style={{ height: '36px' }} onError={(e) => e.target.style.display='none'} />
           RaitekEdge
         </div>
         <div className="top-bar-nav">
