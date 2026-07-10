@@ -82,13 +82,13 @@ const Layout = () => {
           <NavLink to="/overview" className={({isActive}) => `top-bar-item ${isActive || topLevel === 'overview' ? 'active' : ''}`}>
             <Globe size={18} /> Overview
           </NavLink>
-          <NavLink to="/network/wan" className={({isActive}) => `top-bar-item ${topLevel === 'network' ? 'active' : ''}`}>
+          <NavLink to="/network/ethernet-port" className={({isActive}) => `top-bar-item ${topLevel === 'network' ? 'active' : ''}`}>
             <Globe size={18} /> Network
           </NavLink>
-          <NavLink to="/edge-computing/protocol" className={({isActive}) => `top-bar-item ${topLevel === 'edge-computing' ? 'active' : ''}`}>
+          <NavLink to="/edge-computing/edge-mode" className={({isActive}) => `top-bar-item ${topLevel === 'edge-computing' ? 'active' : ''}`}>
             <Cpu size={18} /> Edge Computing
           </NavLink>
-          <NavLink to="/system-management/configuration" className={({isActive}) => `top-bar-item ${topLevel === 'system-management' ? 'active' : ''}`}>
+          <NavLink to="/system-management/time" className={({isActive}) => `top-bar-item ${topLevel === 'system-management' ? 'active' : ''}`}>
             <Settings size={18} /> System Management
           </NavLink>
         </div>
