@@ -11,6 +11,7 @@ import Diagnostics from './pages/network/Diagnostics';
 
 // Edge Computing
 import EdgeMode from './pages/edge/EdgeMode';
+import NodeRedEditor from './pages/edge/NodeRedEditor';
 import IOModule from './pages/edge/IOModule';
 import DataPoint from './pages/edge/DataPoint';
 import Protocol from './pages/edge/Protocol';
@@ -39,6 +40,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/nodered" element={<NodeRedEditor />} />
         
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/overview" replace />} />

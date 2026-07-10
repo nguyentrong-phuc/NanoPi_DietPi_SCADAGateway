@@ -32,7 +32,7 @@ const EdgeMode = () => {
               </div>
               <div style={{ display: 'flex', gap: '15px' }}>
                 <button 
-                  onClick={() => window.open(`http://${window.location.hostname}:1880`, '_blank')}
+                  onClick={() => window.open('/nodered', '_blank')}
                   style={{ backgroundColor: '#3b82f6', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 600 }}
                 >
                   Graphical Design
