@@ -1,10 +1,12 @@
-import React from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Globe, Settings, Cpu, HardDrive } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Globe, Settings, Cpu, HardDrive, UserCog, ChevronDown } from 'lucide-react';
 
 const Layout = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Determine top-level active tab
   const getTopLevel = () => {
@@ -90,8 +92,38 @@ const Layout = () => {
             <Settings size={18} /> System Management
           </NavLink>
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
-           <span style={{fontSize: '12px'}}>admin</span>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
+           <div 
+             style={{ 
+               display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', 
+               padding: '4px 12px 4px 4px', borderRadius: '20px', backgroundColor: 'rgba(255,255,255,0.1)',
+               transition: 'background-color 0.2s'
+             }}
+             onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)'}
+             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+             onClick={() => setDropdownOpen(!dropdownOpen)}
+           >
+             <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <UserCog size={16} color="var(--primary-color)" />
+             </div>
+             <span style={{ fontSize: '13px', fontWeight: 600 }}>admin</span>
+             <ChevronDown size={16} />
+           </div>
+           
+           {dropdownOpen && (
+             <div style={{ 
+               position: 'absolute', top: '45px', right: '0', backgroundColor: 'white', 
+               boxShadow: '0 4px 12px rgba(0,0,0,0.15)', borderRadius: '4px', width: '150px',
+               color: '#333', overflow: 'hidden', zIndex: 1000
+             }}>
+               <div style={{ padding: '12px 15px', borderBottom: '1px solid #eee', fontSize: '13px', cursor: 'pointer' }} onClick={() => { setDropdownOpen(false); navigate('/system-management/user'); }}>
+                 Change Password
+               </div>
+               <div style={{ padding: '12px 15px', fontSize: '13px', cursor: 'pointer', color: '#dc3545' }} onClick={() => { setDropdownOpen(false); navigate('/login'); }}>
+                 Logout
+               </div>
+             </div>
+           )}
         </div>
       </div>
 
