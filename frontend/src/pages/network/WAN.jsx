@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
 const WAN = () => {
-  const [config, setConfig] = useState({
+  const [initialConfig, setInitialConfig] = useState({
     mode: 'DHCP',
     dnsMode: 'Manual',
     dns1: '8.8.8.8',
     dns2: '8.8.4.4',
     mtu: '1500'
   });
+  const [config, setConfig] = useState(initialConfig);
+  const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
 
   const [loading, setLoading] = useState(false);
 
@@ -24,6 +26,7 @@ const WAN = () => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
+      setInitialConfig(config);
       alert('WAN Configuration Applied!');
       setLoading(false);
     }, 1000);
@@ -128,7 +131,7 @@ const WAN = () => {
               </div>
 
               <div style={{ marginLeft: '-50px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading || !hasChanges} style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   apply
                 </button>
               </div>

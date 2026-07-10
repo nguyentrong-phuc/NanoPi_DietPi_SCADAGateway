@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const LAN = () => {
-  const [lanConfig, setLanConfig] = useState({
+  const [initialLanConfig, setInitialLanConfig] = useState({
     ip: '192.168.1.199',
     netmask: '255.255.255.0',
     mac: 'D4:AD:20:F9:3F:CE',
@@ -15,6 +15,8 @@ const LAN = () => {
     receive: '25.2 MB(272945)',
     connTime: '21:22:32'
   });
+  const [lanConfig, setLanConfig] = useState(initialLanConfig);
+  const hasChanges = JSON.stringify(lanConfig) !== JSON.stringify(initialLanConfig);
 
   const [activeTab, setActiveTab] = useState('Configure');
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,10 @@ const LAN = () => {
     fetch(`${API_URL}/api/network`)
       .then(res => res.json())
       .then(data => {
-        if (data.lan1) setLanConfig(prev => ({ ...prev, ...data.lan1 }));
+        if (data.lan1) {
+          setLanConfig(prev => ({ ...prev, ...data.lan1 }));
+          setInitialLanConfig(prev => ({ ...prev, ...data.lan1 }));
+        }
       })
       .catch(err => console.error("Error fetching network config:", err));
   }, []);
@@ -44,7 +49,10 @@ const LAN = () => {
       body: JSON.stringify(payload)
     })
       .then(res => res.json())
-      .then(data => alert(data.message || 'Applied configuration for LAN!'))
+      .then(data => {
+        setInitialLanConfig(lanConfig);
+        alert(data.message || 'Applied configuration for LAN!');
+      })
       .catch(err => alert('Failed to apply configuration.'))
       .finally(() => setLoading(false));
   };
@@ -181,7 +189,7 @@ const LAN = () => {
               </div>
 
               <div style={{ marginTop: '40px', paddingLeft: '15px' }}>
-                <button type="submit" disabled={loading} style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+                <button type="submit" disabled={loading || !hasChanges} style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                   {loading ? 'Applying...' : 'apply'}
                 </button>
               </div>
@@ -252,7 +260,7 @@ const LAN = () => {
             </div>
 
             <div style={{ marginTop: '20px', paddingLeft: '15px' }}>
-              <button style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
+              <button disabled={!hasChanges} style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
                 apply
               </button>
             </div>

@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 
 const EthernetPort = () => {
+  const [appliedPort1Mode, setAppliedPort1Mode] = useState('WAN');
   const [port1Mode, setPort1Mode] = useState('WAN');
-  const [port2Mode, setPort2Mode] = useState('LAN');
+  const [appliedPort2Mode, setAppliedPort2Mode] = useState('WAN');
+  const [port2Mode, setPort2Mode] = useState('WAN');
+
+  const hasChanges = port1Mode !== appliedPort1Mode || port2Mode !== appliedPort2Mode;
+
+  const handleApplyAll = () => {
+    setAppliedPort1Mode(port1Mode);
+    setAppliedPort2Mode(port2Mode);
+    alert('All modes applied!');
+  };
 
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
@@ -40,11 +50,13 @@ const EthernetPort = () => {
                 </button>
               </div>
             </div>
-            <div style={{ textAlign: 'right', marginTop: '15px' }}>
-              <span onClick={() => alert(`Ethernet Port 1 changed to ${port1Mode} mode`)} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
-                ⇌ Change Mode
-              </span>
-            </div>
+            {port1Mode !== appliedPort1Mode && (
+              <div style={{ textAlign: 'right', marginTop: '15px' }}>
+                <span onClick={() => { setAppliedPort1Mode(port1Mode); alert(`Ethernet Port 1 changed to ${port1Mode} mode`); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                  ⇌ Change Mode
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Vertical Divider */}
@@ -73,11 +85,13 @@ const EthernetPort = () => {
                 </button>
               </div>
             </div>
-            <div style={{ textAlign: 'right', marginTop: '15px' }}>
-              <span onClick={() => alert(`Ethernet Port 2 changed to ${port2Mode} mode`)} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
-                ⇌ Change Mode
-              </span>
-            </div>
+            {port2Mode !== appliedPort2Mode && (
+              <div style={{ textAlign: 'right', marginTop: '15px' }}>
+                <span onClick={() => { setAppliedPort2Mode(port2Mode); alert(`Ethernet Port 2 changed to ${port2Mode} mode`); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                  ⇌ Change Mode
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -85,7 +99,10 @@ const EthernetPort = () => {
         <div style={{ height: '15px', backgroundColor: '#eaedf2', margin: '0 -20px 20px -20px' }}></div>
 
         <div>
-          <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+          <button 
+            disabled={!hasChanges}
+            onClick={handleApplyAll}
+            style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px', cursor: hasChanges ? 'pointer' : 'not-allowed' }}>
             apply
           </button>
         </div>
