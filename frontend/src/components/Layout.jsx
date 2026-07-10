@@ -40,15 +40,8 @@ const Layout = () => {
       return (
         <div className="sub-sidebar">
           <NavLink to="/edge-computing/edge-mode" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Edge Mode</NavLink>
-          <NavLink to="/edge-computing/io-module" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>IO Module</NavLink>
           <NavLink to="/edge-computing/data-point" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Data Point</NavLink>
           <NavLink to="/edge-computing/protocol" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Protocol</NavLink>
-          <div className="sidebar-item" style={{color: '#999'}}>Edge Gateway</div>
-          <NavLink to="/edge-computing/serial-port" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Serial Port</NavLink>
-          <NavLink to="/edge-computing/communication" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Communication</NavLink>
-          <NavLink to="/edge-computing/data-query-control" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Data Query/Control</NavLink>
-          <NavLink to="/edge-computing/data-reporting" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Data Reporting</NavLink>
-          <NavLink to="/edge-computing/linkage-control" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Linkage Control</NavLink>
         </div>
       );
     }
