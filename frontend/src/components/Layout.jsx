@@ -53,8 +53,6 @@ const Layout = () => {
           <NavLink to="/system-management/log" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>LOG</NavLink>
           <div className="sidebar-item" style={{color: '#999'}}>System</div>
           <NavLink to="/system-management/configuration" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Configuration Man...</NavLink>
-          <NavLink to="/system-management/firmware" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Firmware Upgrade</NavLink>
-          <NavLink to="/system-management/user" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>User Management</NavLink>
           <NavLink to="/system-management/reboot" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`} style={{paddingLeft: '30px'}}>Reboot</NavLink>
         </div>
       );

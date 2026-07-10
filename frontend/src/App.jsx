@@ -24,6 +24,7 @@ import LinkageControl from './pages/edge/LinkageControl';
 import SystemTime from './pages/system/SystemTime';
 import Log from './pages/system/Log';
 import SystemConfig from './pages/system/SystemConfig';
+import Reboot from './pages/system/Reboot';
 
 // Placeholder for unimplemented routes
 const Placeholder = ({ name }) => (
@@ -75,9 +76,7 @@ const App = () => {
             <Route path="time" element={<SystemTime />} />
             <Route path="log" element={<Log />} />
             <Route path="configuration" element={<SystemConfig />} />
-            <Route path="firmware" element={<Placeholder name="Firmware Upgrade" />} />
-            <Route path="user" element={<Placeholder name="User Management" />} />
-            <Route path="reboot" element={<Placeholder name="Reboot" />} />
+            <Route path="reboot" element={<Reboot />} />
             <Route path="*" element={<Placeholder name="System Management Module" />} />
           </Route>
         </Route>
