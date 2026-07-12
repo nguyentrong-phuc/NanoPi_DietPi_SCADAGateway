@@ -1,12 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Globe, Settings, Cpu, HardDrive, UserCog, ChevronDown } from 'lucide-react';
+import { message } from 'antd';
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
+
+  const handleReboot = () => {
+    setDropdownOpen(false);
+    if (window.confirm('Are you sure you want to reboot the device?')) {
+      fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
+        .then(() => message.warning('System is rebooting... Please wait.', 5))
+        .catch(() => message.warning('Reboot command sent.', 5));
+    }
+  };
+
+  // ── Auto-logout after 5 min idle ──────────────────────────────
+  const IDLE_TIMEOUT   = 5 * 60 * 1000;  // 5 minutes
+  const WARN_BEFORE    = 1 * 60 * 1000;  // warn 1 minute before
+  const logoutTimer    = useRef(null);
+  const warnTimer      = useRef(null);
+  const warnMsgKey     = 'idle-warn';
+
+  const doLogout = useCallback(() => {
+    message.destroy(warnMsgKey);
+    message.warning({
+      content: 'Session expired due to inactivity. Please log in again.',
+      duration: 0,
+      key: 'idle-logout'
+    });
+    setTimeout(() => {
+      message.destroy('idle-logout');
+      navigate('/login');
+    }, 3000);
+  }, [navigate]);
+
+  const resetTimers = useCallback(() => {
+    clearTimeout(logoutTimer.current);
+    clearTimeout(warnTimer.current);
+    message.destroy(warnMsgKey);
+
+    warnTimer.current = setTimeout(() => {
+      message.warning({
+        content: '⚠ You will be logged out in 1 minute due to inactivity.',
+        duration: WARN_BEFORE / 1000,
+        key: warnMsgKey
+      });
+    }, IDLE_TIMEOUT - WARN_BEFORE);
+
+    logoutTimer.current = setTimeout(doLogout, IDLE_TIMEOUT);
+  }, [doLogout, IDLE_TIMEOUT, WARN_BEFORE]);
+
+  useEffect(() => {
+    const events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'];
+    events.forEach(e => window.addEventListener(e, resetTimers, { passive: true }));
+    resetTimers(); // start on mount
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetTimers));
+      clearTimeout(logoutTimer.current);
+      clearTimeout(warnTimer.current);
+    };
+  }, [resetTimers]);
+  // ─────────────────────────────────────────────────────────────
 
   // Determine top-level active tab
   const getTopLevel = () => {
@@ -108,6 +167,9 @@ const Layout = () => {
              }}>
                <div style={{ padding: '12px 15px', borderBottom: '1px solid #eee', fontSize: '13px', cursor: 'pointer' }} onClick={() => { setDropdownOpen(false); navigate('/system-management/user'); }}>
                  Change Password
+               </div>
+               <div style={{ padding: '12px 15px', borderBottom: '1px solid #eee', fontSize: '13px', cursor: 'pointer', color: '#e67e22' }} onClick={handleReboot}>
+                 Reboot
                </div>
                <div style={{ padding: '12px 15px', fontSize: '13px', cursor: 'pointer', color: '#dc3545' }} onClick={() => { setDropdownOpen(false); navigate('/login'); }}>
                  Logout
