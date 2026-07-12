@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Overview from './pages/Overview';
 import NetworkWAN from './pages/network/WAN';
 import NetworkLAN from './pages/network/LAN';
+import NetworkWireless from './pages/network/Wireless';
 import Routing from './pages/network/Routing';
 import Diagnostics from './pages/network/Diagnostics';
 
@@ -50,6 +51,7 @@ const App = () => {
             <Route index element={<Navigate to="/network/wan" replace />} />
             <Route path="wan" element={<NetworkWAN />} />
             <Route path="lan" element={<NetworkLAN />} />
+            <Route path="wireless" element={<NetworkWireless />} />
             <Route path="routing" element={<Routing />} />
             <Route path="diagnostics" element={<Diagnostics />} />
             <Route path="*" element={<Placeholder name="Network Module" />} />

@@ -142,8 +142,17 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Column 2: Location */}
+          {/* Column 2: WLAN & Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px' }}>
+              <SubCardHeader title="WLAN (wlan0)" onSettingsClick={() => navigate('/network/wireless')} />
+              <FieldRow label="Mode:" value={info?.wlan?.mode} />
+              <FieldRow label="WLAN IP:" value={info?.wlan?.liveIp !== '--' ? info?.wlan?.liveIp : info?.wlan?.staticIp} />
+              <FieldRow label="Netmask:" value={info?.wlan?.netmask} />
+              <FieldRow label="Gateway:" value={info?.wlan?.gateway} />
+              <FieldRow label="SSID:" value={info?.wlan?.ssid || '--'} />
+            </div>
+
             <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', flex: 1 }}>
               <SubCardHeader title="LOCATION" />
               <FieldRow label="Longitude:" value="--" />

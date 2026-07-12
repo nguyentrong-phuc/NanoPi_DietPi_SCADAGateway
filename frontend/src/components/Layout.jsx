@@ -29,6 +29,7 @@ const Layout = () => {
         <div className="sub-sidebar">
           <NavLink to="/network/wan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>WAN</NavLink>
           <NavLink to="/network/lan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>LAN</NavLink>
+          <NavLink to="/network/wireless" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Wireless</NavLink>
           <NavLink to="/network/routing" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Routing</NavLink>
           <NavLink to="/network/diagnostics" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Diagnostics</NavLink>
         </div>
