@@ -44,6 +44,9 @@ Once new UI changes are built and pushed, run the update script on the NanoPi to
 curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash
 ```
 
+### 🚨 Lessons Learned / Common Pitfalls
+- **Forgetting to update `backend/public/`**: The most common mistake is building the frontend (`frontend/dist/`) but forgetting to copy it to `backend/public/` before pushing to GitHub. If you only push `frontend/dist` (or worse, ignore it), the NanoPi will successfully pull the new code and restart the backend, but it will continue serving the OLD UI from `backend/public/`. Always strictly follow the 4-step workflow above!
+
 ## 4. UI/UX Design System & Guidelines
 
 To maintain consistency throughout the dashboard, anyone contributing to the Frontend must adhere to the following design styles defined in `index.css`:

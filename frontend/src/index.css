@@ -394,3 +394,20 @@ select.form-input-standard {
   color: #c0c4cc;
   cursor: not-allowed;
 }
+
+/* Hide scrollbars for Ant Design popups (TimePicker, Select, etc) for a cleaner UI */
+.ant-picker-time-panel-column::-webkit-scrollbar,
+.ant-select-dropdown::-webkit-scrollbar,
+.sub-sidebar::-webkit-scrollbar,
+.content-area::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  display: none;
+}
+.ant-picker-time-panel-column,
+.ant-select-dropdown,
+.sub-sidebar,
+.content-area {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
