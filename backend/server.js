@@ -309,9 +309,11 @@ app.post('/api/network', (req, res) => {
       // Update wpa_supplicant.conf
       let wpaConf = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\n`;
       if (wlanToSave.ssid) {
-        wpaConf += `network={\n  ssid="${wlanToSave.ssid}"\n`;
+        wpaConf += `network={\n  ssid="${wlanToSave.ssid}"\n  scan_ssid=1\n`;
         if (wlanToSave.password) {
-          wpaConf += `  psk="${wlanToSave.password}"\n`;
+          wpaConf += `  psk="${wlanToSave.password}"\n  key_mgmt=WPA-PSK WPA-PSK-SHA256 SAE\n`;
+        } else {
+          wpaConf += `  key_mgmt=NONE\n`;
         }
         wpaConf += `}\n`;
       }
@@ -342,6 +344,7 @@ app.post('/api/network', (req, res) => {
         try { execSync('ifdown -a'); } catch(e) {}
         try { execSync('killall wpa_supplicant'); } catch(e) {}
         try { execSync('rm -rf /var/run/wpa_supplicant/wlan0'); } catch(e) {}
+        try { execSync('rfkill unblock wlan'); } catch(e) {}
         try { execSync('systemctl restart networking'); } catch(e) {}
       }, 1000);
     }
