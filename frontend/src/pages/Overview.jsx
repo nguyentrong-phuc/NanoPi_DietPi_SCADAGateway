@@ -127,9 +127,9 @@ const Overview = () => {
             <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px' }}>
               <SubCardHeader title="WAN (eth0)" onSettingsClick={() => navigate('/network/wan')} />
               <FieldRow label="Mode:" value={info?.wan?.mode} />
-              <FieldRow label="WAN IP:" value={info?.wan?.ip} />
+              <FieldRow label="WAN IP:" value={info?.wan?.liveIp && info?.wan?.liveIp !== '--' ? info?.wan?.liveIp : info?.wan?.staticIp} />
               <FieldRow label="Netmask:" value={info?.wan?.netmask} />
-              <FieldRow label="Gateway:" value={info?.wan?.gateway} />
+              <FieldRow label="Gateway:" value={info?.wan?.liveGateway || info?.wan?.gateway} />
               <FieldRow label="DNS-1:" value={info?.wan?.dns1} />
               <FieldRow label="DNS-2:" value={info?.wan?.dns2} />
             </div>

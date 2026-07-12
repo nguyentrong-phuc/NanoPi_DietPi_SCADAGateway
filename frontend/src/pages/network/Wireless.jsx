@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://192.168.0.100' // Dev fallback
@@ -17,6 +18,7 @@ const NetworkWireless = () => {
   const [initialConfig, setInitialConfig] = useState(null);
   const [networkStats, setNetworkStats] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     let isFirstLoad = true;
@@ -133,7 +135,12 @@ const NetworkWireless = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                 <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Password:</label>
-                <input type="password" value={config.password || ''} onChange={(e) => handleChange(e, 'password')} placeholder="Wi-Fi Password" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                <div style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input type={showPassword ? "text" : "password"} value={config.password || ''} onChange={(e) => handleChange(e, 'password')} placeholder="Wi-Fi Password" style={{ flex: 1, padding: '8px 40px 8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#888', display: 'flex', alignItems: 'center', padding: 0 }}>
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
