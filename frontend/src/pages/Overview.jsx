@@ -76,7 +76,7 @@ const Overview = () => {
         <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px', borderRadius: '1.5px' }}></span>
         <span style={{ fontWeight: 700, fontSize: '16px', color: '#222' }}>{title}</span>
       </div>
-      <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
+      {onSettingsClick && <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>}
     </div>
   );
 
@@ -185,10 +185,7 @@ const Overview = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px', flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
-                 <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px' }}></span>
-                 <span style={{ fontWeight: 600, fontSize: '14px', color: '#333' }}>Location</span>
-              </div>
+              <SubCardHeader title="LOCATION" />
               <FieldRow label="Longitude:" value={networkInfo.location.longitude} />
               <FieldRow label="Latitude:" value={networkInfo.location.latitude} />
               <FieldRow label="Status:" value={networkInfo.location.status} />
