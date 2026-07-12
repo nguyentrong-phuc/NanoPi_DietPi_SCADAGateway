@@ -1,0 +1,40 @@
+# Development & Technical Notes
+
+This document keeps track of the project's current progress, technical requirements, workflows, and developer notes. It serves as a central hub for anyone joining the project to understand *what* we are doing and *how* we are doing it.
+
+## 1. Current Phase: Step 1 - UI Construction (Frontend)
+
+We are currently focusing on **Step 1**: Building the web configuration interface (Frontend). No backend logic or hardware interactions (like OS command executions) are fully integrated yet. 
+
+### Status
+- **Framework**: React (Vite) + Vanilla CSS.
+- **Routing**: `react-router-dom` is used for client-side routing.
+- **Structure**:
+  - `frontend/src/components`: Reusable components (e.g., Layout, Menus).
+  - `frontend/src/pages`: Feature-specific screens grouped by modules (Overview, Network, Edge Computing, System Management).
+- **Recent Updates**:
+  - Configured project routing.
+  - Removed "Ethernet Port 1" and "Ethernet Port 2" from the Overview and Network pages based on updated requirements.
+
+## 2. Technical Architecture
+
+- **Monorepo Style**: The project contains both `frontend/` (React/Vite) and `backend/` (Node.js/Express) in the same repository.
+- **Serving the Frontend**: The Node.js backend serves the compiled frontend static files from the `backend/public/` directory.
+
+## 3. Important Development Workflows
+
+### How to update the UI on the NanoPi:
+Because the NanoPi uses `update.sh` which only pulls the source code and restarts the backend (it **does not** compile the React app), developers must build the frontend locally and push the built files to GitHub.
+
+**Workflow before pushing to Github:**
+1. Navigate to the frontend directory: `cd frontend`
+2. Build the UI: `npm run build`
+3. Copy all files from `frontend/dist/` into `backend/public/` (replace old files).
+4. Commit and push the changes (including `backend/public/`) to GitHub.
+
+Once pushed, running `curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash` on the NanoPi will successfully update both the backend and the latest UI.
+
+## 4. Next Steps / Roadmap
+- Continue building out static mockups for remaining UI pages (Edge computing, System settings, etc.).
+- Refine CSS and ensure responsive design layout.
+- Move to **Step 2**: Integrate backend logic with OS commands (`/etc/network/interfaces`, `dnsmasq`, Node-RED integration, etc.) once the UI is finalized.
