@@ -84,7 +84,7 @@ app.get('/api/network', (req, res) => {
     staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
   };
   let lanConfig = {
-    ip: '192.168.2.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
+    ip: '192.168.30.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
   };
 
   // 1. Parse /etc/network/interfaces
@@ -114,7 +114,7 @@ app.get('/api/network', (req, res) => {
       if (eth1BlockMatch) {
         const block = eth1BlockMatch[0];
         const getVal = (key) => { const m = block.match(new RegExp(`^\\s*${key}\\s+(.+)`, 'm')); return m ? m[1].trim() : ''; };
-        lanConfig.ip = getVal('address') || '192.168.2.1';
+        lanConfig.ip = getVal('address') || '192.168.30.1';
         lanConfig.netmask = getVal('netmask') || '255.255.255.0';
       }
     }
@@ -634,7 +634,27 @@ app.get('/api/system/info', (req, res) => {
     // LAN info (eth1)
     try {
       const ipv4 = nets['eth1'] && nets['eth1'].find(n => n.family === 'IPv4' || n.family === 4);
-      if (ipv4) { result.lan.ip = ipv4.address; result.lan.netmask = ipv4.netmask; }
+      if (ipv4) { 
+        result.lan.ip = ipv4.address; 
+        result.lan.netmask = ipv4.netmask; 
+      } else {
+        // Fallback to static IP config if disconnected
+        let staticIp = '192.168.30.1';
+        let staticNetmask = '255.255.255.0';
+        if (fs.existsSync(interfacesPath)) {
+          const ifaces = fs.readFileSync(interfacesPath, 'utf-8');
+          const eth1BlockMatch = ifaces.match(/iface eth1 inet static[\s\S]*?(?=iface|$)/);
+          if (eth1BlockMatch) {
+            const block = eth1BlockMatch[0];
+            const ipMatch = block.match(/^\s*address\s+(.+)/m);
+            if (ipMatch) staticIp = ipMatch[1].trim();
+            const nmMatch = block.match(/^\s*netmask\s+(.+)/m);
+            if (nmMatch) staticNetmask = nmMatch[1].trim();
+          }
+        }
+        result.lan.ip = staticIp;
+        result.lan.netmask = staticNetmask;
+      }
       const dnsContent = fs.existsSync(dnsmasqPath) ? fs.readFileSync(dnsmasqPath, 'utf-8') : '';
       result.lan.dhcpEnabled = dnsContent.includes('interface=eth1');
     } catch(e) {}
