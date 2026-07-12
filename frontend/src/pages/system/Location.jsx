@@ -82,7 +82,7 @@ const Location = () => {
         <h2 className="page-title">Location</h2>
       </div>
 
-      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{ padding: '15px 20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
 
         {/* GPS Live Data Card */}
         <div className="card-panel" style={{ padding: '20px 25px' }}>
