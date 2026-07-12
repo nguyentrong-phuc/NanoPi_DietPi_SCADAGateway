@@ -6,8 +6,8 @@ const LAN = () => {
     netmask: '--',
     mac: '--',
     dhcpEnabled: true,
-    dhcpStart: '192.168.30.2',
-    dhcpEnd: '192.168.30.100',
+    dhcpStart: '170.0.0.2',
+    dhcpEnd: '170.0.0.100',
     dns: '8.8.8.8',
     leaseTime: 1440,
     status: 'Disconnected',
@@ -49,7 +49,19 @@ const LAN = () => {
 
   const handleChange = (e, field) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setLanConfig({ ...lanConfig, [field]: value });
+    const newConfig = { ...lanConfig, [field]: value };
+    
+    // Auto-update DHCP range when IP changes
+    if (field === 'ip' && value.split('.').length === 4) {
+      const parts = value.split('.');
+      if (parts[3] !== '') {
+        const base = `${parts[0]}.${parts[1]}.${parts[2]}`;
+        newConfig.dhcpStart = `${base}.2`;
+        newConfig.dhcpEnd = `${base}.100`;
+      }
+    }
+    
+    setLanConfig(newConfig);
   };
 
   const handleApply = (e) => {
