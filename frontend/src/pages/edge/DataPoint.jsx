@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const ModalToggleSwitch = ({ isOn, handleToggle }) => (
-  <div onClick={handleToggle} style={{ width: '36px', height: '20px', borderRadius: '10px', backgroundColor: isOn ? '#409eff' : '#dcdfe6', position: 'relative', cursor: 'pointer', transition: 'background-color 0.2s' }}>
+  <div onClick={handleToggle} style={{ width: '36px', height: '20px', borderRadius: '10px', backgroundColor: isOn ? 'var(--primary-color)' : '#dcdfe6', position: 'relative', cursor: 'pointer', transition: 'background-color 0.2s' }}>
     <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: 'white', position: 'absolute', top: '2px', left: isOn ? '18px' : '2px', transition: 'left 0.2s' }}></div>
   </div>
 );
@@ -329,11 +329,11 @@ const DataPoint = () => {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Merge acquisition:</span>
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Open' ? '#ed7d31' : '#606266', cursor: 'pointer', margin: 0 }}>
-                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Open'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Open' } })} style={{ accentColor: '#ed7d31', marginRight: '8px' }} /> Open
+                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Open' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Open'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Open' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Open
                   </label>
-                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Close' ? '#ed7d31' : '#606266', cursor: 'pointer', margin: 0 }}>
-                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Close'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Close' } })} style={{ accentColor: '#ed7d31', marginRight: '8px' }} /> Close
+                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Close' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Close'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Close' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Close
                   </label>
                 </div>
               </div>
@@ -365,7 +365,7 @@ const DataPoint = () => {
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: '#ed7d31', border: 'none', color: 'white', borderRadius: '4px', fontWeight: 600, cursor: 'pointer' }}>sure</button>
+              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer' }}>sure</button>
             </div>
             
           </div>
