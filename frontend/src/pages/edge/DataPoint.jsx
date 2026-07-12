@@ -178,38 +178,38 @@ const DataPoint = () => {
         </div>
 
         {/* LIST OF SLAVE POINTS SECTION (White Background) */}
-        <div style={{ backgroundColor: 'white', padding: '20px', flex: 1, borderTop: '1px solid #dee2e6' }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', justifyContent: 'space-between' }}>
+        <div style={{ backgroundColor: 'white', flex: 1, borderTop: '1px solid #dee2e6' }}>
+          <div style={{ padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', borderBottom: '1px solid #ebeef5' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
+              <div style={{ width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></div>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>List of slave points</span>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn btn-primary active-btn" onClick={() => setModalConfig({ isOpen: true, mode: 'addPoint', data: null })} style={{ padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px' }}>Add</button>
-              <button className="btn" style={{ backgroundColor: '#fff', color: '#f56c6c', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #f56c6c' }}>Delete</button>
+              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'addPoint', data: null })} style={{ backgroundColor: 'var(--primary-color)', color: 'white', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: 'none', borderRadius: '4px' }}>Add</button>
+              <button className="btn" style={{ backgroundColor: '#fff', color: '#f56c6c', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #f56c6c', borderRadius: '4px' }}>Delete</button>
               <input type="text" placeholder="Please enterPoint Screen" className="form-control" style={{ padding: '6px 12px', fontSize: '13px', width: '220px', height: '32px', marginLeft: '10px' }} />
-              <button className="btn" style={{ backgroundColor: '#e9ecef', color: '#666', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #ddd' }} disabled>Point Screen</button>
+              <button className="btn" style={{ backgroundColor: 'white', color: 'var(--primary-color)', border: '1px solid var(--primary-color)', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', borderRadius: '4px' }}>Point Screen</button>
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '12px' }}>
+          <div style={{ overflowX: 'auto', padding: '0 20px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center' }}>
               <thead>
-                <tr style={{ backgroundColor: '#f5f7fa', color: '#333', fontWeight: 700 }}>
-                  <th style={{ padding: '12px 10px', width: '40px' }}><input type="checkbox" style={{ margin: 0 }} /></th>
-                  <th style={{ padding: '12px 10px', width: '50px' }}>ID</th>
-                  <th style={{ padding: '12px 10px' }}>Node name</th>
-                  <th style={{ padding: '12px 10px' }}>Data Type</th>
-                  <th style={{ padding: '12px 10px' }}>Decimal Number</th>
-                  <th style={{ padding: '12px 10px' }}>Address</th>
-                  <th style={{ padding: '12px 10px' }}>Read Write Status</th>
-                  <th style={{ padding: '12px 10px' }}>Priority</th>
-                  <th style={{ padding: '12px 10px' }}>Timeout(ms)</th>
-                  <th style={{ padding: '12px 10px' }}>Data</th>
-                  {showFormulaCols && <th style={{ padding: '12px 10px' }}>Acquisition formula</th>}
-                  {showFormulaCols && <th style={{ padding: '12px 10px' }}>Control formula</th>}
-                  <th style={{ padding: '12px 10px' }}>Node desc</th>
-                  <th style={{ padding: '12px 10px' }}>Operation</th>
+                <tr style={{ backgroundColor: '#e2e6ec', borderBottom: '1px solid #ebeef5' }}>
+                  <th style={{ padding: '12px 10px', width: '40px' }}><input type="checkbox" /></th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>ID</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Node name</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Data Type</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Decimal Number</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Address</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Read Write Status</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Priority</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Timeout(ms)</th>
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Data</th>
+                  {showFormulaCols && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Acquisition formula</th>}
+                  {showFormulaCols && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Control formula</th>}
+                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Node desc</th>
+                  {isCustomSlave && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Operation</th>}
                 </tr>
               </thead>
               <tbody>
@@ -228,16 +228,12 @@ const DataPoint = () => {
                     {showFormulaCols && <td style={{ padding: '10px' }}>{point.acq || '--'}</td>}
                     {showFormulaCols && <td style={{ padding: '10px' }}>{point.ctrl || '--'}</td>}
                     <td style={{ padding: '10px' }}>{point.desc}</td>
-                    <td style={{ padding: '10px', fontWeight: 600 }}>
-                      {isCustomSlave ? (
-                        <>
-                          <span onClick={() => setModalConfig({ isOpen: true, mode: 'editPoint', data: point })} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
-                          <span style={{ color: '#e74c3c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
-                        </>
-                      ) : (
-                        <span style={{ color: '#ccc', cursor: 'not-allowed' }}>--</span>
-                      )}
-                    </td>
+                    {isCustomSlave && (
+                      <td style={{ padding: '10px', fontWeight: 600 }}>
+                        <span onClick={() => setModalConfig({ isOpen: true, mode: 'editPoint', data: point })} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
+                        <span style={{ color: '#f56c6c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                      </td>
+                    )}
                   </tr>
                 )) : (
                   <tr>
@@ -250,35 +246,44 @@ const DataPoint = () => {
 
           {/* Pagination */}
           {totalItems > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: '#333' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: '#333', padding: '20px' }}>
               <span style={{ marginRight: '15px' }}>Total {totalItems}</span>
               <select style={{ padding: '4px 8px', border: '1px solid #ddd', borderRadius: '3px', marginRight: '15px', color: '#333' }}>
                 <option>15/page</option>
               </select>
               <div style={{ display: 'flex', gap: '5px' }}>
                 <button 
+                  className="btn" 
+                  disabled={currentPage === 1} 
                   onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  style={{ padding: '4px 10px', border: '1px solid #ddd', backgroundColor: currentPage === 1 ? '#f5f5f5' : 'white', color: currentPage === 1 ? '#aaa' : '#333', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', borderRadius: '3px' }}
-                >
-                  Last
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  style={{ padding: '4px 10px', backgroundColor: 'white', border: '1px solid #dcdfe6', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', color: currentPage === 1 ? '#c0c4cc' : '#606266', fontSize: '13px' }}
+                >Last</button>
+                
+                {[...Array(totalPages)].map((_, i) => (
                   <button 
-                    key={page}
-                    onClick={() => handlePageChange(page)}
-                    style={{ padding: '4px 10px', border: 'none', backgroundColor: currentPage === page ? 'var(--primary-color)' : 'white', color: currentPage === page ? 'white' : '#333', cursor: 'pointer', borderRadius: '3px' }}
+                    key={i} 
+                    className="btn" 
+                    onClick={() => handlePageChange(i + 1)}
+                    style={{ 
+                      padding: '4px 12px', 
+                      backgroundColor: currentPage === i + 1 ? 'var(--primary-color)' : 'white', 
+                      color: currentPage === i + 1 ? 'white' : '#606266', 
+                      border: currentPage === i + 1 ? 'none' : '1px solid #dcdfe6', 
+                      cursor: 'pointer',
+                      fontSize: '13px',
+                      fontWeight: currentPage === i + 1 ? 600 : 400
+                    }}
                   >
-                    {page}
+                    {i + 1}
                   </button>
                 ))}
+                
                 <button 
+                  className="btn" 
+                  disabled={currentPage === totalPages} 
                   onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  style={{ padding: '4px 10px', border: '1px solid #ddd', backgroundColor: currentPage === totalPages ? '#f5f5f5' : 'white', color: currentPage === totalPages ? '#aaa' : '#333', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', borderRadius: '3px' }}
-                >
-                  Next
-                </button>
+                  style={{ padding: '4px 10px', backgroundColor: 'white', border: '1px solid #dcdfe6', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', color: currentPage === totalPages ? '#c0c4cc' : '#606266', fontSize: '13px' }}
+                >Next</button>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', marginLeft: '15px' }}>
                 Go to <input type="number" min="1" max={totalPages} defaultValue={currentPage} style={{ width: '40px', padding: '4px', margin: '0 5px', border: '1px solid #ddd', borderRadius: '3px', textAlign: 'center' }} />
@@ -336,11 +341,11 @@ const DataPoint = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Read Write Status</span>
                   <div style={{ flex: 1, display: 'flex', gap: '15px', alignItems: 'center' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: (modalConfig.data?.rw === 'Only Read' || !modalConfig.data) ? '#eb7e30' : '#606266', cursor: 'pointer', margin: 0 }}>
-                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Only Read' || !modalConfig.data} style={{ accentColor: '#eb7e30', marginRight: '6px' }} /> Only Read
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: (modalConfig.data?.rw === 'Only Read' || !modalConfig.data) ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Only Read' || !modalConfig.data} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Only Read
                     </label>
-                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.rw === 'Read/Write' ? '#eb7e30' : '#606266', cursor: 'pointer', margin: 0 }}>
-                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Read/Write'} style={{ accentColor: '#eb7e30', marginRight: '6px' }} /> Read/Write
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.rw === 'Read/Write' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Read/Write'} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Read/Write
                     </label>
                     <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#c0c4cc', cursor: 'not-allowed', margin: 0 }}>
                       <input type="radio" name="rwStatus" disabled style={{ marginRight: '6px' }} /> Only Write
@@ -479,7 +484,7 @@ const DataPoint = () => {
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: (modalConfig.mode === 'import' || modalConfig.mode === 'export' || modalConfig.mode === 'addPoint' || modalConfig.mode === 'editPoint') ? '#eb7e30' : 'var(--primary-color)', color: 'white', border: 'none' }}>
+              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none' }}>
                 {modalConfig.mode === 'import' ? 'import' : (modalConfig.mode === 'export' || modalConfig.mode === 'addPoint' || modalConfig.mode === 'editPoint') ? 'sure' : 'sure'}
               </button>
             </div>
