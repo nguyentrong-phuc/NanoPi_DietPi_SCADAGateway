@@ -225,9 +225,6 @@ const DataPoint = () => {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                       <p style={{ margin: 0 }}>protocol: <strong style={{ color: '#333' }}>{slave.protocol}</strong></p>
-                      {slave.protocol === 'Modbus_TCP' && slave.ip && (
-                        <p style={{ margin: 0, fontSize: '12px', color: '#777' }}>IP: {slave.ip}:{slave.port}</p>
-                      )}
                     </div>
                     {slave.isCustom && (
                       <div style={{ fontSize: '13px', fontWeight: 600 }}>
