@@ -91,6 +91,9 @@ const DataPoint = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
   const displayedPoints = currentPoints.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const currentSlaveObj = mockSlaves.find(s => s.id === activeSlave);
+  const isCustomSlave = currentSlaveObj?.isCustom;
+
   const showFormulaCols = activeSlave !== 'system_attrs';
 
   const handlePageChange = (page) => {
@@ -226,8 +229,14 @@ const DataPoint = () => {
                     {showFormulaCols && <td style={{ padding: '10px' }}>{point.ctrl || '--'}</td>}
                     <td style={{ padding: '10px' }}>{point.desc}</td>
                     <td style={{ padding: '10px', fontWeight: 600 }}>
-                      <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
-                      <span style={{ color: '#e74c3c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                      {isCustomSlave ? (
+                        <>
+                          <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
+                          <span style={{ color: '#e74c3c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                        </>
+                      ) : (
+                        <span style={{ color: '#ccc', cursor: 'not-allowed' }}>--</span>
+                      )}
                     </td>
                   </tr>
                 )) : (
