@@ -305,7 +305,7 @@ const LAN = () => {
                         <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
                           <td style={{ padding: '12px 15px' }}>{host.hostname}</td>
                           <td style={{ padding: '12px 15px' }}>{host.ip}</td>
-                          <td style={{ padding: '12px 15px' }}>{host.mac}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.mac ? host.mac.toUpperCase() : ''}</td>
                           <td style={{ padding: '12px 15px' }}>{host.leaseTime}</td>
                         </tr>
                       ))
@@ -358,7 +358,7 @@ const LAN = () => {
                           </td>
                           <td style={{ padding: '12px 15px' }}>{host.hostname}</td>
                           <td style={{ padding: '12px 15px' }}>{host.ip}</td>
-                          <td style={{ padding: '12px 15px' }}>{host.mac}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.mac ? host.mac.toUpperCase() : ''}</td>
                           <td style={{ padding: '12px 15px' }}>
                             <button type="button" className="btn btn-danger" style={{ padding: '2px 10px', height: '24px', fontSize: '12px' }} onClick={() => handleToggleHost(host.mac)}>Select</button>
                           </td>
@@ -413,7 +413,7 @@ const LAN = () => {
                 <div className="form-label">
                   <span style={{ color: 'red', marginRight: '4px' }}>*</span>MAC
                 </div>
-                <input type="text" className="form-control" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value})} />
+                <input type="text" className="form-control" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value.toUpperCase()})} />
               </div>
               <div className="form-group">
                 <div className="form-label">
