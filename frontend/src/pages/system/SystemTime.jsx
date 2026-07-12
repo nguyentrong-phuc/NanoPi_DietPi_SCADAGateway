@@ -90,6 +90,24 @@ const SystemTime = () => {
     }).catch(() => message.error('Failed to sync time', 2));
   };
 
+  const [manualDate, setManualDate] = useState(null);
+  const [manualTime, setManualTime] = useState(null);
+
+  const handleManualSet = () => {
+    if (!manualDate || !manualTime) return message.error('Please select both date and time', 2);
+    const dateStr = manualDate.format('YYYY-MM-DD');
+    const timeStr = manualTime.format('HH:mm:ss');
+    const combined = `${dateStr} ${timeStr}`;
+    fetch(`${API_URL}/api/system/time`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'set_time', payload: { dateTime: combined } })
+    }).then(() => {
+      setDeviceTime(combined);
+      message.success('Time set successfully!', 2);
+    }).catch(() => message.error('Failed to set time', 2));
+  };
+
   const handleChange = (e, field) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     setConfig({ ...config, [field]: value });
@@ -127,15 +145,17 @@ const SystemTime = () => {
                 <DatePicker 
                   placeholder="Please select" 
                   style={{ flex: 1, padding: '4px 11px', boxShadow: 'none' }} 
+                  onChange={(date) => setManualDate(date)}
                 />
                 <TimePicker 
                   placeholder="Please select" 
                   style={{ flex: 1, padding: '4px 11px', boxShadow: 'none' }} 
+                  onChange={(time) => setManualTime(time)}
                 />
               </ConfigProvider>
             </div>
             <span 
-              onClick={() => message.success('Time set successfully!', 2)} 
+              onClick={handleManualSet} 
               style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}
             >
               Set

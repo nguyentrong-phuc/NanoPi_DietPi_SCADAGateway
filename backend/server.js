@@ -18,6 +18,17 @@ const PORT = 80;
 app.use(cors());
 app.use(express.json());
 
+const timeOffsetPath = path.join(__dirname, '..', 'config_data', 'time_offset.json');
+const getSystemTime = () => {
+  let offset = 0;
+  try {
+    if (fs.existsSync(timeOffsetPath)) {
+      offset = JSON.parse(fs.readFileSync(timeOffsetPath, 'utf-8')).offsetMs || 0;
+    }
+  } catch(e) {}
+  return new Date(Date.now() + offset);
+};
+
 // Log helper
 const LOG_FILE = path.join(__dirname, 'system_events.json');
 if (!fs.existsSync(LOG_FILE)) {
@@ -32,12 +43,12 @@ const logEvent = (level, message) => {
     }
     const newLog = {
       id: logs.length > 0 ? logs[logs.length - 1].id + 1 : 1,
-      time: new Date().toLocaleString('sv').replace('T', ' '),
+      time: getSystemTime().toLocaleString('sv').replace('T', ' '),
       level,
       log: message
     };
     logs.push(newLog);
-    if (logs.length > 1000) logs = logs.slice(logs.length - 1000);
+    if (logs.length > 500) logs = logs.slice(logs.length - 500);
     fs.writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2));
   } catch(e) {
     console.error("Error writing log:", e);
@@ -524,7 +535,7 @@ app.post('/api/network/diagnostics', (req, res) => {
   if (!/^[a-zA-Z0-9._\-]+$/.test(target)) {
     return res.status(400).json({ error: 'Invalid target format' });
   }
-
+  logEvent('Network Diagnostics', `Executed ${type} to ${target}`, 'admin');
   let cmd = '';
   if (type === 'Ping') {
     cmd = `ping -c 4 ${target}`;
@@ -603,7 +614,7 @@ app.get('/api/system/time', (req, res) => {
     ntpEnabled: true,
     ntpServer1: 'ntp.aliyun.com',
     ntpServer2: 'ntp.gwadar.cn',
-    deviceTime: new Date().toISOString()
+    deviceTime: getSystemTime().toISOString()
   };
 
   try {
@@ -625,7 +636,7 @@ app.get('/api/system/time', (req, res) => {
     }
   } catch (e) { console.error("Error reading time config:", e); }
 
-  config.deviceTime = new Date().toLocaleString('sv').replace('T', ' ');
+  config.deviceTime = getSystemTime().toLocaleString('sv').replace('T', ' ');
   res.json(config);
 });
 
@@ -651,10 +662,17 @@ app.post('/api/system/time', (req, res) => {
       }
     } else if (action === 'set_time') {
       const { dateTime } = payload;
-      if (isLinux && dateTime) {
-        try { execSync(`timedatectl set-ntp false`); } catch(e){} // must disable ntp to set time manually
-        try { execSync(`date -s "${dateTime}"`); } catch(e){}
-        try { execSync(`hwclock -w`); } catch(e){} // save to RTC if available
+      if (dateTime) {
+        const targetTime = new Date(dateTime.replace(' ', 'T')).getTime();
+        const actualTime = Date.now();
+        const offsetMs = targetTime - actualTime;
+        fs.writeFileSync(timeOffsetPath, JSON.stringify({ offsetMs }));
+        
+        if (isLinux) {
+          try { execSync(`timedatectl set-ntp false`); } catch(e){} // disable ntp
+          try { execSync(`date -s "${dateTime}"`); } catch(e){}
+          try { execSync(`hwclock -w`); } catch(e){}
+        }
       }
     } else if (action === 'set_timezone') {
       const { timeZone } = payload;
@@ -768,7 +786,7 @@ app.get('/api/edge/data-points', (req, res) => {
     const loc = getLocationConfig();
     const gpsState = loc.latitude ? 'A' : 'V';
     const satelliteCount = loc.latitude ? '12' : '0';
-    const now = new Date();
+    const now = getSystemTime();
     const unixMs = Date.now();
     const unixSec = Math.floor(unixMs / 1000);
     const localTimeStr1 = now.toLocaleString('sv').replace(' ', ',');
@@ -864,6 +882,7 @@ app.post('/api/edge/data-points', (req, res) => {
 
 // System Management API (Reboot)
 app.post('/api/system/reboot', (req, res) => {
+  logEvent('System Management', 'System Reboot Initiated', 'admin');
   try {
     if (isLinux) {
       console.log("Rebooting system...");
@@ -879,6 +898,7 @@ app.post('/api/system/reboot', (req, res) => {
 app.post('/api/system/hostname', (req, res) => {
   const { hostname } = req.body;
   if (!hostname) return res.status(400).json({ error: 'Hostname is required' });
+  logEvent('System Management', `Changed Hostname to ${hostname}`, 'admin');
   try {
     if (isLinux) {
       execSync(`hostnamectl set-hostname "${hostname}"`);
@@ -912,6 +932,7 @@ app.get('/api/system/schedule-reboot', (req, res) => {
 
 app.post('/api/system/schedule-reboot', (req, res) => {
   const { enabled, time } = req.body;
+  logEvent('System Management', `Updated Schedule Reboot: ${enabled ? \`Enabled at \${time}\` : 'Disabled'}`, 'admin');
   try {
     if (isLinux) {
       let crontab = '';
@@ -938,6 +959,7 @@ app.post('/api/system/schedule-reboot', (req, res) => {
 
 // System Config Export (all config_data JSON files in a zip-like tar)
 app.get('/api/system/config/export', (req, res) => {
+  logEvent('System Management', 'Exported System Configuration', 'admin');
   const configDir = path.join(__dirname, '..', 'config_data');
   const outFile = path.join(__dirname, '..', 'config_data', `scada_config_backup_${Date.now()}.tar.gz`);
   try {
@@ -967,6 +989,7 @@ const upload = multer({ dest: path.join(__dirname, '..', 'config_data', 'tmp_upl
 
 app.post('/api/system/config/import', upload.single('config_file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  logEvent('System Management', 'Imported System Configuration', 'admin');
   const configDir = path.join(__dirname, '..', 'config_data');
   const uploadedPath = req.file.path;
   try {
@@ -1008,7 +1031,7 @@ app.get('/api/system/info', (req, res) => {
     sn: '--',
     mac1: '--',
     mac2: '--',
-    deviceTime: new Date().toLocaleString('sv').replace('T', ' '),
+    deviceTime: getSystemTime().toLocaleString('sv').replace('T', ' '),
     operationTime: '--',
     cpu: 0,
     memory: 0,
