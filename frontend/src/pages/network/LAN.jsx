@@ -284,8 +284,8 @@ const LAN = () => {
                   <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>Static IP List</span>
                 </div>
                 <div>
-                  <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Add</button>
-                  <button style={{ backgroundColor: '#e71562', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Delete</button>
+                  <button className="btn btn-primary" style={{ marginRight: '10px' }}>Add</button>
+                  <button className="btn btn-danger solid">Delete</button>
                 </div>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -310,9 +310,19 @@ const LAN = () => {
               </div>
             </div>
 
-            <div style={{ marginTop: '20px', paddingLeft: '15px' }}>
-              <button disabled={!hasChanges} style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
-                apply
+            <div style={{ marginTop: '20px' }}>
+              <button 
+                disabled={!hasChanges} 
+                className={`btn ${hasChanges ? 'btn-primary active-btn' : ''}`}
+                style={{
+                  backgroundColor: hasChanges ? 'var(--primary-color)' : '#e0e0e0',
+                  color: hasChanges ? 'white' : '#999',
+                  cursor: hasChanges ? 'pointer' : 'not-allowed',
+                  border: 'none',
+                  minWidth: '100px'
+                }}
+              >
+                Apply
               </button>
             </div>
             
