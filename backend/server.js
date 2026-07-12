@@ -207,6 +207,7 @@ const getNetworkConfig = () => {
       const ipv4 = nets[ethName].find(n => n.family === 'IPv4' || n.family === 4);
       if (ipv4) {
         conf.liveIp = ipv4.address;
+        conf.liveNetmask = ipv4.netmask;
         conf.status = 'Connected';
       }
     }
