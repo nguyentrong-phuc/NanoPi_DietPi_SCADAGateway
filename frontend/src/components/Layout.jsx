@@ -27,7 +27,6 @@ const Layout = () => {
     if (topLevel === 'network') {
       return (
         <div className="sub-sidebar">
-          <NavLink to="/network/ethernet-port" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Ethernet Port</NavLink>
           <NavLink to="/network/wan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>WAN</NavLink>
           <NavLink to="/network/lan" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>LAN</NavLink>
           <NavLink to="/network/routing" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Routing</NavLink>

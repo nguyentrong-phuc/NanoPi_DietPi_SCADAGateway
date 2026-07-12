@@ -181,19 +181,8 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Column 2: Ethernet Ports & Location */}
+          {/* Column 2: Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
-              <SubCardHeader title="Ethernet Port 1" onSettingsClick={() => navigate('/network/ethernet-port')} />
-              <FieldRow label="Mode:" value={networkInfo.eth1.mode} />
-              <FieldRow label="Status:" value={networkInfo.eth1.status} valueColor="var(--primary-color)" />
-            </div>
-            
-            <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
-              <SubCardHeader title="Ethernet Port 2" onSettingsClick={() => navigate('/network/ethernet-port')} />
-              <FieldRow label="Mode:" value={networkInfo.eth2.mode} />
-              <FieldRow label="Status:" value={networkInfo.eth2.status} valueColor="var(--primary-color)" />
-            </div>
 
             <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px', flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
