@@ -44,25 +44,29 @@ const SystemTime = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleApply = () => {
-    fetch(`${API_URL}/api/system/time`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'apply_ntp',
-        payload: {
-          ntpEnabled: config.ntpEnabled,
-          ntpServer1: config.ntpServer1,
-          ntpServer2: config.ntpServer2
-        }
-      })
-    }).then(res => res.json()).then(data => {
+  const handleApply = async () => {
+    try {
+      // Save NTP
+      await fetch(`${API_URL}/api/system/time`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'apply_ntp',
+          payload: { ntpEnabled: config.ntpEnabled, ntpServer1: config.ntpServer1, ntpServer2: config.ntpServer2 }
+        })
+      });
+      // Save Timezone
+      await fetch(`${API_URL}/api/system/time`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'set_timezone', payload: { timeZone: config.timeZone } })
+      });
       setInitialConfig(config);
-      message.success('Applied System Time configuration!', 2);
-    }).catch(err => {
+      message.success('System Time configuration applied successfully!', 2);
+    } catch (err) {
       console.error(err);
       message.error('Failed to apply configuration', 2);
-    });
+    }
   };
 
   const handleSetTimezone = () => {
@@ -108,7 +112,6 @@ const SystemTime = () => {
               <option value="Asia/Tokyo">Asia/Tokyo (UTC +9)</option>
               <option value="UTC">UTC</option>
             </select>
-            <span onClick={handleSetTimezone} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Modify</span>
           </div>
 
           <div className="form-group-unified-row">

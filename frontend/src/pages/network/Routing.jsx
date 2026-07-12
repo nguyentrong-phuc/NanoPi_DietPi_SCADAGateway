@@ -109,7 +109,7 @@ const Routing = () => {
           </table>
         </div>
 
-        <button className="btn btn-primary">apply</button>
+        <button className="btn btn-primary">Apply</button>
       </div>
 
       {isAddModalOpen && (

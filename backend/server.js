@@ -748,17 +748,65 @@ app.get('/api/edge/data-points', (req, res) => {
     return { ...points, 'slave_status': autoPoints };
   };
 
+  const getLocationConfig = () => {
+    const locPath = path.join(__dirname, '..', 'config_data', 'location.json');
+    if (fs.existsSync(locPath)) {
+      try { return JSON.parse(fs.readFileSync(locPath, 'utf-8')); } catch(e) {}
+    }
+    return {};
+  };
+
+  const buildSystemAttrsPoints = (points) => {
+    let systemAttrs = points['system_attrs'] || defaultPoints['system_attrs'];
+    const loc = getLocationConfig();
+    const gpsState = loc.latitude ? 'A' : 'V';
+    const satelliteCount = loc.latitude ? '12' : '0';
+    const now = new Date();
+    const unixMs = Date.now();
+    const unixSec = Math.floor(unixMs / 1000);
+    const localTimeStr1 = now.toLocaleString('sv').replace(' ', ',');
+    const localTimeStr2 = now.toLocaleString('sv');
+    const utcTimeStr = now.toISOString().replace(/\.\d+Z$/, 'Z');
+    
+    let mac = '--';
+    try {
+      const nets = os.networkInterfaces();
+      if (nets['eth0']) mac = nets['eth0'][0].mac.toUpperCase();
+    } catch(e) {}
+
+    systemAttrs = systemAttrs.map(pt => {
+      let newData = pt.data;
+      switch(pt.name) {
+        case 'sys_gps_state': newData = gpsState; break;
+        case 'sys_satellite': newData = satelliteCount; break;
+        case 'sys_latitude': newData = loc.latitude || '0.00000000'; break;
+        case 'sys_longitude': newData = loc.longitude || '0.00000000'; break;
+        case 'sys_mac': newData = mac !== '--' ? mac : pt.data; break;
+        case 'sys_unix_time': newData = String(unixMs); break;
+        case 'sys_local_time': newData = localTimeStr1; break;
+        case 'sys_utc_time': newData = utcTimeStr; break;
+        case 'sys_timestamp_str': newData = String(unixSec); break;
+        case 'sys_local_time2': newData = localTimeStr2; break;
+        case 'sys_timestamp_ms': newData = String(unixMs); break;
+        case 'sys_timestamp': newData = String(unixSec); break;
+      }
+      return { ...pt, data: newData };
+    });
+    return { ...points, 'system_attrs': systemAttrs };
+  };
+
   if (fs.existsSync(filePath)) {
     try {
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
       const slaves = data.slaves || defaultSlaves;
-      const points = buildSlaveStatusPoints(slaves, data.points || defaultPoints);
+      let points = buildSlaveStatusPoints(slaves, data.points || defaultPoints);
+      points = buildSystemAttrsPoints(points);
       res.json({ slaves, points });
     } catch (e) {
-      res.json({ slaves: defaultSlaves, points: defaultPoints });
+      res.json({ slaves: defaultSlaves, points: buildSystemAttrsPoints(defaultPoints) });
     }
   } else {
-    res.json({ slaves: defaultSlaves, points: defaultPoints });
+    res.json({ slaves: defaultSlaves, points: buildSystemAttrsPoints(defaultPoints) });
   }
 });
 
@@ -954,6 +1002,10 @@ app.get('/api/system/info', (req, res) => {
   result.mac2 = getMac('eth1');
 
   // Interface status
+  wanConfig.status = 'Disconnected';
+  lanConfig.status = 'Disconnected';
+  wlanConfig.status = 'Disconnected';
+
   if (nets['eth0']) {
     const ipv4 = nets['eth0'].find(n => n.family === 'IPv4' || n.family === 4);
     if (ipv4) {
