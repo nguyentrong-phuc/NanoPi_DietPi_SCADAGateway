@@ -121,7 +121,7 @@ const DataPoint = () => {
             <div>
               <span style={{ fontSize: '12px', color: '#666', marginRight: '20px' }}>Version: 1779939851</span>
               <button className="btn btn-primary active-btn" onClick={openAddModal} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
-              <button className="btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Import</button>
+              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'import', data: null })} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Import</button>
               <button className="btn" style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Export</button>
             </div>
           </div>
@@ -285,88 +285,114 @@ const DataPoint = () => {
             
             {/* Header */}
             <div style={{ padding: '15px 25px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#333' }}>{modalConfig.mode === 'add' ? 'Add' : 'Edit'}</h3>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#333' }}>
+                {modalConfig.mode === 'add' ? 'Add' : modalConfig.mode === 'edit' ? 'Edit' : 'Import mapping table'}
+              </h3>
               <span onClick={closeModal} style={{ cursor: 'pointer', fontSize: '18px', color: '#999' }}>&times;</span>
             </div>
             
             {/* Body */}
-            <div style={{ padding: '25px 40px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave Name:</span>
-                <input type="text" className="form-control" defaultValue={modalConfig.data?.name} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Slave Description:</span>
-                <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Acquisition protocol</span>
-                <select 
-                  className="form-control" 
-                  defaultValue={modalConfig.data?.protocol} 
-                  onChange={(e) => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, protocol: e.target.value } })}
-                  style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: modalConfig.mode === 'edit' ? '#f5f7fa' : 'white', color: modalConfig.mode === 'edit' ? '#c0c4cc' : '#606266', appearance: 'none', cursor: modalConfig.mode === 'edit' ? 'not-allowed' : 'pointer' }}
-                  disabled={modalConfig.mode === 'edit'}
-                >
-                  <option value="Virtual Slave">Virtual Slave</option>
-                  <option value="Modbus_TCP">Modbus_TCP</option>
-                  <option value="Modbus_RTU">Modbus_RTU</option>
-                  <option value="IEC_104">IEC_104</option>
-                </select>
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Polling interval:</span>
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', border: '1px solid #dcdfe6', borderRadius: '4px', paddingRight: '10px' }}>
-                  <input type="text" defaultValue={modalConfig.data?.polling} style={{ flex: 1, height: '32px', border: 'none', padding: '6px 12px', fontSize: '13px', outline: 'none', borderRadius: '4px' }} />
-                  <span style={{ fontSize: '13px', color: '#606266' }}>ms</span>
+            {modalConfig.mode === 'import' ? (
+              <div style={{ padding: '40px 40px 60px 40px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#606266' }}>Import mode:</span>
+                  <select 
+                    className="form-control" 
+                    defaultValue="Import cover"
+                    style={{ width: '220px', height: '36px', padding: '6px 12px', fontSize: '14px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266', cursor: 'pointer' }}
+                  >
+                    <option value="Import cover">Import cover</option>
+                    <option value="Import append">Import append</option>
+                  </select>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#606266' }}><span style={{ color: '#ef4444' }}>*</span> Select File:</span>
+                  <div style={{ width: '280px', height: '36px', border: '1px solid #b3d8ff', borderRadius: '2px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', backgroundColor: 'white' }}>
+                    <span style={{ color: '#409eff', fontSize: '14px' }}>Select File</span>
+                  </div>
                 </div>
               </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Merge acquisition:</span>
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Open' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
-                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Open'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Open' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Open
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Close' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
-                    <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Close'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Close' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Close
-                  </label>
+            ) : (
+              <div style={{ padding: '25px 40px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave Name:</span>
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.name} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                 </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Slave Description:</span>
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Acquisition protocol</span>
+                  <select 
+                    className="form-control" 
+                    defaultValue={modalConfig.data?.protocol} 
+                    onChange={(e) => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, protocol: e.target.value } })}
+                    style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: modalConfig.mode === 'edit' ? '#f5f7fa' : 'white', color: modalConfig.mode === 'edit' ? '#c0c4cc' : '#606266', appearance: 'none', cursor: modalConfig.mode === 'edit' ? 'not-allowed' : 'pointer' }}
+                    disabled={modalConfig.mode === 'edit'}
+                  >
+                    <option value="Virtual Slave">Virtual Slave</option>
+                    <option value="Modbus_TCP">Modbus_TCP</option>
+                    <option value="Modbus_RTU">Modbus_RTU</option>
+                    <option value="IEC_104">IEC_104</option>
+                  </select>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Polling interval:</span>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', border: '1px solid #dcdfe6', borderRadius: '4px', paddingRight: '10px' }}>
+                    <input type="text" defaultValue={modalConfig.data?.polling} style={{ flex: 1, height: '32px', border: 'none', padding: '6px 12px', fontSize: '13px', outline: 'none', borderRadius: '4px' }} />
+                    <span style={{ fontSize: '13px', color: '#606266' }}>ms</span>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Merge acquisition:</span>
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Open' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Open'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Open' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Open
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.merge === 'Close' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="merge" defaultChecked={modalConfig.data?.merge === 'Close'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, merge: 'Close' } })} style={{ accentColor: 'var(--primary-color)', marginRight: '8px' }} /> Close
+                    </label>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave switch:</span>
+                  <ModalToggleSwitch isOn={modalConfig.data?.switch} handleToggle={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, switch: !modalConfig.data.switch }})} />
+                </div>
+  
+                {modalConfig.data?.protocol === 'Modbus_TCP' && (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> IP</span>
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.ip || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Port</span>
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.port || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Salve Address</span>
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.slaveAddress || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                    </div>
+                  </>
+                )}
+  
               </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave switch:</span>
-                <ModalToggleSwitch isOn={modalConfig.data?.switch} handleToggle={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, switch: !modalConfig.data.switch }})} />
-              </div>
-
-              {modalConfig.data?.protocol === 'Modbus_TCP' && (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> IP</span>
-                    <input type="text" className="form-control" defaultValue={modalConfig.data?.ip || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Port</span>
-                    <input type="text" className="form-control" defaultValue={modalConfig.data?.port || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Salve Address</span>
-                    <input type="text" className="form-control" defaultValue={modalConfig.data?.slaveAddress || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-                  </div>
-                </>
-              )}
-
-            </div>
+            )}
             
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer' }}>sure</button>
-            </div>
+              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: modalConfig.mode === 'import' ? '#eb7e30' : 'var(--primary-color)', color: 'white', border: 'none' }}>
+                {modalConfig.mode === 'import' ? 'import' : 'sure'}
+              </button>
             
           </div>
         </div>
