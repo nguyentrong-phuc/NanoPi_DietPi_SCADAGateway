@@ -4,6 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync } = require('child_process');
+const crypto = require('crypto');
+
+// --- Polling Engines ---
+const LiveDatabase = require('./engines/LiveDatabase');
+const SouthboundMaster = require('./engines/SouthboundMaster');
+const NorthboundSlave = require('./engines/NorthboundSlave');
+// -----------------------
 
 const app = express();
 const PORT = 80;
@@ -807,6 +814,28 @@ app.get('/api/edge/data-points', (req, res) => {
       const slaves = data.slaves || defaultSlaves;
       let points = buildSlaveStatusPoints(slaves, data.points || defaultPoints);
       points = buildSystemAttrsPoints(points);
+
+      // Inject Live Values for Custom Slaves
+      slaves.filter(s => s.isCustom).forEach(slave => {
+        if (points[slave.id]) {
+          points[slave.id] = points[slave.id].map(pt => ({
+            ...pt,
+            data: LiveDatabase.getPointValue(`${slave.id}_${pt.id}`)
+          }));
+        }
+      });
+
+      // Inject Live Slave Status
+      if (points['slave_status']) {
+        points['slave_status'] = points['slave_status'].map((pt, i) => {
+          const customSlaves = slaves.filter(s => s.isCustom);
+          if (customSlaves[i]) {
+            return { ...pt, data: LiveDatabase.getSlaveStatus(customSlaves[i].id) };
+          }
+          return pt;
+        });
+      }
+
       res.json({ slaves, points });
     } catch (e) {
       res.json({ slaves: defaultSlaves, points: buildSystemAttrsPoints(defaultPoints) });
@@ -1163,4 +1192,8 @@ if (fs.existsSync(frontendDistPath)) {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`SCADA Gateway Backend running on http://0.0.0.0:${PORT}`);
+  
+  // Start Polling Engines
+  SouthboundMaster.start();
+  NorthboundSlave.start();
 });
