@@ -20,7 +20,7 @@ const Layout = () => {
   };
 
   // ── Auto-logout after 5 min idle ──────────────────────────────
-  const IDLE_TIMEOUT   = 5 * 60 * 1000;  // 5 minutes
+  const IDLE_TIMEOUT   = 10 * 60 * 1000;  // 10 minutes
   const WARN_BEFORE    = 1 * 60 * 1000;  // warn 1 minute before
   const logoutTimer    = useRef(null);
   const warnTimer      = useRef(null);
@@ -111,6 +111,7 @@ const Layout = () => {
           <NavLink to="/system-management/time" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>System Time</NavLink>
           <NavLink to="/system-management/log" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>LOG</NavLink>
           <NavLink to="/system-management/configuration" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Configuration Management</NavLink>
+          <NavLink to="/system-management/location" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Location</NavLink>
           <NavLink to="/system-management/reboot" className={({isActive}) => `sidebar-item ${isActive ? 'active' : ''}`}>Reboot</NavLink>
         </div>
       );

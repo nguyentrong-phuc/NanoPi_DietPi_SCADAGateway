@@ -26,6 +26,8 @@ import SystemTime from './pages/system/SystemTime';
 import Log from './pages/system/Log';
 import SystemConfig from './pages/system/SystemConfig';
 import Reboot from './pages/system/Reboot';
+import Location from './pages/system/Location';
+import UserManagement from './pages/system/UserManagement';
 
 // Placeholder for unimplemented routes
 const Placeholder = ({ name }) => (
@@ -79,6 +81,8 @@ const App = () => {
             <Route path="log" element={<Log />} />
             <Route path="configuration" element={<SystemConfig />} />
             <Route path="reboot" element={<Reboot />} />
+            <Route path="location" element={<Location />} />
+            <Route path="user" element={<UserManagement />} />
             <Route path="*" element={<Placeholder name="System Management Module" />} />
           </Route>
         </Route>

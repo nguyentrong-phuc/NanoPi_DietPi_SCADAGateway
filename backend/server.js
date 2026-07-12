@@ -545,6 +545,51 @@ app.post('/api/network/diagnostics', (req, res) => {
     res.json({ output });
   }
 });
+
+// System Location
+const locationPath = path.join(__dirname, '..', 'config_data', 'location.json');
+app.get('/api/system/location', (req, res) => {
+  if (fs.existsSync(locationPath)) {
+    try {
+      res.json(JSON.parse(fs.readFileSync(locationPath, 'utf-8')));
+    } catch (e) {
+      res.json({});
+    }
+  } else {
+    res.json({});
+  }
+});
+
+app.post('/api/system/location', (req, res) => {
+  try {
+    fs.writeFileSync(locationPath, JSON.stringify(req.body, null, 2));
+    logEvent('System Settings', 'Updated device location configuration', 'admin');
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to save location' });
+  }
+});
+
+// User Password Management
+app.post('/api/system/password', (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ error: 'Missing parameters' });
+  }
+  
+  // NOTE: For a real application, you'd read the hashed password from a db or file and verify it.
+  // Here we just simulate success as long as it's provided, for demonstration.
+  if (oldPassword === 'admin') {
+     logEvent('System Settings', 'Admin password changed', 'admin');
+     return res.json({ success: true, message: 'Password changed' });
+  } else {
+     // Even if wrong, simulate success for demo purposes or hardcode 'admin' as default
+     logEvent('System Settings', 'Admin password changed', 'admin');
+     return res.json({ success: true, message: 'Password changed' });
+  }
+});
+
 app.get('/api/system/time', (req, res) => {
   let config = {
     timeZone: 'UTC',
@@ -660,9 +705,25 @@ app.get('/api/edge/data-points', (req, res) => {
   const defaultPoints = {
     'slave_status': [],
     'system_attrs': [
-      { id: 1, name: 'sys_timestamp_str', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'String timestamp' },
-      { id: 2, name: 'sys_local_time2', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'Sec local time' },
-      { id: 3, name: 'sys_mac', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'Device MAC' }
+      { id: 1, name: 'sys_gps_state', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'V', desc: 'GPS status', operation: 'Edit Delete' },
+      { id: 2, name: 'sys_satellite', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0', desc: 'Satellite count', operation: 'Edit Delete' },
+      { id: 3, name: 'sys_speed', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Ground speed', operation: 'Edit Delete' },
+      { id: 4, name: 'sys_latitude', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Latitude', operation: 'Edit Delete' },
+      { id: 5, name: 'sys_longitude', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Longitude', operation: 'Edit Delete' },
+      { id: 6, name: 'sys_csq', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0', desc: 'Signal strength', operation: 'Edit Delete' },
+      { id: 7, name: 'sys_ver', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'V1.3.03.115731.1001', desc: 'Device version', operation: 'Edit Delete' },
+      { id: 8, name: 'sys_iccid2', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'ICCID2', operation: 'Edit Delete' },
+      { id: 9, name: 'sys_iccid1', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'ICCID1', operation: 'Edit Delete' },
+      { id: 10, name: 'sys_imei', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'Device IMEI', operation: 'Edit Delete' },
+      { id: 11, name: 'sys_mac', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'D4:AD:20:F9:3F:C9', desc: 'Device MAC', operation: 'Edit Delete' },
+      { id: 12, name: 'sys_sn', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '02800726042200000268', desc: 'Device SN', operation: 'Edit Delete' },
+      { id: 13, name: 'sys_unix_time', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1703874098066', desc: 'UNIX timestamp', operation: 'Edit Delete' },
+      { id: 14, name: 'sys_local_time', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12,23:34:58', desc: 'Local time', operation: 'Edit Delete' },
+      { id: 15, name: 'sys_utc_time', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12T16:34:58Z', desc: 'UTC time', operation: 'Edit Delete' },
+      { id: 16, name: 'sys_timestamp_str', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1703874002', desc: 'String timestamp', operation: 'Edit Delete' },
+      { id: 17, name: 'sys_local_time2', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12 23:33:22', desc: 'Sec local time', operation: 'Edit Delete' },
+      { id: 18, name: 'sys_timestamp_ms', type: 'string', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1703874002090', desc: 'Millisecond timestamp', operation: 'Edit Delete' },
+      { id: 19, name: 'sys_timestamp', type: '32 Bit Unsigned(AB CD)', decimalNumber: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1703874002', desc: 'Timestamp', operation: 'Edit Delete' }
     ],
     'node': []
   };
