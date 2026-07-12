@@ -43,7 +43,7 @@ const DataPoint = () => {
     setModalConfig({ 
       isOpen: true, 
       mode: 'add', 
-      data: { name: '', desc: '', protocol: 'Virtual Slave', polling: '0', merge: 'Open', switch: true } 
+      data: { name: '', desc: '', protocol: 'Modbus_TCP', polling: '0', merge: 'Open', switch: true } 
     });
   };
 
@@ -507,7 +507,7 @@ const DataPoint = () => {
                     style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: modalConfig.mode === 'edit' ? '#f5f7fa' : 'white', color: modalConfig.mode === 'edit' ? '#c0c4cc' : '#606266', appearance: 'none', cursor: modalConfig.mode === 'edit' ? 'not-allowed' : 'pointer' }}
                     disabled={modalConfig.mode === 'edit'}
                   >
-                    <option value="Virtual Slave">Virtual Slave</option>
+
                     <option value="Modbus_TCP">Modbus_TCP</option>
                     <option value="Modbus_RTU">Modbus_RTU</option>
 
