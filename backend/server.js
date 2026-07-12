@@ -16,9 +16,12 @@ const isLinux = os.platform() === 'linux';
 const interfacesPath = isLinux ? '/etc/network/interfaces' : path.join(__dirname, '..', 'config_data', 'interfaces_mock.txt');
 const dnsmasqPath = isLinux ? '/etc/dnsmasq.d/scada.conf' : path.join(__dirname, '..', 'config_data', 'dnsmasq_mock.conf');
 
-// Ensure mock files exist in dev
+// Ensure config_data directory exists (on ALL platforms)
+const configDataDir = path.join(__dirname, '..', 'config_data');
+if (!fs.existsSync(configDataDir)) fs.mkdirSync(configDataDir, { recursive: true });
+
+// Ensure mock files exist in dev (Windows)
 if (!isLinux) {
-  if (!fs.existsSync(path.join(__dirname, '..', 'config_data'))) fs.mkdirSync(path.join(__dirname, '..', 'config_data'));
   if (!fs.existsSync(interfacesPath)) fs.writeFileSync(interfacesPath, 'allow-hotplug eth0\niface eth0 inet dhcp\n\nallow-hotplug eth1\niface eth1 inet static\n  address 192.168.2.1\n  netmask 255.255.255.0\n');
   if (!fs.existsSync(dnsmasqPath)) fs.writeFileSync(dnsmasqPath, 'interface=eth1\ndhcp-range=eth1,192.168.2.10,192.168.2.100,255.255.255.0,24h\ndhcp-option=eth1,6,8.8.8.8\n');
 }
