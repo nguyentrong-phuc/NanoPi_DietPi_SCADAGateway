@@ -122,7 +122,7 @@ const DataPoint = () => {
               <span style={{ fontSize: '12px', color: '#666', marginRight: '20px' }}>Version: 1779939851</span>
               <button className="btn btn-primary active-btn" onClick={openAddModal} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
               <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'import', data: null })} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Import</button>
-              <button className="btn" style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Export</button>
+              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'export', data: null })} style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Export</button>
             </div>
           </div>
 
@@ -182,7 +182,9 @@ const DataPoint = () => {
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>List of slave points</span>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <input type="text" placeholder="Please enterPoint Screen" className="form-control" style={{ padding: '6px 12px', fontSize: '13px', width: '220px', height: '32px' }} />
+              <button className="btn btn-primary active-btn" onClick={() => setModalConfig({ isOpen: true, mode: 'addPoint', data: null })} style={{ padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px' }}>Add</button>
+              <button className="btn" style={{ backgroundColor: '#fff', color: '#f56c6c', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #f56c6c' }}>Delete</button>
+              <input type="text" placeholder="Please enterPoint Screen" className="form-control" style={{ padding: '6px 12px', fontSize: '13px', width: '220px', height: '32px', marginLeft: '10px' }} />
               <button className="btn" style={{ backgroundColor: '#e9ecef', color: '#666', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #ddd' }} disabled>Point Screen</button>
             </div>
           </div>
@@ -286,13 +288,83 @@ const DataPoint = () => {
             {/* Header */}
             <div style={{ padding: '15px 25px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#333' }}>
-                {modalConfig.mode === 'add' ? 'Add' : modalConfig.mode === 'edit' ? 'Edit' : 'Import mapping table'}
+                {modalConfig.mode === 'add' ? 'Add' : modalConfig.mode === 'edit' ? 'Edit' : modalConfig.mode === 'import' ? 'Import mapping table' : modalConfig.mode === 'export' ? 'Export' : 'Add'}
               </h3>
               <span onClick={closeModal} style={{ cursor: 'pointer', fontSize: '18px', color: '#999' }}>&times;</span>
             </div>
             
             {/* Body */}
-            {modalConfig.mode === 'import' ? (
+            {modalConfig.mode === 'addPoint' ? (
+              <div style={{ padding: '20px 40px', display: 'flex', flexDirection: 'column', gap: '18px', maxHeight: '70vh', overflowY: 'auto' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Node name</span>
+                  <input type="text" className="form-control" placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Node desc</span>
+                  <input type="text" className="form-control" placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Data Type</span>
+                  <select className="form-control" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
+                    <option>Bit</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Position Number</span>
+                  <input type="text" className="form-control" defaultValue="1" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Decimal Number</span>
+                  <select className="form-control" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
+                    <option>0</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Read Write Status</span>
+                  <div style={{ flex: 1, display: 'flex', gap: '15px', alignItems: 'center' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#eb7e30', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="rwStatus" defaultChecked style={{ accentColor: '#eb7e30', marginRight: '6px' }} /> Only Read
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#606266', cursor: 'pointer', margin: 0 }}>
+                      <input type="radio" name="rwStatus" style={{ marginRight: '6px' }} /> Read/Write
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#c0c4cc', cursor: 'not-allowed', margin: 0 }}>
+                      <input type="radio" name="rwStatus" disabled style={{ marginRight: '6px' }} /> Only Write
+                    </label>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Priority</span>
+                  <select className="form-control" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
+                    <option>Level 0</option>
+                  </select>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Acquisition formula <span style={{ color: '#aaa', fontSize: '12px', marginLeft: '2px', cursor: 'pointer', backgroundColor: '#eee', borderRadius: '50%', padding: '0 4px' }}>?</span></span>
+                  <input type="text" className="form-control" placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Control formula <span style={{ color: '#aaa', fontSize: '12px', marginLeft: '2px', cursor: 'pointer', backgroundColor: '#eee', borderRadius: '50%', padding: '0 4px' }}>?</span></span>
+                  <input type="text" className="form-control" placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Timeout</span>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', border: '1px solid #dcdfe6', borderRadius: '4px', paddingRight: '10px' }}>
+                    <input type="text" defaultValue="2000" style={{ flex: 1, height: '32px', border: 'none', padding: '6px 12px', fontSize: '13px', outline: 'none', borderRadius: '4px' }} />
+                    <span style={{ fontSize: '13px', color: '#606266' }}>ms</span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Unit</span>
+                  <input type="text" className="form-control" placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
+              </div>
+            ) : modalConfig.mode === 'export' ? (
+              <div style={{ padding: '40px', color: '#606266', fontSize: '14px', lineHeight: '1.6', minHeight: '120px' }}>
+                Note: The export point table will synchronously export the data point table, protocol conversion data point table, linkage control event table, and data reporting group table, and will be updated synchronously after importing
+              </div>
+            ) : modalConfig.mode === 'import' ? (
               <div style={{ padding: '40px 40px 60px 40px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '14px', color: '#606266' }}>Import mode:</span>
@@ -390,9 +462,10 @@ const DataPoint = () => {
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: modalConfig.mode === 'import' ? '#eb7e30' : 'var(--primary-color)', color: 'white', border: 'none' }}>
-                {modalConfig.mode === 'import' ? 'import' : 'sure'}
+              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: (modalConfig.mode === 'import' || modalConfig.mode === 'export' || modalConfig.mode === 'addPoint') ? '#eb7e30' : 'var(--primary-color)', color: 'white', border: 'none' }}>
+                {modalConfig.mode === 'import' ? 'import' : modalConfig.mode === 'export' ? 'sure' : 'sure'}
               </button>
+            </div>
             
           </div>
         </div>
