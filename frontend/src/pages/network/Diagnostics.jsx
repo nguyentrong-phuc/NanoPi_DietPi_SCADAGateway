@@ -68,9 +68,9 @@ const Diagnostics = () => {
               style={{ flex: 1, padding: '8px 12px', border: '1px solid #ccc', borderRadius: '4px', maxWidth: '400px' }} 
             />
             <button 
-              onClick={handleSend}
-              disabled={loading || !target}
-              style={{ backgroundColor: (loading || !target) ? '#94a3b8' : '#003fb4', color: 'white', border: 'none', padding: '8px 30px', borderRadius: '2px', cursor: (loading || !target) ? 'not-allowed' : 'pointer', fontWeight: 600 }}
+              onClick={handleSend} 
+              disabled={loading || !target} 
+              className="btn btn-primary"
             >
               {loading ? 'Sending...' : 'Send'}
             </button>

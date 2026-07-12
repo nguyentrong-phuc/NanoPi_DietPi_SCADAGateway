@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { message } from 'antd';
 
 const EthernetPort = () => {
   const [appliedPort1Mode, setAppliedPort1Mode] = useState('WAN');
@@ -52,7 +53,7 @@ const EthernetPort = () => {
             </div>
             {port1Mode !== appliedPort1Mode && (
               <div style={{ textAlign: 'right', marginTop: '15px' }}>
-                <span onClick={() => { setAppliedPort1Mode(port1Mode); alert(`Ethernet Port 1 changed to ${port1Mode} mode`); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                <span onClick={() => { setAppliedPort1Mode(port1Mode); message.success(`Ethernet Port 1 changed to ${port1Mode} mode`, 2); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
                   ⇌ Change Mode
                 </span>
               </div>
@@ -87,7 +88,7 @@ const EthernetPort = () => {
             </div>
             {port2Mode !== appliedPort2Mode && (
               <div style={{ textAlign: 'right', marginTop: '15px' }}>
-                <span onClick={() => { setAppliedPort2Mode(port2Mode); alert(`Ethernet Port 2 changed to ${port2Mode} mode`); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
+                <span onClick={() => { setAppliedPort2Mode(port2Mode); message.success(`Ethernet Port 2 changed to ${port2Mode} mode`, 2); }} style={{ color: '#003fb4', fontSize: '13px', fontWeight: 500, cursor: 'pointer' }}>
                   ⇌ Change Mode
                 </span>
               </div>
@@ -102,7 +103,7 @@ const EthernetPort = () => {
           <button 
             disabled={!hasChanges}
             onClick={handleApplyAll}
-            style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px', cursor: hasChanges ? 'pointer' : 'not-allowed' }}>
+            className="btn btn-primary">
             apply
           </button>
         </div>

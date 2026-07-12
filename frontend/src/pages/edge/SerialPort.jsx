@@ -62,7 +62,7 @@ const SerialPort = () => {
               </div>
               
               <div style={{ marginLeft: '140px' }}>
-                <button className="btn" style={{ backgroundColor: '#e0e0e0', color: '#999', padding: '0 30px', cursor: 'not-allowed' }} disabled>Apply</button>
+                <button className="btn btn-primary" disabled>Apply</button>
               </div>
             </div>
           </div>

@@ -84,8 +84,8 @@ const Routing = () => {
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Static IPv4 Routes</span>
             </div>
             <div>
-              <button onClick={() => setIsAddModalOpen(true)} style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', marginRight: '10px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Add</button>
-              <button style={{ backgroundColor: '#e74c3c', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600 }}>Delete</button>
+              <button onClick={() => setIsAddModalOpen(true)} className="btn btn-primary" style={{ marginRight: '10px' }}>Add</button>
+              <button className="btn btn-danger solid">Delete</button>
             </div>
           </div>
           
@@ -109,7 +109,7 @@ const Routing = () => {
           </table>
         </div>
 
-        <button className="btn btn-primary" style={{ backgroundColor: '#003fb4', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>apply</button>
+        <button className="btn btn-primary">apply</button>
       </div>
 
       {isAddModalOpen && (
@@ -165,8 +165,8 @@ const Routing = () => {
                 </div>
                 
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                  <button type="button" onClick={() => setIsAddModalOpen(false)} style={{ backgroundColor: 'white', color: '#666', border: '1px solid #ddd', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontSize: '13px' }}>cancel</button>
-                  <button type="button" style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontSize: '13px' }}>sure</button>
+                  <button type="button" onClick={() => setIsAddModalOpen(false)} className="btn btn-default">cancel</button>
+                  <button type="button" className="btn btn-primary">sure</button>
                 </div>
               </form>
             </div>

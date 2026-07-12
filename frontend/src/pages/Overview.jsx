@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
@@ -187,7 +188,7 @@ const Overview = () => {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
               <button 
                 onClick={() => setShowHostnameModal(false)}
-                style={{ padding: '8px 15px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', color: '#475569', fontWeight: 600 }}
+                className="btn btn-default"
               >
                 Cancel
               </button>
@@ -203,14 +204,15 @@ const Overview = () => {
                     if (res.success) {
                       setShowHostnameModal(false);
                       setInfo(prev => ({ ...prev, name: newHostname }));
+                      message.success('Hostname updated successfully', 2);
                     } else {
-                      alert('Failed to update hostname');
+                      message.error('Failed to update hostname', 2);
                     }
                   });
                 }}
-                style={{ padding: '8px 15px', backgroundColor: '#003fb4', border: 'none', borderRadius: '4px', cursor: 'pointer', color: 'white', fontWeight: 600 }}
+                className="btn btn-primary"
               >
-                Save
+                Apply
               </button>
             </div>
           </div>

@@ -374,7 +374,7 @@ const LAN = () => {
                           <td style={{ padding: '12px 15px' }}>{host.ip}</td>
                           <td style={{ padding: '12px 15px' }}>{host.mac ? host.mac.toUpperCase() : ''}</td>
                           <td style={{ padding: '12px 15px' }}>
-                            <button type="button" className="btn btn-danger" style={{ padding: '2px 10px', height: '24px', fontSize: '12px' }} onClick={() => handleToggleHost(host.mac)}>Select</button>
+                            <button type="button" className="btn btn-danger" style={{ height: '24px', fontSize: '12px' }} onClick={() => handleToggleHost(host.mac)}>Select</button>
                           </td>
                         </tr>
                       ))
@@ -438,8 +438,8 @@ const LAN = () => {
               </div>
             </div>
             <div style={{ padding: '15px 20px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-              <button type="button" className="btn" style={{ border: '1px solid #d9d9d9', backgroundColor: 'white', color: '#333' }} onClick={() => setShowAddModal(false)}>cancel</button>
-              <button type="button" className="btn btn-primary active-btn" onClick={handleAddSubmit}>sure</button>
+              <button type="button" className="btn btn-default" onClick={() => setShowAddModal(false)}>cancel</button>
+              <button type="button" className="btn btn-primary" onClick={handleAddSubmit}>sure</button>
             </div>
           </div>
         </div>
