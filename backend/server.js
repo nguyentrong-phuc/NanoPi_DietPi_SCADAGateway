@@ -309,9 +309,9 @@ app.post('/api/network', (req, res) => {
       // Update wpa_supplicant.conf
       let wpaConf = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\n`;
       if (wlanToSave.ssid) {
-        wpaConf += `network={\n  ssid="${wlanToSave.ssid}"\n  scan_ssid=1\n`;
+        wpaConf += `network={\n  ssid="${wlanToSave.ssid}"\n`;
         if (wlanToSave.password) {
-          wpaConf += `  psk="${wlanToSave.password}"\n  key_mgmt=WPA-PSK WPA-PSK-SHA256 SAE\n`;
+          wpaConf += `  psk="${wlanToSave.password}"\n`;
         } else {
           wpaConf += `  key_mgmt=NONE\n`;
         }
