@@ -288,11 +288,7 @@ const IEC104Config = ({ config, setConfig, saveConfig }) => {
         <div style={{ padding: '0 15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '30px', marginBottom: '30px' }}>
           <div className="card-panel" style={{ padding: '20px 25px', marginBottom: '20px', overflowX: 'auto' }}>
             <div className="card-subtitle">Connection Config</div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px', minWidth: '950px', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span className="form-label-bold">Server Address:</span>
-                <input type="text" className="form-input-standard" value={config.basicSettings?.serverAddress || '192.168.30.1'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, serverAddress: e.target.value}})} style={{ backgroundColor: '#f5f7fa', color: '#c0c4cc' }} />
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', minWidth: '950px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Local Port:</span>
                 <input type="text" className="form-input-standard" value={config.basicSettings?.port || '2404'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, port: e.target.value}})} />
@@ -318,7 +314,7 @@ const IEC104Config = ({ config, setConfig, saveConfig }) => {
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px', minWidth: '950px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', minWidth: '950px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">T1:</span>
                 <input type="text" className="form-input-standard" value={config.basicSettings?.t1 || '15'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, t1: e.target.value}})} />
