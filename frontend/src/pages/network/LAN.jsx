@@ -2,18 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 const LAN = () => {
   const [initialLanConfig, setInitialLanConfig] = useState({
-    ip: '192.168.1.199',
-    netmask: '255.255.255.0',
-    mac: 'D4:AD:20:F9:3F:CE',
-    dhcpEnabled: false,
-    dhcpStart: '',
-    dhcpEnd: '',
+    ip: '--',
+    netmask: '--',
+    mac: '--',
+    dhcpEnabled: true,
+    dhcpStart: '192.168.30.2',
+    dhcpEnd: '192.168.30.100',
     dns: '8.8.8.8',
     leaseTime: 1440,
-    status: 'connected',
-    send: '25.9 MB(452920)',
-    receive: '25.2 MB(272945)',
-    connTime: '21:22:32'
+    status: 'Disconnected',
+    send: '--',
+    receive: '--',
+    connTime: '--'
   });
   const [lanConfig, setLanConfig] = useState(initialLanConfig);
   const hasChanges = JSON.stringify(lanConfig) !== JSON.stringify(initialLanConfig);
@@ -80,11 +80,11 @@ const LAN = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
             <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>IP:</span> <span style={{ color: '#555' }}>{lanConfig.ip || '--'}</span></div>
             <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{lanConfig.netmask || '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{lanConfig.mac || '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{lanConfig.connTime || '00:00:00'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{lanConfig.mac && lanConfig.mac !== '--' ? lanConfig.mac.toUpperCase() : '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{lanConfig.connTime || '--'}</span></div>
             
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{lanConfig.send || '0 MB'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{lanConfig.receive || '0 MB'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{lanConfig.send || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{lanConfig.receive || '--'}</span></div>
           </div>
         </div>
 

@@ -20,10 +20,24 @@ const dnsmasqPath = isLinux ? '/etc/dnsmasq.d/scada.conf' : path.join(__dirname,
 const configDataDir = path.join(__dirname, '..', 'config_data');
 if (!fs.existsSync(configDataDir)) fs.mkdirSync(configDataDir, { recursive: true });
 
-// Ensure mock files exist in dev (Windows)
-if (!isLinux) {
-  if (!fs.existsSync(interfacesPath)) fs.writeFileSync(interfacesPath, 'allow-hotplug eth0\niface eth0 inet dhcp\n\nallow-hotplug eth1\niface eth1 inet static\n  address 192.168.2.1\n  netmask 255.255.255.0\n');
-  if (!fs.existsSync(dnsmasqPath)) fs.writeFileSync(dnsmasqPath, 'interface=eth1\ndhcp-range=eth1,192.168.2.10,192.168.2.100,255.255.255.0,24h\ndhcp-option=eth1,6,8.8.8.8\n');
+// Ensure default network configuration exists (First boot initialization)
+if (!fs.existsSync(dnsmasqPath)) {
+  fs.writeFileSync(dnsmasqPath, 'interface=eth1\ndhcp-range=eth1,192.168.30.2,192.168.30.100,255.255.255.0,24h\ndhcp-option=eth1,6,8.8.8.8\n');
+  if (isLinux) { try { execSync('systemctl restart dnsmasq'); } catch(e) {} }
+}
+
+if (!fs.existsSync(interfacesPath) || (isLinux && !fs.readFileSync(interfacesPath, 'utf-8').includes('eth1'))) {
+  let interfacesContent = fs.existsSync(interfacesPath) ? fs.readFileSync(interfacesPath, 'utf-8') : '';
+  // Ensure eth0 is at least DHCP
+  if (!interfacesContent.includes('eth0')) {
+    interfacesContent += '\nallow-hotplug eth0\niface eth0 inet dhcp\n';
+  }
+  // Ensure eth1 is Static with 192.168.30.1
+  if (!interfacesContent.includes('eth1')) {
+    interfacesContent += '\nallow-hotplug eth1\niface eth1 inet static\n  address 192.168.30.1\n  netmask 255.255.255.0\n';
+  }
+  fs.writeFileSync(interfacesPath, interfacesContent);
+  if (isLinux) { try { execSync('systemctl restart networking'); } catch(e) {} }
 }
 
 // Auth
