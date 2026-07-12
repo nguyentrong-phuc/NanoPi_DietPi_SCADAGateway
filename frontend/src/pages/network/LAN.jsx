@@ -61,6 +61,18 @@ const LAN = () => {
         newConfig.dhcpEnd = `${base}.100`;
       }
     }
+
+    // Auto-fill DHCP range if turning on DHCP and fields are empty
+    if (field === 'dhcpEnabled' && value === true) {
+      if (!newConfig.dhcpStart || !newConfig.dhcpEnd) {
+        const parts = (newConfig.ip || '').split('.');
+        if (parts.length === 4 && parts[3] !== '') {
+          const base = `${parts[0]}.${parts[1]}.${parts[2]}`;
+          newConfig.dhcpStart = newConfig.dhcpStart || `${base}.2`;
+          newConfig.dhcpEnd = newConfig.dhcpEnd || `${base}.100`;
+        }
+      }
+    }
     
     setLanConfig(newConfig);
   };

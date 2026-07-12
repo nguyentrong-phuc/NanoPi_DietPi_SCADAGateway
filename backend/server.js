@@ -340,6 +340,8 @@ app.post('/api/network', (req, res) => {
         console.log('Restarting networking and dnsmasq...');
         try { execSync('systemctl restart dnsmasq'); } catch(e) {}
         try { execSync('ifdown -a'); } catch(e) {}
+        try { execSync('killall wpa_supplicant'); } catch(e) {}
+        try { execSync('rm -rf /var/run/wpa_supplicant/wlan0'); } catch(e) {}
         try { execSync('systemctl restart networking'); } catch(e) {}
       }, 1000);
     }
