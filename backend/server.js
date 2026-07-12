@@ -142,12 +142,19 @@ app.get('/api/network', (req, res) => {
   // 3. Map live network interfaces (MAC and Live IP)
   const mapLive = (ethName, conf) => {
     if (nets[ethName] && nets[ethName].length > 0) {
+      conf.mac = nets[ethName][0].mac;
       const ipv4 = nets[ethName].find(n => n.family === 'IPv4' || n.family === 4);
       if (ipv4) {
         conf.liveIp = ipv4.address;
-        conf.mac = ipv4.mac;
         conf.status = 'Connected';
       }
+    }
+    // Fallback: Read MAC from sysfs if interface is down and missing from os.networkInterfaces
+    if ((!conf.mac || conf.mac === '--') && isLinux) {
+      try {
+        const mac = fs.readFileSync(`/sys/class/net/${ethName}/address`, 'utf-8').trim();
+        if (mac) conf.mac = mac;
+      } catch(e) {}
     }
   };
   mapLive('eth0', wanConfig);
@@ -534,10 +541,15 @@ app.get('/api/system/info', (req, res) => {
 
   // MAC addresses
   const getMac = (iface) => {
+    let mac = '--';
     const n = nets[iface];
-    if (!n) return '--';
-    const ipv4 = n.find(x => x.family === 'IPv4' || x.family === 4);
-    return ipv4 ? ipv4.mac.toUpperCase() : '--';
+    if (n && n.length > 0) {
+      mac = n[0].mac;
+    }
+    if ((!mac || mac === '--') && isLinux) {
+      try { mac = fs.readFileSync(`/sys/class/net/${iface}/address`, 'utf-8').trim(); } catch(e) {}
+    }
+    return mac !== '--' ? mac.toUpperCase() : '--';
   };
   result.mac1 = getMac('eth0');
   result.mac2 = getMac('eth1');
