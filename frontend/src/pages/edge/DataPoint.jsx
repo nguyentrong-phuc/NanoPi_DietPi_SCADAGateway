@@ -64,8 +64,8 @@ const DataPoint = () => {
   };
 
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ backgroundColor: '#eaedf2', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
+    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark, #f0f2f5)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ backgroundColor: 'white', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
         <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', margin: 0 }}>
           Data Point
         </h2>
@@ -74,14 +74,14 @@ const DataPoint = () => {
       <div style={{ padding: '20px 20px', flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e85c0d', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>Slave</span>
+            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
+            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Slave</span>
           </div>
           <div>
             <span style={{ fontSize: '12px', color: '#666', marginRight: '20px' }}>Version: 1779939851</span>
-            <button style={{ backgroundColor: '#e85c0d', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
-            <button style={{ backgroundColor: '#e85c0d', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Import</button>
-            <button style={{ backgroundColor: '#e85c0d', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Export</button>
+            <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
+            <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Import</button>
+            <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px' }}>Export</button>
           </div>
         </div>
 
@@ -90,32 +90,35 @@ const DataPoint = () => {
             <div 
               key={slave.id} 
               onClick={() => { setActiveSlave(slave.id); setCurrentPage(1); }}
+              className="w-card"
               style={{ 
                 backgroundColor: 'white', 
-                border: activeSlave === slave.id ? '1px solid #e85c0d' : '1px solid #eee', 
-                boxShadow: activeSlave === slave.id ? '0 0 5px rgba(232,92,13,0.2)' : '0 1px 3px rgba(0,0,0,0.05)',
-                borderRadius: '4px', 
+                border: activeSlave === slave.id ? '1px solid var(--primary-color)' : '1px solid #dcdfe6', 
+                boxShadow: activeSlave === slave.id ? '0 0 0 2px rgba(0,63,180,0.2)' : '0 2px 8px rgba(0,0,0,0.05)',
                 padding: '15px',
                 cursor: 'pointer',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '160px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f5f5f5', paddingBottom: '10px', marginBottom: '15px' }}>
-                <div style={{ fontWeight: 700, color: '#333', fontSize: '15px', borderLeft: '3px solid #e85c0d', paddingLeft: '8px' }}>
-                  | {slave.name}
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '10px' }}>
+                <div style={{ fontWeight: 700, color: '#222', fontSize: '15px', borderLeft: '3px solid var(--primary-color)', paddingLeft: '8px' }}>
+                  {slave.name}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: '#666' }}>
-                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', backgroundColor: slave.status === 'online' ? '#28a745' : '#e71562', marginRight: '5px' }}></div>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: '#666', fontWeight: 600 }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: slave.status === 'online' ? '#28a745' : '#dc3545', marginRight: '6px' }}></div>
                   {slave.status}
                 </div>
               </div>
-              <div style={{ fontSize: '13px', color: '#555', minHeight: '40px', whiteSpace: 'pre-line' }}>
-                <p style={{ margin: 0, marginBottom: '15px' }}>{slave.desc}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <p style={{ margin: 0 }}>protocol: <strong>{slave.protocol}</strong></p>
+              <div style={{ fontSize: '13px', color: '#555', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <p style={{ margin: 0, marginBottom: 'auto', whiteSpace: 'pre-line', lineHeight: '1.4' }}>{slave.desc}</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                  <p style={{ margin: 0 }}>protocol: <strong style={{ color: '#333' }}>{slave.protocol}</strong></p>
                   {slave.isCustom && (
-                    <div style={{ color: '#e71562', fontSize: '12px', fontWeight: 500 }}>
-                      <span style={{ color: '#e85c0d', marginRight: '10px', cursor: 'pointer' }}>✎ Edit</span>
+                    <div style={{ color: '#dc3545', fontSize: '12px', fontWeight: 600 }}>
+                      <span style={{ color: 'var(--primary-color)', marginRight: '10px', cursor: 'pointer' }}>✎ Edit</span>
                       <span style={{ cursor: 'pointer' }}>🗑 Delete</span>
                     </div>
                   )}
@@ -125,14 +128,14 @@ const DataPoint = () => {
           ))}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px', justifyContent: 'space-between', marginTop: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#e85c0d', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>List of slave points</span>
+            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
+            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>List of slave points</span>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input type="text" placeholder="Please enterPoint Screen" style={{ padding: '6px 12px', border: '1px solid #ddd', borderRadius: '3px', fontSize: '13px', width: '200px' }} />
-            <button style={{ backgroundColor: '#e0e0e0', color: '#fff', border: 'none', padding: '6px 20px', borderRadius: '3px', fontWeight: 600, fontSize: '13px' }} disabled>Point Screen</button>
+            <input type="text" placeholder="Please enterPoint Screen" className="form-control" style={{ padding: '6px 12px', fontSize: '13px', width: '200px', height: 'auto' }} />
+            <button className="btn" style={{ backgroundColor: '#e0e0e0', color: '#fff', padding: '6px 20px', fontWeight: 600, fontSize: '13px' }} disabled>Point Screen</button>
           </div>
         </div>
 
@@ -205,7 +208,7 @@ const DataPoint = () => {
                 <button 
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  style={{ padding: '4px 10px', border: 'none', backgroundColor: currentPage === page ? '#e85c0d' : 'white', color: currentPage === page ? 'white' : '#333', cursor: 'pointer', borderRadius: '3px' }}
+                  style={{ padding: '4px 10px', border: 'none', backgroundColor: currentPage === page ? 'var(--primary-color)' : 'white', color: currentPage === page ? 'white' : '#333', cursor: 'pointer', borderRadius: '3px' }}
                 >
                   {page}
                 </button>
