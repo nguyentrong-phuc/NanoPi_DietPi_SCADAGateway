@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TimePicker, ConfigProvider, message } from 'antd';
+import { TimePicker, ConfigProvider, message, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+
 const Reboot = () => {
   const [scheduledReboot, setScheduledReboot] = useState(false);
   const [rebootTime, setRebootTime] = useState('04:00');
@@ -21,12 +23,18 @@ const Reboot = () => {
   const hasChanges = scheduledReboot !== initialConfig.enabled || rebootTime !== initialConfig.time;
 
   const handleReboot = () => {
-    if (window.confirm("Are you sure you want to reboot the device?")) {
-      const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
-      fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
-        .then(() => message.success('Device is rebooting...'))
-        .catch(console.error);
-    }
+    Modal.confirm({
+      title: 'Reboot Device',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to reboot the device?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk() {
+        fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
+          .then(() => message.success('Device is rebooting...'))
+          .catch(console.error);
+      }
+    });
   };
 
   const handleApply = () => {

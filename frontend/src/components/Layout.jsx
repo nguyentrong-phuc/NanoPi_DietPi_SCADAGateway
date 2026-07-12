@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Globe, Settings, Cpu, HardDrive, UserCog, ChevronDown } from 'lucide-react';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const Layout = () => {
   const location = useLocation();
@@ -12,11 +13,18 @@ const Layout = () => {
 
   const handleReboot = () => {
     setDropdownOpen(false);
-    if (window.confirm('Are you sure you want to reboot the device?')) {
-      fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
-        .then(() => message.warning('System is rebooting... Please wait.', 5))
-        .catch(() => message.warning('Reboot command sent.', 5));
-    }
+    Modal.confirm({
+      title: 'Reboot Device',
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure you want to reboot the device?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk() {
+        fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
+          .then(() => message.warning('System is rebooting... Please wait.', 5))
+          .catch(() => message.warning('Reboot command sent.', 5));
+      }
+    });
   };
 
   // ── Auto-logout after 5 min idle ──────────────────────────────
