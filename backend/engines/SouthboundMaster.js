@@ -67,19 +67,65 @@ class SouthboundMaster {
 
         for (const pt of slavePoints) {
           try {
-            // Simplified polling logic
             const addr = parseInt(pt.address, 10);
             if (!isNaN(addr)) {
-               // Assuming holding registers (4xxxx). Offset = address - 40001
                let offset = addr;
                if (addr >= 40001) offset = addr - 40001;
+               
+               let count = 1;
+               if (pt.type && pt.type.includes('64 Bit')) count = 4;
+               else if (pt.type && pt.type.includes('32 Bit')) count = 2;
 
-               const res = await client.readHoldingRegisters(offset, 1);
-               // Store as slaveId_pointId
-               LiveDatabase.setPointValue(`${slave.id}_${pt.id}`, res.data[0]);
+               const res = await client.readHoldingRegisters(offset, count);
+               
+               // Parse data based on type
+               let finalValue = 0;
+               if (res.data && res.data.length > 0) {
+                 const buffer = Buffer.alloc(res.data.length * 2);
+                 for (let i = 0; i < res.data.length; i++) {
+                   buffer.writeUInt16BE(res.data[i], i * 2);
+                 }
+                 
+                 const type = pt.type || '16 Bit Unsigned';
+                 if (type.includes('CDAB')) {
+                   for (let i = 0; i < buffer.length; i += 4) {
+                     if (i + 4 <= buffer.length) {
+                       const temp = Buffer.from(buffer.subarray(i, i + 2));
+                       buffer.subarray(i + 2, i + 4).copy(buffer, i);
+                       temp.copy(buffer, i + 2);
+                     }
+                   }
+                 } else if (type.includes('BADC')) {
+                   for (let i = 0; i < buffer.length; i += 2) {
+                     const b0 = buffer[i];
+                     buffer[i] = buffer[i + 1];
+                     buffer[i + 1] = b0;
+                   }
+                 } else if (type.includes('DCBA')) {
+                   buffer.reverse();
+                 }
+
+                 try {
+                   if (type.includes('16 Bit Signed')) finalValue = buffer.readInt16BE(0);
+                   else if (type.includes('16 Bit Unsigned') || type === 'Bit') finalValue = buffer.readUInt16BE(0);
+                   else if (type.includes('32 Bit Signed')) finalValue = buffer.readInt32BE(0);
+                   else if (type.includes('32 Bit Unsigned')) finalValue = buffer.readUInt32BE(0);
+                   else if (type.includes('32 Bit Float')) finalValue = buffer.readFloatBE(0);
+                   else if (type.includes('64 Bit Float')) finalValue = buffer.readDoubleBE(0);
+                   else if (type.includes('64 Bit Signed')) finalValue = Number(buffer.readBigInt64BE(0));
+                   else if (type.includes('64 Bit Unsigned')) finalValue = Number(buffer.readBigUInt64BE(0));
+                   else finalValue = buffer.readUInt16BE(0);
+                 } catch(e) { finalValue = 0; }
+               }
+               
+               // Format float precision if needed
+               if (pt.type && pt.type.includes('Float')) {
+                  finalValue = parseFloat(finalValue.toFixed(4));
+               }
+
+               LiveDatabase.setPointValue(`${slave.id}_${pt.id}`, finalValue);
             }
           } catch (err) {
-            // Just log locally
             // console.error(`[Southbound] Polling error for slave ${slave.name}:`, err.message);
           }
         }
