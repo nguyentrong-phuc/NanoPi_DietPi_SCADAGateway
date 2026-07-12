@@ -7,6 +7,7 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
 
 const NetworkWireless = () => {
   const [config, setConfig] = useState({
+    enabled: false,
     mode: 'DHCP',
     ssid: '',
     password: '',
@@ -45,7 +46,7 @@ const NetworkWireless = () => {
   }, []);
 
   const handleChange = (e, field) => {
-    const value = e.target.value;
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     if (field === 'mode') {
       const newConfig = { ...config, mode: value };
       if (value === 'Static IP' && config.mode === 'DHCP') {
@@ -127,11 +128,25 @@ const NetworkWireless = () => {
             </div>
 
             <form onSubmit={handleApply} style={{ maxWidth: '500px', marginLeft: '50px' }}>
-              
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>SSID (Wi-Fi Name):</label>
-                <input type="text" value={config.ssid || ''} onChange={(e) => handleChange(e, 'ssid')} placeholder="e.g. MyHomeNetwork" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                <label style={{ width: '140px', fontSize: '14px', fontWeight: 600, color: '#333' }}>Enable Wi-Fi:</label>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                  <label style={{ position: 'relative', display: 'inline-block', width: '40px', height: '20px', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={config.enabled} onChange={(e) => handleChange(e, 'enabled')} style={{ opacity: 0, width: 0, height: 0 }} />
+                    <span style={{ position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: config.enabled ? '#10b981' : '#ccc', transition: '.4s', borderRadius: '34px' }}></span>
+                    <span style={{ position: 'absolute', content: '""', height: '14px', width: '14px', left: config.enabled ? '23px' : '3px', bottom: '3px', backgroundColor: 'white', transition: '.4s', borderRadius: '50%' }}></span>
+                  </label>
+                  <span style={{ marginLeft: '10px', fontSize: '13px', color: config.enabled ? '#10b981' : '#888', fontWeight: 600 }}>{config.enabled ? 'ON' : 'OFF'}</span>
+                </div>
               </div>
+
+              {config.enabled && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
+                    <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>SSID (Wi-Fi Name):</label>
+                    <input type="text" value={config.ssid || ''} onChange={(e) => handleChange(e, 'ssid')} placeholder="e.g. MyHomeNetwork" style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                  </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
                 <label style={{ width: '140px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Password:</label>
@@ -169,14 +184,6 @@ const NetworkWireless = () => {
               )}
               
               <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
-                <button 
-                  type="button" 
-                  onClick={() => setConfig(initialConfig)} 
-                  disabled={loading}
-                  style={{ flex: 1, padding: '8px 0', border: '1px solid #ddd', backgroundColor: 'white', color: '#555', borderRadius: '4px', cursor: 'pointer', fontWeight: 600 }}
-                >
-                  Cancel
-                </button>
                 <button 
                   type="submit" 
                   disabled={loading}

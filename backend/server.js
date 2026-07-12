@@ -84,7 +84,7 @@ const getNetworkConfig = () => {
     ip: '170.0.0.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
   };
   let wlanConfig = {
-    mode: 'DHCP', ssid: '', password: '', staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
+    enabled: false, mode: 'DHCP', ssid: '', password: '', staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
   };
 
   // 1. Parse /etc/network/interfaces
@@ -126,6 +126,9 @@ const getNetworkConfig = () => {
         wlanConfig.staticIp = getVal('address');
         wlanConfig.netmask = getVal('netmask') || '255.255.255.0';
         wlanConfig.gateway = getVal('gateway');
+      }
+      if (ifaces.includes('iface wlan0 inet')) {
+        wlanConfig.enabled = true;
       }
     }
   } catch(e) { console.error("Error reading interfaces:", e); }
@@ -289,18 +292,15 @@ app.post('/api/network', (req, res) => {
 
     // WLAN
     const wlanToSave = req.body.wlan || currentConfig.wlan;
-    if (wlanToSave) {
-      interfacesContent += `allow-hotplug wlan0\n`;
-      if (wlanToSave.mode === 'DHCP') {
-        interfacesContent += `iface wlan0 inet dhcp\n`;
-      } else {
-        interfacesContent += `iface wlan0 inet static\n`;
-        interfacesContent += `  address ${wlanToSave.staticIp}\n`;
-        interfacesContent += `  netmask ${wlanToSave.netmask}\n`;
-        if (wlanToSave.gateway) interfacesContent += `  gateway ${wlanToSave.gateway}\n`;
+      if (wlanToSave && wlanToSave.enabled) {
+        interfacesContent += `allow-hotplug wlan0\niface wlan0 inet ${wlanToSave.mode === 'Static IP' ? 'static' : 'dhcp'}\n`;
+        if (wlanToSave.mode === 'Static IP') {
+          if (wlanToSave.staticIp) interfacesContent += `  address ${wlanToSave.staticIp}\n`;
+          if (wlanToSave.netmask) interfacesContent += `  netmask ${wlanToSave.netmask}\n`;
+          if (wlanToSave.gateway) interfacesContent += `  gateway ${wlanToSave.gateway}\n`;
+        }
+        interfacesContent += `  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n\n`;
       }
-      interfacesContent += `  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n\n`;
-      
       // Update wpa_supplicant.conf
       let wpaConf = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\n`;
       if (wlanToSave.ssid) {
