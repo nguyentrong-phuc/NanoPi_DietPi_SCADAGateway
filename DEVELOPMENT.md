@@ -44,7 +44,26 @@ Once new UI changes are built and pushed, run the update script on the NanoPi to
 curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash
 ```
 
-## 4. Next Steps / Roadmap
+## 4. UI/UX Design System & Guidelines
+
+To maintain consistency throughout the dashboard, anyone contributing to the Frontend must adhere to the following design styles defined in `index.css`:
+
+### Colors
+- **Primary Color (RaitekSCADAEdge Blue)**: `#003FB4`
+- **Backgrounds**: `#f0f2f5` (App Body), `#ffffff` (Panels/Cards)
+- **Status Colors**: `#28a745` (Success/Connected), `#dc3545` (Danger/Disconnected)
+
+### Layout (`app-container`)
+- **Top Bar (`top-bar`)**: 60px height, primary color background. Contains Logo and main Navigation.
+- **Sub-Sidebar (`sub-sidebar`)**: 240px width, white background. Contains nested navigation items (`sidebar-item`).
+- **Content Area (`content-area`)**: Flex-1, 20px padding, light gray background.
+
+### Components
+- **Cards (`w-card`, Wukong-style)**: Used to wrap sections of content. White background, rounded corners (4px), subtle shadow, and a 1px border. Card titles (`w-card-title`) have a signature primary-colored vertical line on the left.
+- **Forms (`form-group`)**: Flex layout with a 200px label width (`form-label`) and dashed bottom borders separating fields. Inputs (`form-control`) are 300px wide and glow with the primary color on focus.
+- **Buttons (`btn`)**: Solid, 4px border radius. Primary buttons (`btn-primary.active-btn`) use the primary color `#003FB4`.
+
+## 5. Next Steps / Roadmap
 - Continue building out static mockups for remaining UI pages (Edge computing, System settings, etc.).
 - Refine CSS and ensure responsive design layout.
 - Move to **Step 2**: Integrate backend logic with OS commands (`/etc/network/interfaces`, `dnsmasq`, Node-RED integration, etc.) once the UI is finalized.
