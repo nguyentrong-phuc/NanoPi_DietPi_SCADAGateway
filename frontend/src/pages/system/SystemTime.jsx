@@ -10,11 +10,79 @@ const SystemTime = () => {
     ntpServer2: 'ntp.gwadar.cn'
   });
   const [config, setConfig] = useState(initialConfig);
+  const [deviceTime, setDeviceTime] = useState(new Date().toLocaleString('sv').replace('T', ' '));
   const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/system/time`)
+      .then(res => res.json())
+      .then(data => {
+        setInitialConfig({
+          timeZone: data.timeZone || 'UTC +7',
+          ntpEnabled: data.ntpEnabled !== false,
+          ntpServer1: data.ntpServer1 || '',
+          ntpServer2: data.ntpServer2 || ''
+        });
+        setConfig({
+          timeZone: data.timeZone || 'UTC +7',
+          ntpEnabled: data.ntpEnabled !== false,
+          ntpServer1: data.ntpServer1 || '',
+          ntpServer2: data.ntpServer2 || ''
+        });
+        if (data.deviceTime) setDeviceTime(data.deviceTime);
+      })
+      .catch(console.error);
+
+    const timer = setInterval(() => {
+      setDeviceTime(prev => {
+        const d = new Date(prev.replace(' ', 'T'));
+        d.setSeconds(d.getSeconds() + 1);
+        return d.toLocaleString('sv').replace('T', ' ');
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleApply = () => {
-    setInitialConfig(config);
-    alert('Applied System Time configuration!');
+    fetch(`${API_URL}/api/system/time`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'apply_ntp',
+        payload: {
+          ntpEnabled: config.ntpEnabled,
+          ntpServer1: config.ntpServer1,
+          ntpServer2: config.ntpServer2
+        }
+      })
+    }).then(res => res.json()).then(data => {
+      setInitialConfig(config);
+      alert('Applied System Time configuration!');
+    }).catch(err => {
+      console.error(err);
+      alert('Failed to apply configuration');
+    });
+  };
+
+  const handleSetTimezone = () => {
+    fetch(`${API_URL}/api/system/time`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'set_timezone', payload: { timeZone: config.timeZone } })
+    }).then(() => alert('Timezone updated!'));
+  };
+
+  const handleSyncWithBrowser = () => {
+    const browserTime = new Date().toLocaleString('sv').replace('T', ' ');
+    fetch(`${API_URL}/api/system/time`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'set_time', payload: { dateTime: browserTime } })
+    }).then(() => {
+      setDeviceTime(browserTime);
+      alert('Time synced with browser!');
+    });
   };
 
   const handleChange = (e, field) => {
@@ -34,17 +102,18 @@ const SystemTime = () => {
           <div className="form-group-unified-row">
             <div className="form-label-bold">Time Zone:</div>
             <select value={config.timeZone} onChange={(e) => handleChange(e, 'timeZone')} className="form-input-standard" style={{ width: '280px' }}>
-              <option value="UTC +7">UTC +7</option>
-              <option value="UTC +8">UTC +8</option>
-              <option value="UTC +9">UTC +9</option>
+              <option value="Asia/Ho_Chi_Minh">Asia/Ho_Chi_Minh (UTC +7)</option>
+              <option value="Asia/Shanghai">Asia/Shanghai (UTC +8)</option>
+              <option value="Asia/Tokyo">Asia/Tokyo (UTC +9)</option>
+              <option value="UTC">UTC</option>
             </select>
-            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Modify</span>
+            <span onClick={handleSetTimezone} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Modify</span>
           </div>
 
           <div className="form-group-unified-row">
             <div className="form-label-bold">Device Time:</div>
-            <span style={{ fontSize: '13px', color: 'var(--text-dark)', width: '280px', padding: '0 12px' }}>{new Date().toLocaleString('sv').replace('T', ' ')}</span>
-            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Sync With Browser</span>
+            <span style={{ fontSize: '13px', color: 'var(--text-dark)', width: '280px', padding: '0 12px' }}>{deviceTime}</span>
+            <span onClick={handleSyncWithBrowser} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Sync With Browser</span>
           </div>
 
           <div className="form-group-unified-row">

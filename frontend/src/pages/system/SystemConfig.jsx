@@ -5,14 +5,28 @@ const SystemConfig = () => {
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: '' });
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleExport = (type) => {
-    window.location.href = `${API_URL}/api/system/export/${type}`;
+  const handleExport = () => {
+    window.location.href = `${API_URL}/api/system/config/export`;
   };
 
   const handleFileSelect = (file) => {
-    if (file) {
-      setSelectedFile(file);
-    }
+    if (file) setSelectedFile(file);
+  };
+
+  const handleImport = () => {
+    if (!selectedFile) return alert('Please select a file first');
+    const formData = new FormData();
+    formData.append('config_file', selectedFile);
+    fetch(`${API_URL}/api/system/config/import`, { method: 'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message || 'Import successful!');
+        closeModal();
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Import failed!');
+      });
   };
 
   const closeModal = () => {
@@ -36,7 +50,7 @@ const SystemConfig = () => {
           <div style={{ paddingLeft: '20px' }}>
             <div className="form-group-unified-row">
               <span className="form-label-bold">Export:</span>
-              <button className="btn btn-primary" style={{ width: '200px' }} onClick={() => handleExport('system')}>Export Config</button>
+              <button className="btn btn-primary" style={{ width: '200px' }} onClick={handleExport}>Export Config</button>
             </div>
             <div className="form-group-unified-row">
               <span className="form-label-bold">Import:</span>
@@ -114,7 +128,10 @@ const SystemConfig = () => {
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn btn-default" onClick={closeModal}>Cancel</button>
-              <button className="btn btn-primary" onClick={() => { if(modalConfig.mode === 'export') handleExport('edge'); closeModal(); }}>
+              <button className="btn btn-primary" onClick={() => {
+                if (modalConfig.mode === 'export') { handleExport(); closeModal(); }
+                else if (modalConfig.mode === 'import' || modalConfig.mode === 'import_system') { handleImport(); }
+              }}>
                 {(modalConfig.mode === 'import' || modalConfig.mode === 'import_system') ? 'Import' : 'Sure'}
               </button>
             </div>

@@ -12,6 +12,19 @@ const WAN = () => {
   const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
 
   const [loading, setLoading] = useState(false);
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/network`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.wan) {
+          setConfig(prev => ({ ...prev, ...data.wan }));
+          setInitialConfig(prev => ({ ...prev, ...data.wan }));
+        }
+      })
+      .catch(err => console.error("Error fetching network config:", err));
+  }, []);
 
   const handleChange = (e, field) => {
     const value = e.target.value;
@@ -25,11 +38,24 @@ const WAN = () => {
   const handleApply = (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setInitialConfig(config);
-      alert('WAN Configuration Applied!');
-      setLoading(false);
-    }, 1000);
+    const payload = { wan: config };
+    fetch(`${API_URL}/api/network`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(data => {
+        setInitialConfig(config);
+        alert(data.message || 'WAN Configuration Applied!');
+      })
+      .catch(err => {
+        console.error("Error applying config", err);
+        alert("Failed to apply configuration");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -53,15 +79,15 @@ const WAN = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>DHCP</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>172.31.5.26</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>D4:AD:20:F9:3F:CD</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>{config.mode}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>{config.liveIp || 'N/A'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>{config.liveGateway || 'N/A'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{config.mac || 'N/A'}</span></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>255.255.255.0</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>172.31.5.25</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>4.6 MB(67828)</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>7.0 MB(76584)</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{config.netmask || 'N/A'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>{config.dns1} {config.dns2}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{config.receive || '0 MB'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{config.send || '0 MB'}</span></div>
               
               <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>20:39:43</span></div>
             </div>

@@ -26,9 +26,9 @@ const LAN = () => {
     fetch(`${API_URL}/api/network`)
       .then(res => res.json())
       .then(data => {
-        if (data.lan1) {
-          setLanConfig(prev => ({ ...prev, ...data.lan1 }));
-          setInitialLanConfig(prev => ({ ...prev, ...data.lan1 }));
+        if (data.lan) {
+          setLanConfig(prev => ({ ...prev, ...data.lan }));
+          setInitialLanConfig(prev => ({ ...prev, ...data.lan }));
         }
       })
       .catch(err => console.error("Error fetching network config:", err));
@@ -42,7 +42,7 @@ const LAN = () => {
   const handleApply = (e) => {
     e.preventDefault();
     setLoading(true);
-    const payload = { lan1: lanConfig, lan2: {} };
+    const payload = { lan: lanConfig };
     fetch(`${API_URL}/api/network`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

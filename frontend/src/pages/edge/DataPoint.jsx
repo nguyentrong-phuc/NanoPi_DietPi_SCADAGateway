@@ -6,7 +6,7 @@ const ModalToggleSwitch = ({ isOn, handleToggle }) => (
   </div>
 );
 
-const mockSlaves = [
+const initialMockSlaves = [
   { id: 'slave_status', name: 'Slave_Status', desc: 'Slave Status\n0:offline 1:abnormal 2:online 3:stop', protocol: 'Slave Status', status: 'online', isCustom: false },
   { id: 'system_attrs', name: 'System_Attributes', desc: 'System Node', protocol: 'System Node', status: 'online', isCustom: false },
   { id: 'node', name: 'Node', desc: '', protocol: 'Virtual Slave', status: 'online', isCustom: true },
@@ -15,7 +15,7 @@ const mockSlaves = [
   { id: 'envision', name: 'Envision_1', desc: 'Data Sources: 172.168.41.11:502', protocol: 'Modbus_TCP', status: 'offline', isCustom: true },
 ];
 
-const mockPoints = {
+const initialMockPoints = {
   'slave_status': [
     { id: 1, name: 'Envision_1', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '--', acq: '--', ctrl: '--', desc: 'Envision_1' },
     { id: 2, name: 'PM5320_1', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '0', acq: '--', ctrl: '--', desc: 'PM5320_1' },
@@ -52,10 +52,31 @@ const mockPoints = {
 };
 
 const DataPoint = () => {
+  const [slaves, setSlaves] = useState(initialMockSlaves);
+  const [points, setPoints] = useState(initialMockPoints);
   const [activeSlave, setActiveSlave] = useState('slave_status');
   const [currentPage, setCurrentPage] = useState(1);
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'add', data: null });
   const itemsPerPage = 15;
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
+  React.useEffect(() => {
+    fetch(`${API_URL}/api/edge/data-points`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.slaves && data.slaves.length > 0) setSlaves(data.slaves);
+        if (data.points) setPoints(data.points);
+      })
+      .catch(console.error);
+  }, []);
+
+  const saveConfig = (newSlaves, newPoints) => {
+    fetch(`${API_URL}/api/edge/data-points`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slaves: newSlaves, points: newPoints })
+    }).catch(console.error);
+  };
 
   const openAddModal = () => {
     setModalConfig({ 
@@ -86,12 +107,12 @@ const DataPoint = () => {
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
-  const currentPoints = mockPoints[activeSlave] || [];
+    const currentPoints = points[activeSlave] || [];
   const totalItems = currentPoints.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
   const displayedPoints = currentPoints.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  const currentSlaveObj = mockSlaves.find(s => s.id === activeSlave);
+    const currentSlaveObj = slaves.find(s => s.id === activeSlave);
   const isCustomSlave = currentSlaveObj?.isCustom;
 
   const showFormulaCols = activeSlave !== 'system_attrs';
@@ -128,7 +149,7 @@ const DataPoint = () => {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-            {mockSlaves.map(slave => (
+    {slaves.map(slave => (
               <div 
                 key={slave.id} 
                 onClick={() => { setActiveSlave(slave.id); setCurrentPage(1); }}

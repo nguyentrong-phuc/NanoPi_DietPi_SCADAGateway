@@ -1,23 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TimePicker, ConfigProvider } from 'antd';
 import dayjs from 'dayjs';
 const Reboot = () => {
-  const [scheduledReboot, setScheduledReboot] = useState(true);
-  const [rebootTime, setRebootTime] = useState('04:44');
-  const [initialConfig, setInitialConfig] = useState({ enabled: true, time: '04:44' });
+  const [scheduledReboot, setScheduledReboot] = useState(false);
+  const [rebootTime, setRebootTime] = useState('04:00');
+  const [initialConfig, setInitialConfig] = useState({ enabled: false, time: '04:00' });
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/system/schedule-reboot`)
+      .then(res => res.json())
+      .then(data => {
+        setScheduledReboot(data.enabled);
+        setRebootTime(data.time || '04:00');
+        setInitialConfig({ enabled: data.enabled, time: data.time || '04:00' });
+      })
+      .catch(console.error);
+  }, []);
 
   const hasChanges = scheduledReboot !== initialConfig.enabled || rebootTime !== initialConfig.time;
 
   const handleReboot = () => {
-    if (window.confirm("Are you sure you want to reboot the gateway?")) {
-      alert("Rebooting...");
-      // Add actual reboot API call here later
+    if (window.confirm("Are you sure you want to reboot the device?")) {
+      const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+      fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
+        .then(() => alert('Device is rebooting...'))
+        .catch(console.error);
     }
   };
 
   const handleApply = () => {
-    setInitialConfig({ enabled: scheduledReboot, time: rebootTime });
-    alert("Scheduled reboot applied!");
+    fetch(`${API_URL}/api/system/schedule-reboot`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled: scheduledReboot, time: rebootTime })
+    }).then(res => res.json()).then(data => {
+      setInitialConfig({ enabled: scheduledReboot, time: rebootTime });
+      alert(data.message || 'Scheduled reboot applied!');
+    }).catch(err => {
+      console.error(err);
+      alert('Failed to apply scheduled reboot');
+    });
   };
 
   return (
