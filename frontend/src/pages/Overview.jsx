@@ -128,7 +128,7 @@ const Overview = () => {
               <SubCardHeader title="WAN (eth0)" onSettingsClick={() => navigate('/network/wan')} />
               <FieldRow label="Mode:" value={info?.wan?.mode} />
               <FieldRow label="WAN IP:" value={info?.wan?.liveIp && info?.wan?.liveIp !== '--' ? info?.wan?.liveIp : info?.wan?.staticIp} />
-              <FieldRow label="Netmask:" value={info?.wan?.netmask} />
+              <FieldRow label="Netmask:" value={info?.wan?.mode === 'DHCP' ? (info?.wan?.status === 'Connected' ? (info?.wan?.liveNetmask || '--') : '--') : (info?.wan?.netmask || '--')} />
               <FieldRow label="Gateway:" value={info?.wan?.liveGateway || info?.wan?.gateway} />
               <FieldRow label="DNS-1:" value={info?.wan?.dns1} />
               <FieldRow label="DNS-2:" value={info?.wan?.dns2} />
@@ -148,7 +148,7 @@ const Overview = () => {
               <SubCardHeader title="WLAN (wlan0)" onSettingsClick={() => navigate('/network/wireless')} />
               <FieldRow label="Mode:" value={info?.wlan?.mode} />
               <FieldRow label="WLAN IP:" value={info?.wlan?.liveIp !== '--' ? info?.wlan?.liveIp : info?.wlan?.staticIp} />
-              <FieldRow label="Netmask:" value={info?.wlan?.netmask} />
+              <FieldRow label="Netmask:" value={info?.wlan?.mode === 'DHCP' ? (info?.wlan?.status === 'Connected' ? (info?.wlan?.liveNetmask || '--') : '--') : (info?.wlan?.netmask || '--')} />
               <FieldRow label="Gateway:" value={info?.wlan?.gateway} />
               <FieldRow label="SSID:" value={info?.wlan?.ssid || '--'} />
             </div>
