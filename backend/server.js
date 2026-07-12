@@ -334,9 +334,11 @@ app.post('/api/network', (req, res) => {
     if (isLinux) {
       setTimeout(() => {
         console.log('Restarting networking and dnsmasq...');
-        try { execSync('systemctl restart networking'); } catch(e) {}
         try { execSync('systemctl restart dnsmasq'); } catch(e) {}
-        try { execSync('systemctl restart wpa_supplicant'); } catch(e) {}
+        try { execSync('killall wpa_supplicant'); } catch(e) {}
+        try { execSync('ifdown wlan0; ifdown eth1; ifdown eth0'); } catch(e) {}
+        try { execSync('systemctl restart networking'); } catch(e) {}
+        try { execSync('ifup wlan0'); } catch(e) {}
       }, 1000);
     }
   } catch (error) {
