@@ -311,7 +311,6 @@ app.post('/api/network', (req, res) => {
         wpaConf += `}\n`;
       }
       fs.writeFileSync(wpaSupplicantPath, wpaConf);
-    }
 
     fs.writeFileSync(interfacesPath, interfacesContent);
 
