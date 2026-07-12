@@ -376,6 +376,7 @@ const LAN = () => {
 
             <div style={{ marginTop: '20px' }}>
               <button 
+                onClick={handleApply}
                 disabled={!hasChanges} 
                 className={`btn ${hasChanges ? 'btn-primary active-btn' : ''}`}
                 style={{
