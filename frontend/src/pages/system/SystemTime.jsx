@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 const SystemTime = () => {
   const [initialConfig, setInitialConfig] = useState({
-    timeZone: 'UTC +8',
+    timeZone: 'UTC +7',
     ntpEnabled: true,
     ntpServer1: 'ntp.aliyun.com',
-    ntpServer2: ''
+    ntpServer2: 'ntp.gwadar.cn'
   });
   const [config, setConfig] = useState(initialConfig);
   const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
@@ -28,42 +28,39 @@ const SystemTime = () => {
         </h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-          <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
-          <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Configure</span>
-        </div>
-
-        <div style={{ maxWidth: '600px', marginLeft: '50px' }}>
+      <div style={{ padding: '30px 20px', flex: 1 }}>
+        <div style={{ maxWidth: '600px', marginLeft: '60px' }}>
           
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Time Zone:</div>
-            <select value={config.timeZone} onChange={(e) => handleChange(e, 'timeZone')} style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }}>
-              <option value="UTC +7">UTC +7 (Bangkok, Hanoi, Jakarta)</option>
-              <option value="UTC +8">UTC +8 (Beijing, Singapore)</option>
-              <option value="UTC +9">UTC +9 (Tokyo, Seoul)</option>
+            <select value={config.timeZone} onChange={(e) => handleChange(e, 'timeZone')} style={{ width: '280px', padding: '8px 12px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#606266' }}>
+              <option value="UTC +7">UTC +7</option>
+              <option value="UTC +8">UTC +8</option>
+              <option value="UTC +9">UTC +9</option>
             </select>
-            <span style={{ color: '#003fb4', fontSize: '13px', cursor: 'pointer', marginLeft: '10px', fontWeight: 600 }}>Modify</span>
+            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', fontWeight: 400, textDecoration: 'underline' }}>Modify</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Device Time:</div>
-            <span style={{ fontSize: '13px', color: '#333', width: '300px' }}>{new Date().toLocaleString()}</span>
-            <span style={{ color: '#003fb4', fontSize: '13px', cursor: 'pointer', marginLeft: '10px', fontWeight: 600 }}>Sync With Browser</span>
+            <span style={{ fontSize: '13px', color: '#333', width: '280px' }}>{new Date().toLocaleString('sv').replace('T', ' ')}</span>
+            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', fontWeight: 400, textDecoration: 'underline' }}>Sync With Browser</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
             <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Set Time:</div>
-            <input type="date" style={{ width: '145px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333', marginRight: '10px' }} />
-            <input type="time" style={{ width: '145px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
-            <span style={{ color: '#003fb4', fontSize: '13px', cursor: 'pointer', marginLeft: '10px', fontWeight: 600 }}>Set</span>
+            <div style={{ width: '280px', display: 'flex', gap: '10px' }}>
+              <input type="date" style={{ flex: 1, padding: '8px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#c0c4cc' }} />
+              <input type="time" style={{ flex: 1, padding: '8px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#c0c4cc' }} />
+            </div>
+            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', fontWeight: 400, textDecoration: 'underline' }}>Set</span>
           </div>
 
-          <div style={{ borderTop: '1px solid #eaedf2', paddingTop: '30px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-              <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333', fontWeight: 600 }}>NTP:</div>
-              <div style={{ width: '300px', display: 'flex', alignItems: 'center' }}>
-                <label className="toggle-switch">
+          <div style={{ borderTop: '1px solid #ebeef5', paddingTop: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', marginLeft: '-60px' }}>
+              <div style={{ fontSize: '14px', color: '#333', fontWeight: 600, marginRight: '10px' }}>NTP</div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <label className="toggle-switch" style={{ width: '36px', height: '18px' }}>
                   <input type="checkbox" checked={config.ntpEnabled} onChange={(e) => handleChange(e, 'ntpEnabled')} />
                   <span className="toggle-slider"></span>
                 </label>
@@ -72,21 +69,20 @@ const SystemTime = () => {
 
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
               <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>NTP Server_1:</div>
-              <input type="text" value={config.ntpServer1} onChange={(e) => handleChange(e, 'ntpServer1')} style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+              <input type="text" value={config.ntpServer1} onChange={(e) => handleChange(e, 'ntpServer1')} style={{ width: '280px', padding: '8px 12px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#606266' }} />
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
               <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>NTP Server_2:</div>
-              <input type="text" value={config.ntpServer2} onChange={(e) => handleChange(e, 'ntpServer2')} style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} placeholder="Please enter" />
+              <input type="text" value={config.ntpServer2} onChange={(e) => handleChange(e, 'ntpServer2')} style={{ width: '280px', padding: '8px 12px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#606266' }} placeholder="Please enter" />
             </div>
           </div>
 
-          <div style={{ marginTop: '40px', paddingLeft: '15px' }}>
+          <div style={{ marginTop: '20px', marginLeft: '-60px' }}>
             <button 
-              disabled={!hasChanges}
               onClick={handleApply}
-              style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
-              apply
+              style={{ backgroundColor: 'var(--primary-color)', color: 'white', cursor: 'pointer', border: 'none', padding: '8px 30px', borderRadius: '4px', fontWeight: 600, fontSize: '13px' }}>
+              Apply
             </button>
           </div>
 
