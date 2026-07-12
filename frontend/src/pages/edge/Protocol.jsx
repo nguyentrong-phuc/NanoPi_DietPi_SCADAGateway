@@ -50,7 +50,17 @@ const ModbusConfig = ({ activeTab }) => {
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266' }}><span style={{ color: '#f56c6c' }}>*</span> Protocol:</span>
                 <select className="form-control" style={{ padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
-                  <option>TCP Server</option>
+                  {activeTab === 'Modbus RTU' ? (
+                    <>
+                      <option>RTU Master</option>
+                      <option>RTU Slave</option>
+                    </>
+                  ) : (
+                    <>
+                      <option>TCP Server</option>
+                      <option>TCP Client</option>
+                    </>
+                  )}
                 </select>
               </div>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -65,39 +75,49 @@ const ModbusConfig = ({ activeTab }) => {
           </div>
 
           {/* Slave Configuration */}
-          <div style={{ backgroundColor: '#ffffff', border: '1px solid #ebeef5', borderRadius: '4px', padding: '15px 20px', marginBottom: '25px' }}>
+          <div style={{ backgroundColor: '#ffffff', border: '1px solid #ebeef5', borderRadius: '4px', padding: '15px 20px', marginBottom: '25px', overflowX: 'auto' }}>
             <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '15px' }}>
               Slave Configuration
             </div>
             
-            <div style={{ display: 'flex', width: '100%', gap: '0' }}>
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '0.8fr 1.2fr 1.3fr 1.3fr 1.5fr', gap: '20px', minWidth: '850px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266' }}><span style={{ color: '#f56c6c' }}>*</span> Slave Address:</span>
-                <input type="text" className="form-control" defaultValue="1" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px 0 0 4px', border: '1px solid #dcdfe6', height: '32px', color: '#606266', outline: 'none' }} />
+                <input type="text" className="form-control" defaultValue="1" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', color: '#606266', outline: 'none' }} />
               </div>
-              <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266', whiteSpace: 'nowrap' }}><span style={{ color: '#f56c6c' }}>*</span> Protocol_Conversion.bit16_int:</span>
-                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '0', border: '1px solid #dcdfe6', borderLeft: 'none', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
-                  <option>AB</option>
+                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
+                  <option value="AB">AB</option>
+                  <option value="BA">BA</option>
                 </select>
               </div>
-              <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266', whiteSpace: 'nowrap' }}><span style={{ color: '#f56c6c' }}>*</span> 32 bit integer byte order:</span>
-                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '0', border: '1px solid #dcdfe6', borderLeft: 'none', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
-                  <option>AB CD</option>
+                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
+                  <option value="AB CD">AB CD</option>
+                  <option value="CD AB">CD AB</option>
+                  <option value="BA DC">BA DC</option>
+                  <option value="DC BA">DC BA</option>
                 </select>
               </div>
-              <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266', whiteSpace: 'nowrap' }}><span style={{ color: '#f56c6c' }}>*</span> 32 bit float byte order:</span>
-                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '0', border: '1px solid #dcdfe6', borderLeft: 'none', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
-                  <option>AB CD</option>
+                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
+                  <option value="AB CD">AB CD</option>
+                  <option value="CD AB">CD AB</option>
+                  <option value="BA DC">BA DC</option>
+                  <option value="DC BA">DC BA</option>
                 </select>
               </div>
-              <div style={{ flex: 1.5, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontSize: '12px', color: '#606266', whiteSpace: 'nowrap' }}>64 bit integer byte order:</span>
-                <div style={{ width: '100%', height: '32px', display: 'flex', alignItems: 'center', padding: '0 12px', fontSize: '13px', color: '#333', border: '1px solid #dcdfe6', borderLeft: 'none', borderRadius: '0 4px 4px 0', backgroundColor: '#fcfcfc' }}>
-                  ABCDEFGH
-                </div>
+                <select className="form-control" style={{ width: '100%', padding: '0 12px', fontSize: '13px', borderRadius: '4px', border: '1px solid #dcdfe6', height: '32px', backgroundColor: 'white', color: '#606266', outline: 'none' }}>
+                  <option value="ABCDEFGH">ABCDEFGH</option>
+                  <option value="HGFEDCBA">HGFEDCBA</option>
+                  <option value="GHEFCDAB">GHEFCDAB</option>
+                  <option value="BADCFEHG">BADCFEHG</option>
+                </select>
               </div>
             </div>
           </div>
