@@ -11,6 +11,32 @@ const PORT = 80;
 app.use(cors());
 app.use(express.json());
 
+// Log helper
+const LOG_FILE = path.join(__dirname, 'system_events.json');
+if (!fs.existsSync(LOG_FILE)) {
+  fs.writeFileSync(LOG_FILE, JSON.stringify([]));
+}
+
+const logEvent = (level, message) => {
+  try {
+    let logs = [];
+    if (fs.existsSync(LOG_FILE)) {
+      logs = JSON.parse(fs.readFileSync(LOG_FILE, 'utf-8'));
+    }
+    const newLog = {
+      id: logs.length > 0 ? logs[logs.length - 1].id + 1 : 1,
+      time: new Date().toLocaleString('sv').replace('T', ' '),
+      level,
+      log: message
+    };
+    logs.push(newLog);
+    if (logs.length > 1000) logs = logs.slice(logs.length - 1000);
+    fs.writeFileSync(LOG_FILE, JSON.stringify(logs, null, 2));
+  } catch(e) {
+    console.error("Error writing log:", e);
+  }
+};
+
 // Helper to determine OS and paths
 const isLinux = os.platform() === 'linux';
 const interfacesPath = isLinux ? '/etc/network/interfaces' : path.join(__dirname, '..', 'config_data', 'interfaces_mock.txt');
@@ -43,13 +69,24 @@ if (!fs.existsSync(authFilePath)) {
   fs.writeFileSync(authFilePath, JSON.stringify({ username: 'admin', password: 'admin' }, null, 2));
 }
 
+app.get('/api/logs', (req, res) => {
+  try {
+    const logs = JSON.parse(fs.readFileSync(LOG_FILE, 'utf-8'));
+    res.json(logs);
+  } catch(e) {
+    res.status(500).json({ error: 'Failed to read logs' });
+  }
+});
+
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
   try {
     const auth = JSON.parse(fs.readFileSync(authFilePath, 'utf-8'));
     if (username === auth.username && password === auth.password) {
+      logEvent('Info', `User ${username} logged in`);
       res.json({ token: 'fake-jwt-token-123', username: auth.username });
     } else {
+      logEvent('Warning', `Failed login attempt for user ${username}`);
       res.status(401).json({ error: 'Invalid credentials' });
     }
   } catch(e) {
@@ -468,6 +505,46 @@ app.get('/api/network/routing', (req, res) => {
   }
   res.json({ routes });
 });
+
+// Network Diagnostics (Ping & Traceroute)
+app.post('/api/network/diagnostics', (req, res) => {
+  const { target, type } = req.body;
+  if (!target || !type) {
+    return res.status(400).json({ error: 'Missing target or type' });
+  }
+
+  // Basic sanitization: only allow safe IP/domain characters
+  if (!/^[a-zA-Z0-9._\-]+$/.test(target)) {
+    return res.status(400).json({ error: 'Invalid target format' });
+  }
+
+  let cmd = '';
+  if (type === 'Ping') {
+    cmd = `ping -c 4 ${target}`;
+  } else if (type === 'Traceroute') {
+    // Try traceroute first, fall back to tracepath (pre-installed on Debian/DietPi)
+    cmd = `traceroute ${target} 2>/dev/null || tracepath -n ${target}`;
+  } else {
+    return res.status(400).json({ error: 'Unknown diagnostic type' });
+  }
+
+  try {
+    let output;
+    if (isLinux) {
+      output = execSync(cmd, { timeout: 30000 }).toString();
+    } else {
+      // Windows fallback for dev
+      output = type === 'Ping'
+        ? execSync(`ping ${target}`, { timeout: 15000 }).toString()
+        : execSync(`tracert ${target}`, { timeout: 30000 }).toString();
+    }
+    res.json({ output });
+  } catch (err) {
+    // execSync throws on non-zero exit but still has stdout
+    const output = (err.stdout && err.stdout.toString()) || err.message;
+    res.json({ output });
+  }
+});
 app.get('/api/system/time', (req, res) => {
   let config = {
     timeZone: 'UTC',
@@ -540,27 +617,83 @@ app.post('/api/system/time', (req, res) => {
   }
 });
 
-// Edge Computing JSON Storage API
-app.get('/api/edge/:type', (req, res) => {
-  const type = req.params.type;
-  const filePath = path.join(__dirname, '..', 'config_data', `${type}.json`);
+// Edge Computing - Protocol Configurations
+app.get('/api/edge/protocol/:type', (req, res) => {
+  const type = req.params.type; // modbus_rtu, modbus_tcp, iec104
+  const filePath = path.join(__dirname, '..', 'config_data', `protocol_${type}.json`);
   if (fs.existsSync(filePath)) {
     try {
       res.json(JSON.parse(fs.readFileSync(filePath, 'utf-8')));
-    } catch (e) { res.json({ slaves: [], points: [] }); }
+    } catch (e) {
+      res.json({ basicSettings: {}, nodes: [] });
+    }
   } else {
-    res.json({ slaves: [], points: [] });
+    res.json({ basicSettings: {}, nodes: [] });
   }
 });
 
-app.post('/api/edge/:type', (req, res) => {
+app.post('/api/edge/protocol/:type', (req, res) => {
   const type = req.params.type;
-  const filePath = path.join(__dirname, '..', 'config_data', `${type}.json`);
+  const filePath = path.join(__dirname, '..', 'config_data', `protocol_${type}.json`);
   try {
-    fs.writeFileSync(filePath, JSON.stringify(req.body, null, 2));
+    const { basicSettings, nodes } = req.body;
+    // Basic validation
+    if (!basicSettings || !Array.isArray(nodes)) {
+      return res.status(400).json({ error: 'Invalid payload structure' });
+    }
+    fs.writeFileSync(filePath, JSON.stringify({ basicSettings, nodes }, null, 2));
+    logEvent('Protocol Configuration', `Updated protocol: ${type}`, 'admin');
     res.json({ success: true, message: 'Configuration saved' });
   } catch (e) {
     res.status(500).json({ error: 'Failed to save configuration' });
+  }
+});
+
+// Edge Computing - Data Points
+app.get('/api/edge/data-points', (req, res) => {
+  const filePath = path.join(__dirname, '..', 'config_data', `data-points.json`);
+  const defaultSlaves = [
+    { id: 'slave_status', name: 'Slave_Status', desc: 'Slave Status\n0:offline 1:abnormal 2:online 3:stop', protocol: 'Slave Status', status: 'online', isCustom: false },
+    { id: 'system_attrs', name: 'System_Attributes', desc: 'System Node', protocol: 'System Node', status: 'online', isCustom: false },
+    { id: 'node', name: 'Virtual Node', desc: 'Intermediate calculation points', protocol: 'Virtual Slave', status: 'online', isCustom: false }
+  ];
+  const defaultPoints = {
+    'slave_status': [],
+    'system_attrs': [
+      { id: 1, name: 'sys_timestamp_str', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'String timestamp' },
+      { id: 2, name: 'sys_local_time2', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'Sec local time' },
+      { id: 3, name: 'sys_mac', type: 'string', address: '--', rw: 'Only Read', priority: 'Level 1', data: '--', desc: 'Device MAC' }
+    ],
+    'node': []
+  };
+
+  if (fs.existsSync(filePath)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      // Ensure system nodes exist
+      const slaves = data.slaves || defaultSlaves;
+      const points = data.points || defaultPoints;
+      res.json({ slaves, points });
+    } catch (e) {
+      res.json({ slaves: defaultSlaves, points: defaultPoints });
+    }
+  } else {
+    res.json({ slaves: defaultSlaves, points: defaultPoints });
+  }
+});
+
+app.post('/api/edge/data-points', (req, res) => {
+  const filePath = path.join(__dirname, '..', 'config_data', `data-points.json`);
+  try {
+    const { slaves, points } = req.body;
+    if (!Array.isArray(slaves) || typeof points !== 'object') {
+      return res.status(400).json({ error: 'Invalid payload structure' });
+    }
+    fs.writeFileSync(filePath, JSON.stringify({ slaves, points }, null, 2));
+    logEvent('Data Point Configuration', `Updated data points configurations`, 'admin');
+    res.json({ success: true, message: 'Data points saved' });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to save data points' });
   }
 });
 
@@ -838,6 +971,42 @@ app.post('/api/network/diagnostics', (req, res) => {
     // We return stdout if available, otherwise stderr, otherwise error message
     res.json({ output: stdout || stderr || (error ? error.message : 'No output') });
   });
+});
+
+// Logs API
+app.get('/api/system/logs', (req, res) => {
+  try {
+    const logs = JSON.parse(fs.readFileSync(LOG_FILE, 'utf-8'));
+    res.json({ logs: logs.reverse() }); // Newest first
+  } catch (e) {
+    res.json({ logs: [] });
+  }
+});
+
+app.post('/api/system/logs/clear', (req, res) => {
+  try {
+    fs.writeFileSync(LOG_FILE, JSON.stringify([]));
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to clear logs' });
+  }
+});
+
+app.get('/api/system/logs/download', (req, res) => {
+  try {
+    const logs = JSON.parse(fs.readFileSync(LOG_FILE, 'utf-8'));
+    let csv = 'ID,Time,Level,Log\n';
+    logs.forEach(l => {
+      // Escape quotes in log message
+      const safeMsg = l.log.replace(/"/g, '""');
+      csv += `${l.id},${l.time},${l.level},"${safeMsg}"\n`;
+    });
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=system_logs.csv');
+    res.send(csv);
+  } catch (e) {
+    res.status(500).send('Error generating log file');
+  }
 });
 
 // Serve Frontend Static Files

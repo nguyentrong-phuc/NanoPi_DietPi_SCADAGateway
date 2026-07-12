@@ -155,7 +155,7 @@ const Overview = () => {
               <FieldRow label="Mode:" value={info?.wlan?.enabled ? info?.wlan?.mode : '--'} />
               <FieldRow label="WLAN IP:" value={info?.wlan?.enabled ? (info?.wlan?.liveIp !== '--' ? info?.wlan?.liveIp : info?.wlan?.staticIp) : '--'} />
               <FieldRow label="Netmask:" value={info?.wlan?.enabled ? (info?.wlan?.mode === 'DHCP' ? (info?.wlan?.status === 'Connected' ? (info?.wlan?.liveNetmask || '--') : '--') : (info?.wlan?.netmask || '--')) : '--'} />
-              <FieldRow label="Gateway:" value={info?.wlan?.enabled ? info?.wlan?.gateway : '--'} />
+              <FieldRow label="Gateway:" value={info?.wlan?.enabled ? (info?.wlan?.liveGateway || info?.wlan?.gateway || '--') : '--'} />
               <FieldRow label="SSID:" value={info?.wlan?.enabled ? (info?.wlan?.ssid || '--') : '--'} />
             </div>
 

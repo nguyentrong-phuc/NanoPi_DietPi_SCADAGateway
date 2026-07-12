@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { message } from 'antd';
 
 const ModalToggleSwitch = ({ isOn, handleToggle }) => (
   <div onClick={handleToggle} style={{ width: '36px', height: '20px', borderRadius: '10px', backgroundColor: isOn ? 'var(--primary-color)' : '#dcdfe6', position: 'relative', cursor: 'pointer', transition: 'background-color 0.2s' }}>
@@ -6,65 +7,20 @@ const ModalToggleSwitch = ({ isOn, handleToggle }) => (
   </div>
 );
 
-const initialMockSlaves = [
-  { id: 'slave_status', name: 'Slave_Status', desc: 'Slave Status\n0:offline 1:abnormal 2:online 3:stop', protocol: 'Slave Status', status: 'online', isCustom: false },
-  { id: 'system_attrs', name: 'System_Attributes', desc: 'System Node', protocol: 'System Node', status: 'online', isCustom: false },
-  { id: 'node', name: 'Node', desc: '', protocol: 'Virtual Slave', status: 'online', isCustom: true },
-  { id: 'logger', name: 'Logger3000_1', desc: 'Data Sources: 172.168.41.20:502', protocol: 'Modbus_TCP', status: 'offline', isCustom: true },
-  { id: 'pm5320', name: 'PM5320_1', desc: 'Data Sources: 172.168.41.12:502', protocol: 'Modbus_TCP', status: 'offline', isCustom: true },
-  { id: 'envision', name: 'Envision_1', desc: 'Data Sources: 172.168.41.11:502', protocol: 'Modbus_TCP', status: 'offline', isCustom: true },
-];
-
-const initialMockPoints = {
-  'slave_status': [
-    { id: 1, name: 'Envision_1', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '--', acq: '--', ctrl: '--', desc: 'Envision_1' },
-    { id: 2, name: 'PM5320_1', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '0', acq: '--', ctrl: '--', desc: 'PM5320_1' },
-    { id: 3, name: 'Logger3000_1', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '0', acq: '--', ctrl: '--', desc: 'Logger3000_1' },
-    { id: 4, name: 'Node', type: '8 Bit Signed', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 2000, data: '2', acq: '--', ctrl: '--', desc: 'Node' },
-  ],
-  'system_attrs': [
-    { id: 1, name: 'sys_timestamp_str', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1783838262', desc: 'String timestamp' },
-    { id: 2, name: 'sys_local_time2', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12 13:37:43', desc: 'Sec local time' },
-    { id: 3, name: 'sys_timestamp_ms', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1783838263006', desc: 'Millisecond timestamp' },
-    { id: 4, name: 'sys_timestamp', type: '32 Bit Unsigned(AB)', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1783838263', desc: 'Timestamp' },
-    { id: 5, name: 'sys_gps_state', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'V', desc: 'GPS status' },
-    { id: 6, name: 'sys_satellite', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0', desc: 'Satellite count' },
-    { id: 7, name: 'sys_speed', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Ground speed' },
-    { id: 8, name: 'sys_latitude', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Latitude' },
-    { id: 9, name: 'sys_longitude', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0.00000000', desc: 'Longitude' },
-    { id: 10, name: 'sys_csq', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '0', desc: 'Signal strength' },
-    { id: 11, name: 'sys_ver', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'V1.3.03.115731.1001', desc: 'Device version' },
-    { id: 12, name: 'sys_iccid2', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'ICCID2' },
-    { id: 13, name: 'sys_iccid1', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'ICCID1' },
-    { id: 14, name: 'sys_imei', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '--', desc: 'Device IMEI' },
-    { id: 15, name: 'sys_mac', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: 'D4:AD:20:F9:3F:C9', desc: 'Device MAC' },
-    { id: 16, name: 'sys_sn', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '02800726042200000268', desc: 'Device SN' },
-    { id: 17, name: 'sys_unix_time', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '1783838368759', desc: 'UNIX timestamp' },
-    { id: 18, name: 'sys_local_time', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12 13:39:28', desc: 'Local time' },
-    { id: 19, name: 'sys_utc_time', type: 'string', decimal: 0, address: '--', rw: 'Only Read', priority: 'Level 1', timeout: 0, data: '2026-07-12 06:39:28Z', desc: 'UTC time' },
-  ],
-  'node': [
-     { id: 1, name: 'DO02', type: 'Bit', decimal: 0, address: 'DO 02', rw: 'Read/Write', priority: 'Level 1', timeout: 2000, data: '0', acq: '--', ctrl: '--', desc: '--' }
-  ],
-  'logger': [],
-  'pm5320': [],
-  'envision': []
-};
-
 const DataPoint = () => {
-  const [slaves, setSlaves] = useState(initialMockSlaves);
-  const [points, setPoints] = useState(initialMockPoints);
+  const [slaves, setSlaves] = useState([]);
+  const [points, setPoints] = useState({});
   const [activeSlave, setActiveSlave] = useState('slave_status');
   const [currentPage, setCurrentPage] = useState(1);
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'add', data: null });
   const itemsPerPage = 15;
   const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch(`${API_URL}/api/edge/data-points`)
       .then(res => res.json())
       .then(data => {
-        if (data.slaves && data.slaves.length > 0) setSlaves(data.slaves);
+        if (data.slaves) setSlaves(data.slaves);
         if (data.points) setPoints(data.points);
       })
       .catch(console.error);
@@ -75,7 +31,12 @@ const DataPoint = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slaves: newSlaves, points: newPoints })
-    }).catch(console.error);
+    })
+    .then(res => res.json())
+    .then(() => {
+      message.success('Configuration saved successfully', 2);
+    })
+    .catch(console.error);
   };
 
   const openAddModal = () => {
@@ -92,17 +53,89 @@ const DataPoint = () => {
       isOpen: true, 
       mode: 'edit', 
       data: { 
-        name: slave.name, 
-        desc: '', 
-        protocol: slave.protocol, 
-        polling: '500', 
-        merge: 'Open', 
-        switch: true,
-        ip: slave.desc.match(/(\d+\.\d+\.\d+\.\d+)/)?.[0] || '172.168.41.12',
-        port: slave.desc.match(/:(\d+)/)?.[1] || '502',
-        slaveAddress: '255'
+        ...slave,
+        polling: slave.polling || '500', 
+        merge: slave.merge || 'Open', 
+        switch: slave.switch !== false,
+        ip: slave.ip || slave.desc?.match(/(\d+\.\d+\.\d+\.\d+)/)?.[0] || '127.0.0.1',
+        port: slave.port || slave.desc?.match(/:(\d+)/)?.[1] || '502',
+        slaveAddress: slave.slaveAddress || '1'
       } 
     });
+  };
+
+  const handleDeleteSlave = (slaveId, e) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this Data Point?')) {
+      const newSlaves = slaves.filter(s => s.id !== slaveId);
+      const newPoints = { ...points };
+      delete newPoints[slaveId];
+      setSlaves(newSlaves);
+      setPoints(newPoints);
+      saveConfig(newSlaves, newPoints);
+      if (activeSlave === slaveId) {
+        setActiveSlave('slave_status');
+      }
+    }
+  };
+
+  const handleDeletePoint = (pointId) => {
+    if (window.confirm('Are you sure you want to delete this Point?')) {
+      const newPoints = { ...points };
+      newPoints[activeSlave] = newPoints[activeSlave].filter(p => p.id !== pointId);
+      setPoints(newPoints);
+      saveConfig(slaves, newPoints);
+    }
+  };
+
+  const handleSaveModal = () => {
+    let newSlaves = [...slaves];
+    let newPoints = { ...points };
+    
+    if (modalConfig.mode === 'add') {
+      const newId = 'custom_' + Date.now();
+      newSlaves.push({
+        id: newId,
+        name: modalConfig.data.name || 'New Slave',
+        desc: modalConfig.data.desc || (modalConfig.data.protocol === 'Modbus_TCP' ? `Data Sources: ${modalConfig.data.ip}:${modalConfig.data.port}` : ''),
+        protocol: modalConfig.data.protocol,
+        status: 'offline',
+        isCustom: true,
+        ...modalConfig.data
+      });
+      newPoints[newId] = [];
+    } else if (modalConfig.mode === 'edit') {
+      const idx = newSlaves.findIndex(s => s.id === modalConfig.data.id);
+      if (idx > -1) {
+        newSlaves[idx] = { 
+          ...newSlaves[idx], 
+          ...modalConfig.data,
+          desc: modalConfig.data.protocol === 'Modbus_TCP' ? `Data Sources: ${modalConfig.data.ip}:${modalConfig.data.port}` : modalConfig.data.desc
+        };
+      }
+    } else if (modalConfig.mode === 'addPoint') {
+      if (!newPoints[activeSlave]) newPoints[activeSlave] = [];
+      const newId = newPoints[activeSlave].length > 0 ? Math.max(...newPoints[activeSlave].map(p => p.id)) + 1 : 1;
+      newPoints[activeSlave].push({
+        id: newId,
+        ...modalConfig.data,
+        name: modalConfig.data.name || `Point ${newId}`,
+        type: modalConfig.data.type || '8 Bit Unsigned',
+        rw: modalConfig.data.rw || 'Only Read',
+        data: '--',
+        address: modalConfig.data.address || '--'
+      });
+    } else if (modalConfig.mode === 'editPoint') {
+      const pIdx = newPoints[activeSlave].findIndex(p => p.id === modalConfig.data.id);
+      if (pIdx > -1) {
+        newPoints[activeSlave][pIdx] = { ...newPoints[activeSlave][pIdx], ...modalConfig.data };
+      }
+    }
+
+    setSlaves(newSlaves);
+    setPoints(newPoints);
+    saveConfig(newSlaves, newPoints);
+    closeModal();
   };
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
@@ -186,7 +219,7 @@ const DataPoint = () => {
                     {slave.isCustom && (
                       <div style={{ fontSize: '13px', fontWeight: 600 }}>
                         <span onClick={(e) => openEditModal(slave, e)} style={{ color: 'var(--primary-color)', opacity: 0.9, marginRight: '12px', cursor: 'pointer' }}>Edit</span>
-                        <span onClick={(e) => e.stopPropagation()} style={{ color: '#e74c3c', opacity: 0.9, cursor: 'pointer' }}>Delete</span>
+                        <span onClick={(e) => handleDeleteSlave(slave.id, e)} style={{ color: '#e74c3c', opacity: 0.9, cursor: 'pointer' }}>Delete</span>
                       </div>
                     )}
                   </div>
@@ -259,7 +292,7 @@ const DataPoint = () => {
                     {isCustomSlave && (
                       <td style={{ fontWeight: 600 }}>
                         <span onClick={() => setModalConfig({ isOpen: true, mode: 'editPoint', data: point })} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px' }}>Edit</span>
-                        <span style={{ color: 'var(--danger-color)', cursor: 'pointer' }}>Delete</span>
+                        <span onClick={() => handleDeletePoint(point.id)} style={{ color: 'var(--danger-color)', cursor: 'pointer' }}>Delete</span>
                       </td>
                     )}
                   </tr>
@@ -332,24 +365,29 @@ const DataPoint = () => {
               <div style={{ padding: '20px 40px', display: 'flex', flexDirection: 'column', gap: '18px', maxHeight: '70vh', overflowY: 'auto' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Node name</span>
-                  <input type="text" className="form-control" defaultValue={modalConfig.data?.name} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.name} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, name: e.target.value }})} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Node desc</span>
-                  <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, desc: e.target.value }})} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Data Type</span>
-                  <select className="form-control" defaultValue={modalConfig.data?.type || (modalConfig.mode === 'addPoint' ? 'Bit' : '8 Bit Unsigned')} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
+                  <select className="form-control" defaultValue={modalConfig.data?.type || (modalConfig.mode === 'addPoint' ? 'Bit' : '8 Bit Unsigned')} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, type: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
                     <option>Bit</option>
                     <option>8 Bit Unsigned</option>
                     <option>8 Bit Signed</option>
+                    <option>16 Bit Unsigned</option>
+                    <option>16 Bit Signed</option>
+                    <option>32 Bit Unsigned</option>
+                    <option>32 Bit Signed</option>
+                    <option>32 Bit Float</option>
                   </select>
                 </div>
                 {modalConfig.mode === 'addPoint' && (
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Position Number</span>
-                    <input type="text" className="form-control" defaultValue="1" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Address</span>
+                    <input type="text" className="form-control" defaultValue={modalConfig.data?.address || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, address: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                   </div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -362,10 +400,10 @@ const DataPoint = () => {
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Read Write Status</span>
                   <div style={{ flex: 1, display: 'flex', gap: '15px', alignItems: 'center' }}>
                     <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: (modalConfig.data?.rw === 'Only Read' || !modalConfig.data) ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
-                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Only Read' || !modalConfig.data} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Only Read
+                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Only Read' || !modalConfig.data} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, rw: 'Only Read' }})} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Only Read
                     </label>
                     <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: modalConfig.data?.rw === 'Read/Write' ? 'var(--primary-color)' : '#606266', cursor: 'pointer', margin: 0 }}>
-                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Read/Write'} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Read/Write
+                      <input type="radio" name="rwStatus" defaultChecked={modalConfig.data?.rw === 'Read/Write'} onChange={() => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, rw: 'Read/Write' }})} style={{ accentColor: 'var(--primary-color)', marginRight: '6px' }} /> Read/Write
                     </label>
                     <label style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#c0c4cc', cursor: 'not-allowed', margin: 0 }}>
                       <input type="radio" name="rwStatus" disabled style={{ marginRight: '6px' }} /> Only Write
@@ -432,12 +470,12 @@ const DataPoint = () => {
                 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave Name:</span>
-                  <input type="text" className="form-control" defaultValue={modalConfig.data?.name} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.name} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, name: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Slave Description:</span>
-                  <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.desc} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, desc: e.target.value }})} placeholder="Please enter" style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -485,15 +523,15 @@ const DataPoint = () => {
                   <>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> IP</span>
-                      <input type="text" className="form-control" defaultValue={modalConfig.data?.ip || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.ip || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, ip: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Port</span>
-                      <input type="text" className="form-control" defaultValue={modalConfig.data?.port || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.port || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, port: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Salve Address</span>
-                      <input type="text" className="form-control" defaultValue={modalConfig.data?.slaveAddress || ''} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                      <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Slave Address</span>
+                      <input type="text" className="form-control" defaultValue={modalConfig.data?.slaveAddress || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, slaveAddress: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
                     </div>
                   </>
                 )}
@@ -504,8 +542,8 @@ const DataPoint = () => {
             {/* Footer */}
             <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #f0f0f0' }}>
               <button className="btn btn-default" onClick={closeModal}>Cancel</button>
-              <button className="btn btn-primary" onClick={closeModal}>
-                {modalConfig.mode === 'import' ? 'Import' : 'Sure'}
+              <button className="btn btn-primary" onClick={modalConfig.mode === 'import' || modalConfig.mode === 'export' ? closeModal : handleSaveModal}>
+                {modalConfig.mode === 'import' || modalConfig.mode === 'export' ? 'Close' : 'Sure'}
               </button>
             </div>
             

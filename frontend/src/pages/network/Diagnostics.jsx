@@ -83,7 +83,7 @@ const Diagnostics = () => {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
             <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Medicng Result</span>
+            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Diagnostics Result</span>
           </div>
           <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e0e0e0', minHeight: '300px', borderRadius: '4px', padding: '15px', whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '13px', color: '#333', overflowY: 'auto' }}>
             {result}

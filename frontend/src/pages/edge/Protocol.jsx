@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { message } from 'antd';
+
+const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
 const ToggleSwitch = ({ isOn, handleToggle }) => {
   return (
@@ -20,12 +23,41 @@ const ToggleSwitch = ({ isOn, handleToggle }) => {
   );
 };
 
-const ModbusConfig = ({ activeTab }) => {
-  const [rs485, setRs485] = useState(false);
+// Modbus Config Component
+const ModbusConfig = ({ activeTab, config, setConfig, saveConfig }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [modalData, setModalData] = useState({});
+
+  const handleAdd = () => {
+    setModalMode('add');
+    setModalData({ id: config.nodes.length + 1, pos: '', src: '', type: '16 Bit Unsigned', addr: '', rw: 'Read/Write' });
+    setModalOpen(true);
+  };
+
+  const handleEdit = (node) => {
+    setModalMode('edit');
+    setModalData({ ...node });
+    setModalOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this mapping?")) {
+      setConfig({ ...config, nodes: config.nodes.filter(n => n.id !== id) });
+    }
+  };
+
+  const handleSaveModal = () => {
+    if (modalMode === 'add') {
+      setConfig({ ...config, nodes: [...config.nodes, modalData] });
+    } else {
+      setConfig({ ...config, nodes: config.nodes.map(n => n.id === modalData.id ? modalData : n) });
+    }
+    setModalOpen(false);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
-      {/* Basic settings */}
       <div style={{ marginBottom: '20px' }}>
         <div className="card-header" style={{ marginBottom: '20px' }}>
           <span className="card-header-line"></span>
@@ -33,68 +65,61 @@ const ModbusConfig = ({ activeTab }) => {
         </div>
         
         <div style={{ padding: '0 15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '30px', marginBottom: '30px' }}>
-          {/* Connection Config */}
           <div className="card-panel" style={{ padding: '20px 25px', marginBottom: '20px' }}>
-            <div className="card-subtitle">
-              Connection Config
-            </div>
+            <div className="card-subtitle">Connection Config</div>
             <div style={{ display: 'flex', gap: '30px' }}>
               {activeTab === 'Modbus RTU' && (
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <span style={{ fontSize: '13px', color: '#333', fontWeight: 600 }}><span style={{ color: '#e71562' }}>*</span> RS485:</span>
                   <div style={{ height: '34px', display: 'flex', alignItems: 'center' }}>
-                    <ToggleSwitch isOn={rs485} handleToggle={() => setRs485(!rs485)} />
+                    <ToggleSwitch isOn={config.basicSettings?.rs485 || false} handleToggle={() => setConfig({ ...config, basicSettings: { ...config.basicSettings, rs485: !config.basicSettings?.rs485 }})} />
                   </div>
                 </div>
               )}
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Protocol:</span>
-                <select className="form-input-standard" style={{ height: '34px' }}>
+                <select className="form-input-standard" value={config.basicSettings?.protocol || ''} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, protocol: e.target.value}})} style={{ height: '34px' }}>
                   {activeTab === 'Modbus RTU' ? (
                     <>
-                      <option>RTU Master</option>
-                      <option>RTU Slave</option>
+                      <option value="RTU Master">RTU Master</option>
+                      <option value="RTU Slave">RTU Slave</option>
                     </>
                   ) : (
                     <>
-                      <option>TCP Server</option>
-                      <option>TCP Client</option>
+                      <option value="TCP Server">TCP Server</option>
+                      <option value="TCP Client">TCP Client</option>
                     </>
                   )}
                 </select>
               </div>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Local Port:</span>
-                <input type="text" className="form-input-standard" defaultValue="502" style={{ height: '34px' }} />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.port || '502'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, port: e.target.value}})} style={{ height: '34px' }} />
               </div>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Maximum of Client:</span>
-                <input type="text" className="form-input-standard" defaultValue="2" style={{ height: '34px' }} />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.maxClient || '2'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, maxClient: e.target.value}})} style={{ height: '34px' }} />
               </div>
             </div>
           </div>
 
-          {/* Slave Configuration */}
           <div className="card-panel" style={{ padding: '20px 25px', marginBottom: '25px', overflowX: 'auto' }}>
-            <div className="card-subtitle">
-              Slave Configuration
-            </div>
-            
+            <div className="card-subtitle">Slave Configuration</div>
             <div style={{ display: 'grid', gridTemplateColumns: '0.8fr 1.2fr 1.3fr 1.3fr 1.5fr', gap: '20px', minWidth: '850px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Slave Address:</span>
-                <input type="text" className="form-input-standard" defaultValue="1" style={{ height: '34px', width: '100%' }} />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.slaveAddress || '1'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, slaveAddress: e.target.value}})} style={{ height: '34px', width: '100%' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span className="form-label-bold form-label-required">Protocol_Conversion.bit16_int:</span>
-                <select className="form-input-standard" style={{ height: '34px', width: '100%' }}>
+                <span className="form-label-bold form-label-required">Protocol Conversion (16 bit):</span>
+                <select className="form-input-standard" value={config.basicSettings?.bit16 || 'AB'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, bit16: e.target.value}})} style={{ height: '34px', width: '100%' }}>
                   <option value="AB">AB</option>
                   <option value="BA">BA</option>
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">32 bit integer byte order:</span>
-                <select className="form-input-standard" style={{ height: '34px', width: '100%' }}>
+                <select className="form-input-standard" value={config.basicSettings?.bit32int || 'AB CD'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, bit32int: e.target.value}})} style={{ height: '34px', width: '100%' }}>
                   <option value="AB CD">AB CD</option>
                   <option value="CD AB">CD AB</option>
                   <option value="BA DC">BA DC</option>
@@ -103,7 +128,7 @@ const ModbusConfig = ({ activeTab }) => {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">32 bit float byte order:</span>
-                <select className="form-input-standard" style={{ height: '34px', width: '100%' }}>
+                <select className="form-input-standard" value={config.basicSettings?.bit32float || 'AB CD'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, bit32float: e.target.value}})} style={{ height: '34px', width: '100%' }}>
                   <option value="AB CD">AB CD</option>
                   <option value="CD AB">CD AB</option>
                   <option value="BA DC">BA DC</option>
@@ -111,8 +136,8 @@ const ModbusConfig = ({ activeTab }) => {
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span className="form-label-bold">64 bit integer byte order:</span>
-                <select className="form-input-standard" style={{ height: '34px', width: '100%' }}>
+                <span className="form-label-bold form-label-required">64 bit float byte order:</span>
+                <select className="form-input-standard" value={config.basicSettings?.bit64float || 'ABCDEFGH'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, bit64float: e.target.value}})} style={{ height: '34px', width: '100%' }}>
                   <option value="ABCDEFGH">ABCDEFGH</option>
                   <option value="HGFEDCBA">HGFEDCBA</option>
                   <option value="GHEFCDAB">GHEFCDAB</option>
@@ -121,29 +146,24 @@ const ModbusConfig = ({ activeTab }) => {
               </div>
             </div>
           </div>
-          <button className="btn btn-primary" style={{ padding: '0 40px' }}>Apply</button>
-        </div>
-      </div>
 
-      {/* Node mapping table */}
-      <div>
-        <div className="card-header" style={{ marginBottom: '20px', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span className="card-header-line"></span>
-            <span className="card-title">Node mapping table</span>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button className="btn btn-primary" style={{ padding: '0 30px' }}>Add</button>
-            <button className="btn btn-outline" style={{ color: 'var(--danger-color)', borderColor: 'var(--danger-color)', padding: '0 30px' }}>Delete</button>
-          </div>
+          <button className="btn btn-primary" onClick={saveConfig}>Apply</button>
         </div>
 
-        <div className="table-container" style={{ marginBottom: '20px' }}>
-          <table className="table-unified">
+        <div className="card-header" style={{ marginBottom: '20px' }}>
+          <span className="card-header-line"></span>
+          <span className="card-title">Node mapping table</span>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+          <button className="btn btn-primary" onClick={handleAdd}>Add</button>
+        </div>
+
+        <div className="table-responsive" style={{ marginBottom: '15px' }}>
+          <table className="table table-bordered table-striped" style={{ width: '100%' }}>
             <thead>
               <tr>
-                <th style={{ width: '40px' }}><input type="checkbox" style={{ margin: 0 }} /></th>
-                <th style={{ width: '50px' }}>ID</th>
+                <th>ID</th>
                 <th>Position Name</th>
                 <th>Source(slave)</th>
                 <th>Data Type</th>
@@ -153,67 +173,112 @@ const ModbusConfig = ({ activeTab }) => {
               </tr>
             </thead>
             <tbody>
-              {activeTab === 'Modbus RTU' ? (
-                <tr>
-                  <td colSpan="8" style={{ padding: '40px', color: '#999', fontSize: '13px' }}>No data yet</td>
+              {config.nodes && config.nodes.length > 0 ? config.nodes.map(row => (
+                <tr key={row.id}>
+                  <td>{row.id}</td>
+                  <td>{row.pos}</td>
+                  <td>{row.src}</td>
+                  <td>{row.type}</td>
+                  <td>{row.addr}</td>
+                  <td>{row.rw}</td>
+                  <td style={{ fontWeight: 600 }}>
+                    <span onClick={() => handleEdit(row)} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px', opacity: 0.9 }}>Edit</span>
+                    <span onClick={() => handleDelete(row.id)} style={{ color: 'var(--danger-color)', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                  </td>
                 </tr>
-              ) : (
-                [
-                  { id: 1, pos: 'COS', src: 'Node', type: '32 Bit Float', addr: '30024', rw: 'Read/Write' },
-                  { id: 2, pos: 'HZ', src: 'Node', type: '32 Bit Float', addr: '30022', rw: 'Read/Write' },
-                  { id: 3, pos: 'IC', src: 'Node', type: '32 Bit Float', addr: '30020', rw: 'Read/Write' },
-                  { id: 4, pos: 'IB', src: 'Node', type: '32 Bit Float', addr: '30018', rw: 'Read/Write' },
-                  { id: 5, pos: 'IA', src: 'Node', type: '32 Bit Float', addr: '30016', rw: 'Read/Write' },
-                  { id: 6, pos: 'VC', src: 'Node', type: '32 Bit Float', addr: '30014', rw: 'Read/Write' },
-                  { id: 7, pos: 'VB', src: 'Node', type: '32 Bit Float', addr: '30012', rw: 'Read/Write' },
-                  { id: 8, pos: 'VA', src: 'Node', type: '32 Bit Float', addr: '30010', rw: 'Read/Write' },
-                  { id: 9, pos: 'QOUT', src: 'Node', type: '32 Bit Float', addr: '30008', rw: 'Read/Write' },
-                  { id: 10, pos: 'AINV_D1', src: 'Node', type: '32 Bit Float', addr: '30006', rw: 'Read/Write' }
-                ].map(row => (
-                  <tr key={row.id}>
-                    <td><input type="checkbox" style={{ margin: 0 }} /></td>
-                    <td>{row.id}</td>
-                    <td>{row.pos}</td>
-                    <td>{row.src}</td>
-                    <td>{row.type}</td>
-                    <td>{row.addr}</td>
-                    <td>{row.rw}</td>
-                    <td style={{ fontWeight: 600 }}>
-                      <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px', opacity: 0.9 }}>Edit</span>
-                      <span style={{ color: 'var(--danger-color)', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
-                    </td>
-                  </tr>
-                ))
+              )) : (
+                <tr>
+                  <td colSpan="7" style={{ padding: '40px', color: '#999', fontSize: '13px', textAlign: 'center' }}>No data yet</td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: 'var(--text-dark)' }}>
-          <span style={{ marginRight: '15px' }}>Total {activeTab === 'Modbus RTU' ? 0 : 26}</span>
-          <select className="form-input-standard" style={{ width: 'auto', padding: '4px 8px', marginRight: '15px' }}>
-            <option>10/page</option>
-          </select>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <button className="btn btn-default" style={{ padding: '4px 10px' }} disabled>Last</button>
-            <button className="btn btn-primary" style={{ padding: '4px 12px' }}>1</button>
-            <button className="btn btn-default" style={{ padding: '4px 12px' }}>2</button>
-            <button className="btn btn-default" style={{ padding: '4px 12px' }}>3</button>
-            <button className="btn btn-default" style={{ padding: '4px 10px' }}>Next</button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', marginLeft: '15px' }}>
-            Go to <input type="number" min="1" defaultValue="1" className="form-input-standard" style={{ width: '40px', padding: '4px', margin: '0 5px', textAlign: 'center' }} />
+      {modalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ backgroundColor: 'white', borderRadius: '4px', width: '500px', padding: '20px' }}>
+            <h3 style={{ marginTop: 0 }}>{modalMode === 'add' ? 'Add Mapping' : 'Edit Mapping'}</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Position Name:</span>
+                <input className="form-control" value={modalData.pos || ''} onChange={e => setModalData({...modalData, pos: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Source(slave):</span>
+                <input className="form-control" value={modalData.src || ''} onChange={e => setModalData({...modalData, src: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Data Type:</span>
+                <select className="form-control" value={modalData.type || ''} onChange={e => setModalData({...modalData, type: e.target.value})} style={{ flex: 1, padding: '5px' }}>
+                  <option>16 Bit Unsigned</option>
+                  <option>16 Bit Signed</option>
+                  <option>32 Bit Unsigned</option>
+                  <option>32 Bit Signed</option>
+                  <option>32 Bit Float</option>
+                  <option>64 Bit Float</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Address:</span>
+                <input className="form-control" value={modalData.addr || ''} onChange={e => setModalData({...modalData, addr: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Read/Write:</span>
+                <select className="form-control" value={modalData.rw || ''} onChange={e => setModalData({...modalData, rw: e.target.value})} style={{ flex: 1, padding: '5px' }}>
+                  <option>Read/Write</option>
+                  <option>Only Read</option>
+                  <option>Only Write</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button className="btn btn-default" onClick={() => setModalOpen(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={handleSaveModal}>Save</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-const IEC104Config = () => {
+// IEC104 Config Component
+const IEC104Config = ({ config, setConfig, saveConfig }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [modalData, setModalData] = useState({});
+
+  const handleAdd = () => {
+    setModalMode('add');
+    setModalData({ id: config.nodes.length + 1, pos: '', src: '', type: 'Measured value, short floating point number', addr: '', rw: 'Only Read', asdu: '1' });
+    setModalOpen(true);
+  };
+
+  const handleEdit = (node) => {
+    setModalMode('edit');
+    setModalData({ ...node });
+    setModalOpen(true);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this mapping?")) {
+      setConfig({ ...config, nodes: config.nodes.filter(n => n.id !== id) });
+    }
+  };
+
+  const handleSaveModal = () => {
+    if (modalMode === 'add') {
+      setConfig({ ...config, nodes: [...config.nodes, modalData] });
+    } else {
+      setConfig({ ...config, nodes: config.nodes.map(n => n.id === modalData.id ? modalData : n) });
+    }
+    setModalOpen(false);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
-      {/* Basic settings */}
       <div style={{ marginBottom: '20px' }}>
         <div className="card-header" style={{ marginBottom: '20px' }}>
           <span className="card-header-line"></span>
@@ -221,85 +286,74 @@ const IEC104Config = () => {
         </div>
         
         <div style={{ padding: '0 15px', borderBottom: '1px solid var(--border-color)', paddingBottom: '30px', marginBottom: '30px' }}>
-          {/* Connection Config */}
           <div className="card-panel" style={{ padding: '20px 25px', marginBottom: '20px', overflowX: 'auto' }}>
-            <div className="card-subtitle">
-              Connection Config
-            </div>
+            <div className="card-subtitle">Connection Config</div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px', minWidth: '950px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold">Server Address:</span>
-                <input type="text" className="form-input-standard" defaultValue="192.168.30.1" disabled style={{ backgroundColor: '#f5f7fa', color: '#c0c4cc' }} />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.serverAddress || '192.168.30.1'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, serverAddress: e.target.value}})} style={{ backgroundColor: '#f5f7fa', color: '#c0c4cc' }} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Local Port:</span>
-                <input type="text" className="form-input-standard" defaultValue="2404" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.port || '2404'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, port: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">COT size:</span>
-                <select className="form-input-standard">
+                <select className="form-input-standard" value={config.basicSettings?.cot || '2'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, cot: e.target.value}})}>
                   <option value="1">1</option>
-                  <option value="2" selected>2</option>
+                  <option value="2">2</option>
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">K:</span>
-                <input type="text" className="form-input-standard" defaultValue="25" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.k || '25'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, k: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">W:</span>
-                <input type="text" className="form-input-standard" defaultValue="25" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.w || '8'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, w: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">T0:</span>
-                <input type="text" className="form-input-standard" defaultValue="30" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.t0 || '30'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, t0: e.target.value}})} />
               </div>
             </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '20px', minWidth: '950px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">T1:</span>
-                <input type="text" className="form-input-standard" defaultValue="25" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.t1 || '15'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, t1: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">T2:</span>
-                <input type="text" className="form-input-standard" defaultValue="25" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.t2 || '10'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, t2: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">T3:</span>
-                <input type="text" className="form-input-standard" defaultValue="25" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.t3 || '20'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, t3: e.target.value}})} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span className="form-label-bold form-label-required">Maximum connection:</span>
-                <input type="text" className="form-input-standard" defaultValue="10" />
+                <input type="text" className="form-input-standard" value={config.basicSettings?.maxConnection || '2'} onChange={e => setConfig({...config, basicSettings: {...config.basicSettings, maxConnection: e.target.value}})} />
               </div>
-              <div style={{ flex: 1 }}></div>
-              <div style={{ flex: 1 }}></div>
             </div>
           </div>
-          <button className="btn" style={{ padding: '0 30px' }} disabled>Apply</button>
-        </div>
-      </div>
-
-      {/* Node mapping table */}
-      <div>
-        <div className="card-header" style={{ marginBottom: '20px', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span className="card-header-line"></span>
-            <span className="card-title">Node mapping table</span>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button className="btn btn-primary" style={{ padding: '0 30px' }}>Add</button>
-            <button className="btn btn-outline" style={{ color: 'var(--danger-color)', borderColor: 'var(--danger-color)', padding: '0 30px' }}>Delete</button>
-          </div>
+          <button className="btn btn-primary" onClick={saveConfig}>Apply</button>
         </div>
 
-        <div className="table-container" style={{ marginBottom: '20px' }}>
-          <table className="table-unified">
+        <div className="card-header" style={{ marginBottom: '20px' }}>
+          <span className="card-header-line"></span>
+          <span className="card-title">Node mapping table</span>
+        </div>
+        
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+          <button className="btn btn-primary" onClick={handleAdd}>Add</button>
+        </div>
+
+        <div className="table-responsive" style={{ marginBottom: '15px' }}>
+          <table className="table table-bordered table-striped" style={{ width: '100%' }}>
             <thead>
               <tr>
-                <th style={{ width: '40px' }}><input type="checkbox" style={{ margin: 0 }} /></th>
-                <th style={{ width: '50px' }}>ID</th>
+                <th>ID</th>
                 <th>Position Name</th>
                 <th>Source(slave)</th>
                 <th>Data Type</th>
@@ -310,20 +364,8 @@ const IEC104Config = () => {
               </tr>
             </thead>
             <tbody>
-              {[
-                { id: 1, pos: 'COS', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_12', asdu: '3' },
-                { id: 2, pos: 'HZ', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_11', asdu: '3' },
-                { id: 3, pos: 'IC', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_10', asdu: '3' },
-                { id: 4, pos: 'IB', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_9', asdu: '3' },
-                { id: 5, pos: 'IA', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_8', asdu: '3' },
-                { id: 6, pos: 'VC', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_7', asdu: '3' },
-                { id: 7, pos: 'VB', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_6', asdu: '3' },
-                { id: 8, pos: 'VA', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_5', asdu: '3' },
-                { id: 9, pos: 'QOUT', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_4', asdu: '3' },
-                { id: 10, pos: 'AINV_D1', src: 'Node', type: 'Float', rw: 'Read/Write', addr: 'M_ME_NC_1_3', asdu: '3' }
-              ].map(row => (
+              {config.nodes && config.nodes.length > 0 ? config.nodes.map(row => (
                 <tr key={row.id}>
-                  <td><input type="checkbox" style={{ margin: 0 }} /></td>
                   <td>{row.id}</td>
                   <td>{row.pos}</td>
                   <td>{row.src}</td>
@@ -332,45 +374,107 @@ const IEC104Config = () => {
                   <td>{row.addr}</td>
                   <td>{row.asdu}</td>
                   <td style={{ fontWeight: 600 }}>
-                    <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px', opacity: 0.9 }}>Edit</span>
-                    <span style={{ color: 'var(--danger-color)', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                    <span onClick={() => handleEdit(row)} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px', opacity: 0.9 }}>Edit</span>
+                    <span onClick={() => handleDelete(row.id)} style={{ color: 'var(--danger-color)', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan="8" style={{ padding: '40px', color: '#999', fontSize: '13px', textAlign: 'center' }}>No data yet</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
-
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: 'var(--text-dark)' }}>
-          <span style={{ marginRight: '15px' }}>Total 18</span>
-          <select className="form-input-standard" style={{ width: 'auto', padding: '4px 8px', marginRight: '15px' }}>
-            <option>10/page</option>
-          </select>
-          <div style={{ display: 'flex', gap: '5px' }}>
-            <button className="btn btn-default" style={{ padding: '4px 10px' }} disabled>Last</button>
-            <button className="btn btn-primary" style={{ padding: '4px 12px' }}>1</button>
-            <button className="btn btn-default" style={{ padding: '4px 12px' }}>2</button>
-            <button className="btn btn-default" style={{ padding: '4px 10px' }}>Next</button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', marginLeft: '15px' }}>
-            Go to <input type="number" min="1" defaultValue="1" className="form-input-standard" style={{ width: '40px', padding: '4px', margin: '0 5px', textAlign: 'center' }} />
+      </div>
+      
+      {modalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div style={{ backgroundColor: 'white', borderRadius: '4px', width: '500px', padding: '20px' }}>
+            <h3 style={{ marginTop: 0 }}>{modalMode === 'add' ? 'Add Mapping' : 'Edit Mapping'}</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginTop: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Position Name:</span>
+                <input className="form-control" value={modalData.pos || ''} onChange={e => setModalData({...modalData, pos: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Source(slave):</span>
+                <input className="form-control" value={modalData.src || ''} onChange={e => setModalData({...modalData, src: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Data Type:</span>
+                <select className="form-control" value={modalData.type || ''} onChange={e => setModalData({...modalData, type: e.target.value})} style={{ flex: 1, padding: '5px' }}>
+                  <option>Measured value, short floating point number</option>
+                  <option>Measured value, normalized value</option>
+                  <option>Single point information</option>
+                  <option>Double point information</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Address:</span>
+                <input className="form-control" value={modalData.addr || ''} onChange={e => setModalData({...modalData, addr: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>ASDU:</span>
+                <input className="form-control" value={modalData.asdu || ''} onChange={e => setModalData({...modalData, asdu: e.target.value})} style={{ flex: 1, padding: '5px' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '120px' }}>Read/Write:</span>
+                <select className="form-control" value={modalData.rw || ''} onChange={e => setModalData({...modalData, rw: e.target.value})} style={{ flex: 1, padding: '5px' }}>
+                  <option>Only Read</option>
+                  <option>Read/Write</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button className="btn btn-default" onClick={() => setModalOpen(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={handleSaveModal}>Save</button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
 const Protocol = () => {
-  const [activeTab, setActiveTab] = useState('Modbus RTU');
-  // Initially all protocols are "Closed" (false)
-  const [protocolState, setProtocolState] = useState({
-    'Modbus RTU': false,
-    'Modbus TCP': false,
-    'IEC104': false
-  });
-
   const tabs = ['Modbus RTU', 'Modbus TCP', 'IEC104'];
+  const [activeTab, setActiveTab] = useState('Modbus RTU');
+  const [protocolState, setProtocolState] = useState({
+    'Modbus RTU': true,
+    'Modbus TCP': true,
+    'IEC104': true
+  });
+  
+  const [config, setConfig] = useState({ basicSettings: {}, nodes: [] });
+
+  const getEndpoint = (tab) => {
+    if (tab === 'Modbus RTU') return 'modbus_rtu';
+    if (tab === 'Modbus TCP') return 'modbus_tcp';
+    return 'iec104';
+  };
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/edge/protocol/${getEndpoint(activeTab)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data) setConfig({ basicSettings: data.basicSettings || {}, nodes: data.nodes || [] });
+      })
+      .catch(console.error);
+  }, [activeTab]);
+
+  const saveConfig = () => {
+    fetch(`${API_URL}/api/edge/protocol/${getEndpoint(activeTab)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config)
+    })
+    .then(res => res.json())
+    .then(() => {
+      message.success(`${activeTab} Configuration saved successfully`, 2);
+    })
+    .catch(console.error);
+  };
 
   const toggleProtocol = () => {
     setProtocolState({
@@ -383,13 +487,11 @@ const Protocol = () => {
 
   return (
     <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
-      
       <div className="page-title-container">
         <h2 className="page-title">Protocol</h2>
       </div>
 
       <div style={{ flex: 1, display: 'flex' }}>
-        {/* Left Sidebar for protocols */}
         <div style={{ width: '180px', backgroundColor: 'white', borderRight: '8px solid #eaedf2' }}>
           {tabs.map(tab => (
             <div 
@@ -411,10 +513,7 @@ const Protocol = () => {
           ))}
         </div>
 
-        {/* Right Content */}
         <div style={{ flex: 1, backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-          
-          {/* Header */}
           <div className="card-header" style={{ padding: '20px', borderBottom: '1px solid var(--border-color)' }}>
             <span className="card-header-line"></span>
             <span className="card-title" style={{ marginRight: '20px' }}>{activeTab}</span>
@@ -422,11 +521,10 @@ const Protocol = () => {
           </div>
           
           <div style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            {/* Main view state */}
             {!isOpen ? (
               <>
                 <div>
-                  <button className="btn" style={{ backgroundColor: '#e0e0e0', color: '#fff', cursor: 'not-allowed', padding: '0 30px' }} disabled>Apply</button>
+                  <button className="btn btn-primary" style={{ padding: '0 30px' }} disabled>Apply</button>
                 </div>
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: '-100px' }}>
                   <h3 style={{ fontSize: '20px', color: 'var(--text-dark)', marginBottom: '15px', fontWeight: 600 }}>Function Close</h3>
@@ -434,10 +532,11 @@ const Protocol = () => {
                 </div>
               </>
             ) : (
-              activeTab === 'IEC104' ? <IEC104Config /> : <ModbusConfig activeTab={activeTab} />
+              activeTab === 'IEC104' ? 
+                <IEC104Config config={config} setConfig={setConfig} saveConfig={saveConfig} /> : 
+                <ModbusConfig activeTab={activeTab} config={config} setConfig={setConfig} saveConfig={saveConfig} />
             )}
           </div>
-
         </div>
       </div>
     </div>
