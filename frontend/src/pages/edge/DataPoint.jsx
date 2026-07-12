@@ -85,8 +85,8 @@ const DataPoint = () => {
             <div>
               <span style={{ fontSize: '12px', color: '#666', marginRight: '20px' }}>Version: 1779939851</span>
               <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
-              <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Import</button>
-              <button className="btn btn-primary active-btn" style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px' }}>Export</button>
+              <button className="btn" style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Import</button>
+              <button className="btn" style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Export</button>
             </div>
           </div>
 
@@ -96,19 +96,24 @@ const DataPoint = () => {
                 key={slave.id} 
                 onClick={() => { setActiveSlave(slave.id); setCurrentPage(1); }}
                 style={{ 
-                  backgroundColor: 'white', 
-                  border: activeSlave === slave.id ? '1px solid var(--primary-color)' : '1px solid #e0e0e0', 
-                  boxShadow: activeSlave === slave.id ? '0 0 5px rgba(0,63,180,0.15)' : 'none',
+                  backgroundColor: activeSlave === slave.id ? 'var(--primary-light, #f8fbff)' : 'white', 
+                  border: '1px solid',
+                  borderColor: activeSlave === slave.id ? 'var(--primary-color)' : '#e4e7ed', 
+                  boxShadow: activeSlave === slave.id ? '0 4px 12px rgba(0,63,180,0.1)' : '0 2px 6px rgba(0,0,0,0.02)',
+                  borderRadius: '6px',
                   padding: '15px',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                   display: 'flex',
                   flexDirection: 'column',
-                  height: '140px'
+                  height: '140px',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-                  <div style={{ fontWeight: 700, color: '#222', fontSize: '15px', borderLeft: '3px solid var(--primary-color)', paddingLeft: '8px', lineHeight: '15px' }}>
+                {activeSlave === slave.id && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', backgroundColor: 'var(--primary-color)' }}></div>}
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', marginTop: activeSlave === slave.id ? '2px' : '0' }}>
+                  <div style={{ fontWeight: 700, color: '#333', fontSize: '15px', borderLeft: '3px solid var(--primary-color)', paddingLeft: '8px', lineHeight: '15px', borderRadius: '1px' }}>
                     {slave.name}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', fontSize: '12px', color: '#666', fontWeight: 600 }}>
@@ -121,9 +126,9 @@ const DataPoint = () => {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <p style={{ margin: 0 }}>protocol: <strong style={{ color: '#333' }}>{slave.protocol}</strong></p>
                     {slave.isCustom && (
-                      <div style={{ color: '#dc3545', fontSize: '12px', fontWeight: 600 }}>
-                        <span style={{ color: 'var(--primary-color)', marginRight: '10px', cursor: 'pointer' }}>✎ Edit</span>
-                        <span style={{ cursor: 'pointer' }}>🗑 Delete</span>
+                      <div style={{ fontSize: '13px', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--primary-color)', opacity: 0.9, marginRight: '12px', cursor: 'pointer' }}>Edit</span>
+                        <span style={{ color: '#e74c3c', opacity: 0.9, cursor: 'pointer' }}>Delete</span>
                       </div>
                     )}
                   </div>
