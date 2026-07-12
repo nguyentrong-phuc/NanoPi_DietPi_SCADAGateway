@@ -223,9 +223,9 @@ const DataPoint = () => {
                     {showFormulaCols && <td style={{ padding: '10px' }}>{point.acq || '--'}</td>}
                     {showFormulaCols && <td style={{ padding: '10px' }}>{point.ctrl || '--'}</td>}
                     <td style={{ padding: '10px' }}>{point.desc}</td>
-                    <td style={{ padding: '10px' }}>
-                      <span style={{ color: '#aaa', cursor: 'not-allowed', marginRight: '10px' }}>Edit</span>
-                      <span style={{ color: '#aaa', cursor: 'not-allowed' }}>Delete</span>
+                    <td style={{ padding: '10px', fontWeight: 600 }}>
+                      <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
+                      <span style={{ color: '#e74c3c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
                     </td>
                   </tr>
                 )) : (
