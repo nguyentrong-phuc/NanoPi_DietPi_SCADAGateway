@@ -396,18 +396,19 @@ select.form-input-standard {
 }
 
 /* Hide scrollbars for Ant Design popups (TimePicker, Select, etc) for a cleaner UI */
-.ant-picker-time-panel-column::-webkit-scrollbar,
-.ant-select-dropdown::-webkit-scrollbar,
+.ant-picker-dropdown *::-webkit-scrollbar,
+.ant-select-dropdown *::-webkit-scrollbar,
 .sub-sidebar::-webkit-scrollbar,
 .content-area::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
-  display: none;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  display: none !important;
 }
-.ant-picker-time-panel-column,
-.ant-select-dropdown,
+.ant-picker-dropdown *,
+.ant-select-dropdown *,
 .sub-sidebar,
 .content-area {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
 }
