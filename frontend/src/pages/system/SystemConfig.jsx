@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { message } from 'antd';
 
 const SystemConfig = () => {
   const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
@@ -14,18 +15,18 @@ const SystemConfig = () => {
   };
 
   const handleImport = () => {
-    if (!selectedFile) return alert('Please select a file first');
+    if (!selectedFile) return message.warning('Please select a file first', 2);
     const formData = new FormData();
     formData.append('config_file', selectedFile);
     fetch(`${API_URL}/api/system/config/import`, { method: 'POST', body: formData })
       .then(res => res.json())
       .then(data => {
-        alert(data.message || 'Import successful!');
+        message.success(data.message || 'Import successful!', 2);
         closeModal();
       })
       .catch(err => {
         console.error(err);
-        alert('Import failed!');
+        message.error('Import failed!', 2);
       });
   };
 

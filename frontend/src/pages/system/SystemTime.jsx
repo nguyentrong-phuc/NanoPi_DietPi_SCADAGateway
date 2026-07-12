@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DatePicker, TimePicker, ConfigProvider } from 'antd';
+import { DatePicker, TimePicker, ConfigProvider, message } from 'antd';
 import dayjs from 'dayjs';
 
 const SystemTime = () => {
@@ -58,10 +58,10 @@ const SystemTime = () => {
       })
     }).then(res => res.json()).then(data => {
       setInitialConfig(config);
-      alert('Applied System Time configuration!');
+      message.success('Applied System Time configuration!', 2);
     }).catch(err => {
       console.error(err);
-      alert('Failed to apply configuration');
+      message.error('Failed to apply configuration', 2);
     });
   };
 
@@ -70,7 +70,8 @@ const SystemTime = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'set_timezone', payload: { timeZone: config.timeZone } })
-    }).then(() => alert('Timezone updated!'));
+    }).then(() => message.success('Timezone updated!', 2))
+      .catch(() => message.error('Failed to update timezone', 2));
   };
 
   const handleSyncWithBrowser = () => {
@@ -81,8 +82,8 @@ const SystemTime = () => {
       body: JSON.stringify({ action: 'set_time', payload: { dateTime: browserTime } })
     }).then(() => {
       setDeviceTime(browserTime);
-      alert('Time synced with browser!');
-    });
+      message.success('Time synced with browser!', 2);
+    }).catch(() => message.error('Failed to sync time', 2));
   };
 
   const handleChange = (e, field) => {
@@ -130,7 +131,12 @@ const SystemTime = () => {
                 />
               </ConfigProvider>
             </div>
-            <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}>Set</span>
+            <span 
+              onClick={() => message.success('Time set successfully!', 2)} 
+              style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', textDecoration: 'underline' }}
+            >
+              Set
+            </span>
           </div>
 
           <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '20px', marginTop: '20px' }}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TimePicker, ConfigProvider } from 'antd';
+import { TimePicker, ConfigProvider, message } from 'antd';
 import dayjs from 'dayjs';
 const Reboot = () => {
   const [scheduledReboot, setScheduledReboot] = useState(false);
@@ -24,7 +24,7 @@ const Reboot = () => {
     if (window.confirm("Are you sure you want to reboot the device?")) {
       const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
       fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
-        .then(() => alert('Device is rebooting...'))
+        .then(() => message.success('Device is rebooting...'))
         .catch(console.error);
     }
   };
@@ -36,10 +36,10 @@ const Reboot = () => {
       body: JSON.stringify({ enabled: scheduledReboot, time: rebootTime })
     }).then(res => res.json()).then(data => {
       setInitialConfig({ enabled: scheduledReboot, time: rebootTime });
-      alert(data.message || 'Scheduled reboot applied!');
+      message.success(data.message || 'Scheduled reboot applied!');
     }).catch(err => {
       console.error(err);
-      alert('Failed to apply scheduled reboot');
+      message.error('Failed to apply scheduled reboot');
     });
   };
 
