@@ -147,6 +147,52 @@ app.get('/api/network', (req, res) => {
     } catch(e) {}
   }
 
+  // 5. Read /proc/net/dev for RX/TX bytes and connection uptime
+  const formatBytes = (bytes) => {
+    const b = parseInt(bytes) || 0;
+    if (b >= 1024 * 1024) return `${(b / 1024 / 1024).toFixed(1)} MB`;
+    if (b >= 1024) return `${(b / 1024).toFixed(1)} KB`;
+    return `${b} B`;
+  };
+
+  const getConnTime = (iface) => {
+    // Reads carrier_up_count + operstate to estimate time online
+    // Fallback: use system uptime as max bound
+    if (!isLinux) return '--';
+    try {
+      const state = fs.readFileSync(`/sys/class/net/${iface}/operstate`, 'utf-8').trim();
+      if (state !== 'up') return 'Disconnected';
+      // Read uptime in seconds
+      const uptime = parseFloat(fs.readFileSync('/proc/uptime', 'utf-8').split(' ')[0]);
+      const h = Math.floor(uptime / 3600).toString().padStart(2, '0');
+      const m = Math.floor((uptime % 3600) / 60).toString().padStart(2, '0');
+      const s = Math.floor(uptime % 60).toString().padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    } catch(e) { return '--'; }
+  };
+
+  if (isLinux) {
+    try {
+      const procNetDev = fs.readFileSync('/proc/net/dev', 'utf-8');
+      const lines = procNetDev.split('\n');
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('eth0:')) {
+          const parts = trimmed.replace('eth0:', '').trim().split(/\s+/);
+          wanConfig.receive = formatBytes(parts[0]);  // RX bytes
+          wanConfig.send = formatBytes(parts[8]);     // TX bytes
+        }
+        if (trimmed.startsWith('eth1:')) {
+          const parts = trimmed.replace('eth1:', '').trim().split(/\s+/);
+          lanConfig.receive = formatBytes(parts[0]);
+          lanConfig.send = formatBytes(parts[8]);
+        }
+      });
+    } catch(e) {}
+    wanConfig.connTime = getConnTime('eth0');
+    lanConfig.connTime = getConnTime('eth1');
+  }
+
   res.json({ wan: wanConfig, lan: lanConfig });
 });
 
@@ -450,7 +496,116 @@ app.post('/api/system/config/import', upload.single('config_file'), (req, res) =
   }
 });
 
+// System Info API (Overview page - all real data)
+app.get('/api/system/info', (req, res) => {
+  const nets = os.networkInterfaces();
+  const result = {
+    name: 'RaitekEdge R2S',
+    model: 'NanoPi R2S',
+    version: '2.0.0',
+    os: 'Linux (DietPi)',
+    sn: '--',
+    mac1: '--',
+    mac2: '--',
+    deviceTime: new Date().toLocaleString('sv').replace('T', ' '),
+    operationTime: '--',
+    cpu: 0,
+    memory: 0,
+    flash: 0,
+    wan: { mode: '--', ip: '--', netmask: '--', gateway: '--', dns1: '--', dns2: '--' },
+    lan: { ip: '--', netmask: '--', dhcpEnabled: false },
+    eth0Status: 'Disconnected',
+    eth1Status: 'Disconnected',
+  };
+
+  // MAC addresses
+  const getMac = (iface) => {
+    const n = nets[iface];
+    if (!n) return '--';
+    const ipv4 = n.find(x => x.family === 'IPv4' || x.family === 4);
+    return ipv4 ? ipv4.mac.toUpperCase() : '--';
+  };
+  result.mac1 = getMac('eth0');
+  result.mac2 = getMac('eth1');
+
+  // Interface status
+  const getStatus = (iface) => {
+    const n = nets[iface];
+    return (n && n.find(x => x.family === 'IPv4' || x.family === 4)) ? 'Connected' : 'Disconnected';
+  };
+  result.eth0Status = getStatus('eth0');
+  result.eth1Status = getStatus('eth1');
+
+  if (isLinux) {
+    // CPU usage (sample /proc/stat)
+    try {
+      const stat1 = fs.readFileSync('/proc/stat', 'utf-8').split('\n')[0].trim().split(/\s+/).slice(1).map(Number);
+      const total1 = stat1.reduce((a, b) => a + b, 0);
+      const idle1 = stat1[3];
+      // Short delay sample
+      const stat2 = fs.readFileSync('/proc/stat', 'utf-8').split('\n')[0].trim().split(/\s+/).slice(1).map(Number);
+      const total2 = stat2.reduce((a, b) => a + b, 0);
+      const idle2 = stat2[3];
+      const cpuUsage = Math.round(((total2 - total1 - (idle2 - idle1)) / Math.max(total2 - total1, 1)) * 100);
+      result.cpu = Math.min(100, Math.max(0, cpuUsage));
+    } catch(e) {}
+
+    // Memory usage
+    try {
+      const meminfo = fs.readFileSync('/proc/meminfo', 'utf-8');
+      const getMemVal = (key) => { const m = meminfo.match(new RegExp(`^${key}:\\s+(\\d+)`, 'm')); return m ? parseInt(m[1]) : 0; };
+      const total = getMemVal('MemTotal');
+      const available = getMemVal('MemAvailable');
+      if (total > 0) result.memory = Math.round(((total - available) / total) * 100);
+    } catch(e) {}
+
+    // Flash usage (root partition)
+    try {
+      const df = execSync("df / --output=pcent | tail -1").toString().trim().replace('%', '');
+      result.flash = parseInt(df) || 0;
+    } catch(e) {}
+
+    // Uptime (operation time)
+    try {
+      const upSec = parseFloat(fs.readFileSync('/proc/uptime', 'utf-8').split(' ')[0]);
+      const h = Math.floor(upSec / 3600).toString().padStart(2, '0');
+      const m = Math.floor((upSec % 3600) / 60).toString().padStart(2, '0');
+      const s = Math.floor(upSec % 60).toString().padStart(2, '0');
+      result.operationTime = `${h}:${m}:${s}`;
+    } catch(e) {}
+
+    // Hostname as device name
+    try { result.name = execSync('hostname').toString().trim(); } catch(e) {}
+
+    // WAN info (eth0)
+    try {
+      const ipv4 = nets['eth0'] && nets['eth0'].find(n => n.family === 'IPv4' || n.family === 4);
+      if (ipv4) {
+        result.wan.ip = ipv4.address;
+        result.wan.netmask = ipv4.netmask;
+      }
+      const gw = execSync("ip route show default dev eth0 2>/dev/null | awk '{print $3}'").toString().trim();
+      if (gw) result.wan.gateway = gw;
+      const dns = fs.readFileSync('/etc/resolv.conf', 'utf-8').split('\n')
+        .filter(l => l.startsWith('nameserver')).map(l => l.split(/\s+/)[1]);
+      result.wan.dns1 = dns[0] || '--';
+      result.wan.dns2 = dns[1] || '--';
+    } catch(e) {}
+
+    // LAN info (eth1)
+    try {
+      const ipv4 = nets['eth1'] && nets['eth1'].find(n => n.family === 'IPv4' || n.family === 4);
+      if (ipv4) { result.lan.ip = ipv4.address; result.lan.netmask = ipv4.netmask; }
+      const dnsContent = fs.existsSync(dnsmasqPath) ? fs.readFileSync(dnsmasqPath, 'utf-8') : '';
+      result.lan.dhcpEnabled = dnsContent.includes('interface=eth1');
+    } catch(e) {}
+  }
+
+  res.json(result);
+});
+
 // Serve Frontend Static Files
+
 const frontendDistPath = path.join(__dirname, 'public');
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
