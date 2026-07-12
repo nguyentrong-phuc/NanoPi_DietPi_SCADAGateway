@@ -530,7 +530,9 @@ app.post('/api/system/config/import', upload.single('config_file'), (req, res) =
   }
 });
 
-// System Info API (Overview page - all real data)
+// Global state to store previous CPU stat for accurate percentage calculation over time
+let lastCpuStat = null;
+
 app.get('/api/system/info', (req, res) => {
   const nets = os.networkInterfaces();
   const result = {
@@ -576,17 +578,18 @@ app.get('/api/system/info', (req, res) => {
   result.eth1Status = getStatus('eth1');
 
   if (isLinux) {
-    // CPU usage (sample /proc/stat)
+    // CPU usage (sample /proc/stat compared to last API call)
     try {
-      const stat1 = fs.readFileSync('/proc/stat', 'utf-8').split('\n')[0].trim().split(/\s+/).slice(1).map(Number);
-      const total1 = stat1.reduce((a, b) => a + b, 0);
-      const idle1 = stat1[3];
-      // Short delay sample
-      const stat2 = fs.readFileSync('/proc/stat', 'utf-8').split('\n')[0].trim().split(/\s+/).slice(1).map(Number);
-      const total2 = stat2.reduce((a, b) => a + b, 0);
-      const idle2 = stat2[3];
-      const cpuUsage = Math.round(((total2 - total1 - (idle2 - idle1)) / Math.max(total2 - total1, 1)) * 100);
-      result.cpu = Math.min(100, Math.max(0, cpuUsage));
+      const currentStat = fs.readFileSync('/proc/stat', 'utf-8').split('\n')[0].trim().split(/\s+/).slice(1).map(Number);
+      if (lastCpuStat) {
+        const total1 = lastCpuStat.reduce((a, b) => a + b, 0);
+        const idle1 = lastCpuStat[3];
+        const total2 = currentStat.reduce((a, b) => a + b, 0);
+        const idle2 = currentStat[3];
+        const cpuUsage = Math.round(((total2 - total1 - (idle2 - idle1)) / Math.max(total2 - total1, 1)) * 100);
+        result.cpu = Math.min(100, Math.max(0, cpuUsage));
+      }
+      lastCpuStat = currentStat;
     } catch(e) {}
 
     // Memory usage
