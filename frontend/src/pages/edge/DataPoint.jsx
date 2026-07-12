@@ -493,7 +493,7 @@ const DataPoint = () => {
                     <option value="Virtual Slave">Virtual Slave</option>
                     <option value="Modbus_TCP">Modbus_TCP</option>
                     <option value="Modbus_RTU">Modbus_RTU</option>
-                    <option value="IEC_104">IEC_104</option>
+
                   </select>
                 </div>
                 
