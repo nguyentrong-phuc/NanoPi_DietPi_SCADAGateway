@@ -40,32 +40,25 @@ Phase 1 (Frontend) and Phase 2 (Backend) are both **COMPLETE**. The application 
 ### How to update the UI on the NanoPi:
 Because the NanoPi uses `update.sh` which only pulls the source code and restarts the backend (it **does not** compile the React app), developers must build the frontend locally and push the built files to GitHub.
 
-**Workflow before pushing to Github:**
-1. Navigate to the frontend directory: `cd frontend`
-2. Build the UI: `npm run build`
-3. Copy all files from `frontend/dist/` into `backend/public/` (replace old files).
-4. Commit and push the changes (including `backend/public/`) to GitHub.
-
-**For first-time installation on the NanoPi:**
-Run the install script to setup the environment and download the project:
-```bash
-curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/install.sh | bash
+**Workflow using the automated script (Recommended):**
+Simply run the Powershell script at the root of the project:
+```powershell
+.\build.ps1
 ```
-
-**For subsequent updates:**
-Once new UI changes are built and pushed, run the update script on the NanoPi to pull the latest changes:
-```bash
-curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash
-```
+This script will automatically:
+1. Navigate to the `frontend` folder.
+2. Run `npm run build` to compile the Vite React app.
+3. Clean the `backend/public/` directory.
+4. Copy the newly built files from `frontend/dist/` into `backend/public/`.
+5. You then just need to `git commit` and `git push`!
 
 ### 🚨 Lessons Learned / Common Pitfalls
-- **Forgetting to update `backend/public/`**: The most common mistake is building the frontend (`frontend/dist/`) but forgetting to copy it to `backend/public/` before pushing to GitHub. Always strictly follow the 4-step workflow above!
+- **Forgetting to update `backend/public/`**: The most common mistake is building the frontend (`frontend/dist/`) but forgetting to copy it to `backend/public/` before pushing to GitHub. Always use `build.ps1`!
 - **scrollbar in Ant Design popups**: Use `.ant-picker-dropdown *::-webkit-scrollbar { display: none !important; }` and `scrollbar-width: none !important` to hide them cleanly.
-- **`config_data/` directory must exist on Linux**: On first boot, Node.js will crash with `ENOENT` if the `config_data/` folder doesn't exist. **Always create it at the top of `server.js` before any file reads/writes**, using `fs.mkdirSync(configDataDir, { recursive: true })` — do NOT conditionally create it only for Windows/dev.
+- **`config_data/` directory must exist on Linux**: On first boot, Node.js will crash with `ENOENT` if the `config_data/` folder doesn't exist. **Always create it at the top of `server.js` before any file reads/writes**.
 - **Port 80 requires root**: The systemd service runs as `User=root` so binding to port 80 works. Do NOT change the user to a non-root account without also adding `CAP_NET_BIND_SERVICE`.
 - **WAN = eth0, LAN = eth1** on NanoPi R2S. Do NOT swap these in any network configuration code.
 - **Emergency Fallback IP**: The `/etc/network/interfaces` logic intentionally hardcodes `eth1:0` to `10.10.10.254`. This ensures a guaranteed backdoor into the gateway if the main LAN DHCP/IP is misconfigured. DO NOT REMOVE THIS LOGIC.
-- **`install.sh` is safe to re-run**: It will `rm -rf /opt/scada-gateway` and clone fresh. Any data in `config_data/` will be lost. Only run it when absolutely necessary (e.g., the service is broken beyond repair).
 
 ## 4. UI/UX Design System & Guidelines
 
@@ -85,8 +78,17 @@ To maintain consistency throughout the dashboard, anyone contributing to the Fro
 - **Cards (`w-card`, Wukong-style)**: Used to wrap sections of content. White background, rounded corners (4px), subtle shadow, and a 1px border. Card titles (`w-card-title`) have a signature primary-colored vertical line on the left.
 - **Forms (`form-group`)**: Flex layout with a 200px label width (`form-label`) and dashed bottom borders separating fields. Inputs (`form-control`) are 300px wide and glow with the primary color on focus.
 - **Buttons (`btn`)**: Solid, 4px border radius. Primary buttons (`btn-primary.active-btn`) use the primary color `#003FB4`.
+- **Tables (`table-unified`)**: All data tables MUST use the `table-unified` class. This ensures a clean, borderless-style table with a grey-blue header (`#eaedf2`), centered text, hover effects, and `table-layout: fixed` to stretch to 100% width cleanly.
+- **Modals/Alerts**: DO NOT use native browser `window.confirm` or `alert`. Always use Ant Design's `Modal.confirm` or `message` API for a modern, blurred-background UI experience.
 
-## 5. Next Steps / Roadmap
+## 5. Domain-Specific Business Logic (Edge Computing)
+
+- **Protocol Limitations**: We strictly enforce a limit of 1 "Virtual Slave". The Virtual Slave option and IEC104 option are deliberately hidden/removed from the Data Point protocol dropdown to simplify the UX.
+- **Endianness / Data Types**: SCADA systems require explicit endianness. We support extended 32-bit and 64-bit types with specific byte orders (ABCD, CDAB, BADC, DCBA) instead of generic types.
+- **State Toggles**: Switches (e.g., Protocol Enable/Disable) MUST be bound directly to the saved config state from the backend. Do not rely on hardcoded local UI state, to prevent visual desyncs.
+- **Device Time Updates**: When the user applies a Time Zone change, the frontend must immediately re-fetch `/api/system/time` to update the displayed `Device Time` visually, giving immediate user feedback.
+
+## 6. Next Steps / Roadmap
 - **Phase 3**: Real-time data display (Overview page CPU/RAM/Uptime from real `/proc/stat` reads).
 - **Phase 4**: Node-RED integration — backend APIs to manage Node-RED flows for Modbus/MQTT protocol execution.
 - **Phase 5**: Security hardening — JWT token auth, HTTPS support.
