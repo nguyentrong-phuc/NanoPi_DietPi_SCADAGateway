@@ -774,9 +774,15 @@ app.get('/api/edge/data-points', (req, res) => {
       if (nets['eth0']) mac = nets['eth0'][0].mac.toUpperCase();
     } catch(e) {}
 
+    let gitVer = 'V1.3.03.115731.1001';
+    try {
+      gitVer = execSync('git rev-parse --short HEAD', { cwd: path.join(__dirname, '..'), encoding: 'utf-8' }).trim();
+    } catch(e) {}
+
     systemAttrs = systemAttrs.map(pt => {
       let newData = pt.data;
       switch(pt.name) {
+        case 'sys_ver': newData = gitVer; break;
         case 'sys_gps_state': newData = gpsState; break;
         case 'sys_satellite': newData = satelliteCount; break;
         case 'sys_latitude': newData = loc.latitude || '0.00000000'; break;
