@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { DatePicker, TimePicker, ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
 
 const SystemTime = () => {
   const [initialConfig, setInitialConfig] = useState({
@@ -50,8 +52,16 @@ const SystemTime = () => {
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
             <div style={{ width: '160px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Set Time:</div>
             <div style={{ width: '280px', display: 'flex', gap: '10px' }}>
-              <input type="date" style={{ flex: 1, padding: '8px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#c0c4cc' }} />
-              <input type="time" style={{ flex: 1, padding: '8px', border: '1px solid #dcdfe6', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#c0c4cc' }} />
+              <ConfigProvider theme={{ token: { colorPrimary: '#003fb4', borderRadius: 4, colorBorder: '#dcdfe6' } }}>
+                <DatePicker 
+                  placeholder="Please select" 
+                  style={{ flex: 1, padding: '6px 11px', boxShadow: 'none' }} 
+                />
+                <TimePicker 
+                  placeholder="Please select" 
+                  style={{ flex: 1, padding: '6px 11px', boxShadow: 'none' }} 
+                />
+              </ConfigProvider>
             </div>
             <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', marginLeft: '15px', fontWeight: 400, textDecoration: 'underline' }}>Set</span>
           </div>
