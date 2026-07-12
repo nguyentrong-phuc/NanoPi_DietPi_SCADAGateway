@@ -63,19 +63,15 @@ const SystemTime = () => {
       });
       setInitialConfig(config);
       message.success('System Time configuration applied successfully!', 2);
+      
+      // Re-fetch time to reflect new timezone
+      const res = await fetch(`${API_URL}/api/system/time`);
+      const data = await res.json();
+      setDeviceTime(data.deviceTime);
     } catch (err) {
       console.error(err);
       message.error('Failed to apply configuration', 2);
     }
-  };
-
-  const handleSetTimezone = () => {
-    fetch(`${API_URL}/api/system/time`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'set_timezone', payload: { timeZone: config.timeZone } })
-    }).then(() => message.success('Timezone updated!', 2))
-      .catch(() => message.error('Failed to update timezone', 2));
   };
 
   const handleSyncWithBrowser = () => {
