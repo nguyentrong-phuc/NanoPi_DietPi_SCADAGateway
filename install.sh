@@ -62,5 +62,5 @@ systemctl start scada-gateway.service
 echo "========================================================"
 echo "  INSTALLATION COMPLETE!"
 echo "  The Web UI is now running in the background."
-echo "  Access it at: http://$(hostname -I | awk '{print $1}'):3000"
+echo "  Access it at: http://$(hostname -I | awk '{print $1}')"
 echo "========================================================"
