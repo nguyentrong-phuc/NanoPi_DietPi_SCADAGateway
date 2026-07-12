@@ -1,7 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Routing = () => {
+  const [routes, setRoutes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+
+  useEffect(() => {
+    const fetchRouting = () => {
+      fetch(`${API_URL}/api/network/routing`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.routes) setRoutes(data.routes);
+        })
+        .catch(err => console.error("Error fetching routing table:", err));
+    };
+
+    fetchRouting();
+    const timer = setInterval(fetchRouting, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
@@ -35,46 +52,24 @@ const Routing = () => {
               </tr>
             </thead>
             <tbody>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '12px 10px', color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>172.31.5.25</td>
-                <td style={{ color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>UG</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>wan</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '12px 10px', color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>172.31.5.25</td>
-                <td style={{ color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>UG</td>
-                <td style={{ color: '#555' }}>5</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>wan</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '12px 10px', color: '#555' }}>172.31.5.0</td>
-                <td style={{ color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>255.255.255.0</td>
-                <td style={{ color: '#555' }}>U</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>wan</td>
-              </tr>
-              <tr style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '12px 10px', color: '#555' }}>192.168.1.0</td>
-                <td style={{ color: '#555' }}>0.0.0.0</td>
-                <td style={{ color: '#555' }}>255.255.255.0</td>
-                <td style={{ color: '#555' }}>U</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>0</td>
-                <td style={{ color: '#555' }}>br-lan</td>
-              </tr>
+              {routes.length === 0 ? (
+                <tr style={{ borderBottom: '1px solid #eee' }}>
+                  <td colSpan="8" style={{ padding: '12px 10px', color: '#888' }}>No routing data found</td>
+                </tr>
+              ) : (
+                routes.map((route, index) => (
+                  <tr key={index} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '12px 10px', color: '#555' }}>{route.target}</td>
+                    <td style={{ color: '#555' }}>{route.gateway}</td>
+                    <td style={{ color: '#555' }}>{route.netmask}</td>
+                    <td style={{ color: '#555' }}>{route.flag}</td>
+                    <td style={{ color: '#555' }}>{route.metric}</td>
+                    <td style={{ color: '#555' }}>{route.ref}</td>
+                    <td style={{ color: '#555' }}>{route.use}</td>
+                    <td style={{ color: '#555' }}>{route.interface}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

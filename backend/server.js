@@ -287,7 +287,38 @@ const timesyncdPath = isLinux ? '/etc/systemd/timesyncd.conf' : path.join(__dirn
 if (!isLinux && !fs.existsSync(timesyncdPath)) {
   fs.writeFileSync(timesyncdPath, '[Time]\nNTP=ntp.aliyun.com ntp.gwadar.cn\n');
 }
-
+app.get('/api/network/routing', (req, res) => {
+  let routes = [];
+  if (isLinux) {
+    try {
+      const output = execSync('route -n').toString().trim();
+      const lines = output.split('\n').slice(2); // Skip header lines
+      routes = lines.map(line => {
+        const parts = line.trim().split(/\s+/);
+        return {
+          target: parts[0],
+          gateway: parts[1],
+          netmask: parts[2],
+          flag: parts[3],
+          metric: parts[4],
+          ref: parts[5],
+          use: parts[6],
+          interface: parts[7]
+        };
+      });
+    } catch(e) {
+      console.error("Error reading routing table:", e);
+    }
+  } else {
+    // Mock for Windows dev
+    routes = [
+      { target: '0.0.0.0', gateway: '192.168.1.1', netmask: '0.0.0.0', flag: 'UG', metric: '0', ref: '0', use: '0', interface: 'eth0' },
+      { target: '192.168.1.0', gateway: '0.0.0.0', netmask: '255.255.255.0', flag: 'U', metric: '0', ref: '0', use: '0', interface: 'eth0' },
+      { target: '192.168.30.0', gateway: '0.0.0.0', netmask: '255.255.255.0', flag: 'U', metric: '0', ref: '0', use: '0', interface: 'eth1' }
+    ];
+  }
+  res.json({ routes });
+});
 app.get('/api/system/time', (req, res) => {
   let config = {
     timeZone: 'UTC',
