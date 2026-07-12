@@ -32,7 +32,17 @@ Because the NanoPi uses `update.sh` which only pulls the source code and restart
 3. Copy all files from `frontend/dist/` into `backend/public/` (replace old files).
 4. Commit and push the changes (including `backend/public/`) to GitHub.
 
-Once pushed, running `curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash` on the NanoPi will successfully update both the backend and the latest UI.
+**For first-time installation on the NanoPi:**
+Run the install script to setup the environment and download the project:
+```bash
+curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/install.sh | bash
+```
+
+**For subsequent updates:**
+Once new UI changes are built and pushed, run the update script on the NanoPi to pull the latest changes:
+```bash
+curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAGateway/main/update.sh | bash
+```
 
 ## 4. Next Steps / Roadmap
 - Continue building out static mockups for remaining UI pages (Edge computing, System settings, etc.).
