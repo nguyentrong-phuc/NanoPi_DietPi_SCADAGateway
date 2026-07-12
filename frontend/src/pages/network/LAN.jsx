@@ -403,23 +403,23 @@ const LAN = () => {
               <span style={{ cursor: 'pointer', color: '#999' }} onClick={() => setShowAddModal(false)}>✕</span>
             </div>
             <div style={{ padding: '30px 40px' }}>
-              <div className="form-group">
-                <div className="form-label">
-                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>Hostname
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                  <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Hostname:
                 </div>
-                <input type="text" className="form-control" placeholder="Please enter" value={newHost.hostname} onChange={(e) => setNewHost({...newHost, hostname: e.target.value})} />
+                <input type="text" placeholder="Please enter" value={newHost.hostname} onChange={(e) => setNewHost({...newHost, hostname: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
-              <div className="form-group">
-                <div className="form-label">
-                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>MAC
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                  <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>MAC:
                 </div>
-                <input type="text" className="form-control" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value.toUpperCase()})} />
+                <input type="text" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value.toUpperCase()})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
-              <div className="form-group">
-                <div className="form-label">
-                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>IPv4
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
+                  <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>IPv4:
                 </div>
-                <input type="text" className="form-control" placeholder="Please enter" value={newHost.ip} onChange={(e) => setNewHost({...newHost, ip: e.target.value})} />
+                <input type="text" placeholder="Please enter" value={newHost.ip} onChange={(e) => setNewHost({...newHost, ip: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
             </div>
             <div style={{ padding: '15px 20px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
