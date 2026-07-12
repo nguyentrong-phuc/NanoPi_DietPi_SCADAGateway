@@ -15,6 +15,7 @@ app.use(express.json());
 const isLinux = os.platform() === 'linux';
 const interfacesPath = isLinux ? '/etc/network/interfaces' : path.join(__dirname, '..', 'config_data', 'interfaces_mock.txt');
 const dnsmasqPath = isLinux ? '/etc/dnsmasq.d/scada.conf' : path.join(__dirname, '..', 'config_data', 'dnsmasq_mock.conf');
+const wpaSupplicantPath = isLinux ? '/etc/wpa_supplicant/wpa_supplicant.conf' : path.join(__dirname, '..', 'config_data', 'wpa_supplicant_mock.conf');
 
 // Ensure config_data directory exists (on ALL platforms)
 const configDataDir = path.join(__dirname, '..', 'config_data');
@@ -31,7 +32,7 @@ let interfacesContent = fs.existsSync(interfacesPath) ? fs.readFileSync(interfac
 
 // If the file is not managed by us yet, forcefully rewrite it to our defaults
 if (!interfacesContent.includes(interfacesHeader)) {
-  interfacesContent = `${interfacesHeader}\nauto lo\niface lo inet loopback\n\nallow-hotplug eth0\niface eth0 inet dhcp\n\nallow-hotplug eth1\niface eth1 inet static\n  address 170.0.0.1\n  netmask 255.255.255.0\n`;
+  interfacesContent = `${interfacesHeader}\nauto lo\niface lo inet loopback\n\nallow-hotplug eth0\niface eth0 inet dhcp\n\nallow-hotplug eth1\niface eth1 inet static\n  address 170.0.0.1\n  netmask 255.255.255.0\n\nallow-hotplug wlan0\niface wlan0 inet dhcp\n  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n`;
   fs.writeFileSync(interfacesPath, interfacesContent);
   if (isLinux) { try { execSync('systemctl restart networking'); } catch(e) {} }
 }
@@ -72,7 +73,7 @@ app.post('/api/auth/change-password', (req, res) => {
 });
 
 // Network API (WAN: eth0, LAN: eth1)
-app.get('/api/network', (req, res) => {
+const getNetworkConfig = () => {
   const nets = os.networkInterfaces();
   
   let wanConfig = {
@@ -80,7 +81,10 @@ app.get('/api/network', (req, res) => {
     staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
   };
   let lanConfig = {
-    ip: '192.168.30.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
+    ip: '170.0.0.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
+  };
+  let wlanConfig = {
+    mode: 'DHCP', ssid: '', password: '', staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
   };
 
   // 1. Parse /etc/network/interfaces
@@ -110,11 +114,32 @@ app.get('/api/network', (req, res) => {
       if (eth1BlockMatch) {
         const block = eth1BlockMatch[0];
         const getVal = (key) => { const m = block.match(new RegExp(`^\\s*${key}\\s+(.+)`, 'm')); return m ? m[1].trim() : ''; };
-        lanConfig.ip = getVal('address') || '192.168.30.1';
+        lanConfig.ip = getVal('address') || '170.0.0.1';
         lanConfig.netmask = getVal('netmask') || '255.255.255.0';
+      }
+
+      const wlan0BlockMatch = ifaces.match(/iface wlan0 inet static[\s\S]*?(?=iface|$)/);
+      if (wlan0BlockMatch) {
+        wlanConfig.mode = 'Static IP';
+        const block = wlan0BlockMatch[0];
+        const getVal = (key) => { const m = block.match(new RegExp(`^\\s*${key}\\s+(.+)`, 'm')); return m ? m[1].trim() : ''; };
+        wlanConfig.staticIp = getVal('address');
+        wlanConfig.netmask = getVal('netmask') || '255.255.255.0';
+        wlanConfig.gateway = getVal('gateway');
       }
     }
   } catch(e) { console.error("Error reading interfaces:", e); }
+
+  // Parse wpa_supplicant.conf
+  try {
+    if (fs.existsSync(wpaSupplicantPath)) {
+      const wpaConf = fs.readFileSync(wpaSupplicantPath, 'utf-8');
+      const ssidMatch = wpaConf.match(/ssid="([^"]+)"/);
+      const pskMatch = wpaConf.match(/psk="([^"]+)"/);
+      if (ssidMatch) wlanConfig.ssid = ssidMatch[1];
+      if (pskMatch) wlanConfig.password = pskMatch[1];
+    }
+  } catch(e) { console.error("Error reading wpa_supplicant:", e); }
 
   // 2. Parse dnsmasq config for LAN DHCP
   try {
@@ -155,6 +180,7 @@ app.get('/api/network', (req, res) => {
   };
   mapLive('eth0', wanConfig);
   mapLive('eth1', lanConfig);
+  mapLive('wlan0', wlanConfig);
 
   // 4. Try getting live gateway for WAN
   if (isLinux) {
@@ -190,9 +216,8 @@ app.get('/api/network', (req, res) => {
 
   if (isLinux) {
     try {
-      const procNetDev = fs.readFileSync('/proc/net/dev', 'utf-8');
-      const lines = procNetDev.split('\n');
-      lines.forEach(line => {
+      const netDev = fs.readFileSync('/proc/net/dev', 'utf-8');
+      netDev.split('\n').forEach(line => {
         const trimmed = line.trim();
         if (trimmed.startsWith('eth0:')) {
           const parts = trimmed.replace('eth0:', '').trim().split(/\s+/);
@@ -204,13 +229,19 @@ app.get('/api/network', (req, res) => {
           lanConfig.receive = formatBytes(parts[0]);
           lanConfig.send = formatBytes(parts[8]);
         }
+        if (trimmed.startsWith('wlan0:')) {
+          const parts = trimmed.replace('wlan0:', '').trim().split(/\s+/);
+          wlanConfig.receive = formatBytes(parts[0]);
+          wlanConfig.send = formatBytes(parts[8]);
+        }
       });
     } catch(e) {}
     wanConfig.connTime = getConnTime('eth0');
     lanConfig.connTime = getConnTime('eth1');
+    wlanConfig.connTime = getConnTime('wlan0');
   }
 
-  return { wan: wanConfig, lan: lanConfig };
+  return { wan: wanConfig, lan: lanConfig, wlan: wlanConfig };
 };
 
 app.get('/api/network', (req, res) => {
@@ -256,6 +287,32 @@ app.post('/api/network', (req, res) => {
       interfacesContent += `  netmask ${lanToSave.netmask}\n\n`;
     }
 
+    // WLAN
+    const wlanToSave = req.body.wlan || currentConfig.wlan;
+    if (wlanToSave) {
+      interfacesContent += `allow-hotplug wlan0\n`;
+      if (wlanToSave.mode === 'DHCP') {
+        interfacesContent += `iface wlan0 inet dhcp\n`;
+      } else {
+        interfacesContent += `iface wlan0 inet static\n`;
+        interfacesContent += `  address ${wlanToSave.staticIp}\n`;
+        interfacesContent += `  netmask ${wlanToSave.netmask}\n`;
+        if (wlanToSave.gateway) interfacesContent += `  gateway ${wlanToSave.gateway}\n`;
+      }
+      interfacesContent += `  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n\n`;
+      
+      // Update wpa_supplicant.conf
+      let wpaConf = `ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\nupdate_config=1\ncountry=US\n\n`;
+      if (wlanToSave.ssid) {
+        wpaConf += `network={\n  ssid="${wlanToSave.ssid}"\n`;
+        if (wlanToSave.password) {
+          wpaConf += `  psk="${wlanToSave.password}"\n`;
+        }
+        wpaConf += `}\n`;
+      }
+      fs.writeFileSync(wpaSupplicantPath, wpaConf);
+    }
+
     fs.writeFileSync(interfacesPath, interfacesContent);
 
     // 2. Generate dnsmasq config for LAN DHCP
@@ -279,6 +336,7 @@ app.post('/api/network', (req, res) => {
         console.log('Restarting networking and dnsmasq...');
         try { execSync('systemctl restart networking'); } catch(e) {}
         try { execSync('systemctl restart dnsmasq'); } catch(e) {}
+        try { execSync('systemctl restart wpa_supplicant'); } catch(e) {}
       }, 1000);
     }
   } catch (error) {
@@ -540,6 +598,11 @@ let lastCpuStat = null;
 
 app.get('/api/system/info', (req, res) => {
   const nets = os.networkInterfaces();
+  const config = getNetworkConfig();
+  const wanConfig = config.wan;
+  const lanConfig = config.lan;
+  const wlanConfig = config.wlan;
+
   const result = {
     name: 'RaitekEdge R2S',
     model: 'NanoPi R2S',
@@ -553,10 +616,12 @@ app.get('/api/system/info', (req, res) => {
     cpu: 0,
     memory: 0,
     flash: 0,
-    wan: { mode: '--', ip: '--', netmask: '--', gateway: '--', dns1: '--', dns2: '--' },
-    lan: { ip: '--', netmask: '--', dhcpEnabled: false },
+    wan: wanConfig,
+    lan: lanConfig,
+    wlan: wlanConfig,
     eth0Status: 'Disconnected',
     eth1Status: 'Disconnected',
+    wlan0Status: 'Disconnected'
   };
 
   // MAC addresses
@@ -575,12 +640,37 @@ app.get('/api/system/info', (req, res) => {
   result.mac2 = getMac('eth1');
 
   // Interface status
-  const getStatus = (iface) => {
-    const n = nets[iface];
-    return (n && n.find(x => x.family === 'IPv4' || x.family === 4)) ? 'Connected' : 'Disconnected';
-  };
-  result.eth0Status = getStatus('eth0');
-  result.eth1Status = getStatus('eth1');
+  if (nets['eth0']) {
+    const ipv4 = nets['eth0'].find(n => n.family === 'IPv4' || n.family === 4);
+    if (ipv4) {
+      wanConfig.status = 'Connected';
+      wanConfig.liveIp = ipv4.address;
+      wanConfig.netmask = ipv4.netmask;
+      wanConfig.mac = ipv4.mac;
+    }
+  }
+  if (nets['eth1']) {
+    const ipv4 = nets['eth1'].find(n => n.family === 'IPv4' || n.family === 4);
+    if (ipv4) {
+      lanConfig.status = 'Connected';
+      lanConfig.liveIp = ipv4.address;
+      lanConfig.netmask = ipv4.netmask;
+      lanConfig.mac = ipv4.mac;
+    }
+  }
+  if (nets['wlan0']) {
+    const ipv4 = nets['wlan0'].find(n => n.family === 'IPv4' || n.family === 4);
+    if (ipv4) {
+      wlanConfig.status = 'Connected';
+      wlanConfig.liveIp = ipv4.address;
+      wlanConfig.netmask = ipv4.netmask;
+      wlanConfig.mac = ipv4.mac;
+    }
+  }
+
+  result.eth0Status = wanConfig.status;
+  result.eth1Status = lanConfig.status;
+  result.wlan0Status = wlanConfig.status;
 
   if (isLinux) {
     // CPU usage (sample /proc/stat compared to last API call)
@@ -623,49 +713,6 @@ app.get('/api/system/info', (req, res) => {
 
     // Hostname as device name
     try { result.name = execSync('hostname').toString().trim(); } catch(e) {}
-
-    // WAN info (eth0)
-    try {
-      const ipv4 = nets['eth0'] && nets['eth0'].find(n => n.family === 'IPv4' || n.family === 4);
-      if (ipv4) {
-        result.wan.ip = ipv4.address;
-        result.wan.netmask = ipv4.netmask;
-      }
-      const gw = execSync("ip route show default dev eth0 2>/dev/null | awk '{print $3}'").toString().trim();
-      if (gw) result.wan.gateway = gw;
-      const dns = fs.readFileSync('/etc/resolv.conf', 'utf-8').split('\n')
-        .filter(l => l.startsWith('nameserver')).map(l => l.split(/\s+/)[1]);
-      result.wan.dns1 = dns[0] || '--';
-      result.wan.dns2 = dns[1] || '--';
-    } catch(e) {}
-
-    // LAN info (eth1)
-    try {
-      const ipv4 = nets['eth1'] && nets['eth1'].find(n => n.family === 'IPv4' || n.family === 4);
-      if (ipv4) { 
-        result.lan.ip = ipv4.address; 
-        result.lan.netmask = ipv4.netmask; 
-      } else {
-        // Fallback to static IP config if disconnected
-        let staticIp = '192.168.30.1';
-        let staticNetmask = '255.255.255.0';
-        if (fs.existsSync(interfacesPath)) {
-          const ifaces = fs.readFileSync(interfacesPath, 'utf-8');
-          const eth1BlockMatch = ifaces.match(/iface eth1 inet static[\s\S]*?(?=iface|$)/);
-          if (eth1BlockMatch) {
-            const block = eth1BlockMatch[0];
-            const ipMatch = block.match(/^\s*address\s+(.+)/m);
-            if (ipMatch) staticIp = ipMatch[1].trim();
-            const nmMatch = block.match(/^\s*netmask\s+(.+)/m);
-            if (nmMatch) staticNetmask = nmMatch[1].trim();
-          }
-        }
-        result.lan.ip = staticIp;
-        result.lan.netmask = staticNetmask;
-      }
-      const dnsContent = fs.existsSync(dnsmasqPath) ? fs.readFileSync(dnsmasqPath, 'utf-8') : '';
-      result.lan.dhcpEnabled = dnsContent.includes('interface=eth1');
-    } catch(e) {}
   }
 
   res.json(result);
