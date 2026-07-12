@@ -189,12 +189,21 @@ const NetworkWireless = () => {
               </>
               )}
 
-              <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
+              <div style={{ marginLeft: '140px', marginTop: '30px' }}>
                 <button 
                   type="submit" 
-                  disabled={loading || !hasChanges}
-                  style={{ flex: 1, padding: '8px 0', border: 'none', backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', borderRadius: '4px', cursor: hasChanges ? 'pointer' : 'not-allowed', fontWeight: 600, opacity: loading ? 0.7 : 1 }}
-                >
+                  disabled={loading || !hasChanges} 
+                  style={{ 
+                    backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', 
+                    color: hasChanges ? 'white' : '#999', 
+                    cursor: hasChanges ? 'pointer' : 'not-allowed', 
+                    border: 'none', 
+                    padding: '8px 40px', 
+                    borderRadius: '4px', 
+                    fontWeight: 600, 
+                    fontSize: '14px',
+                    opacity: loading ? 0.7 : 1
+                  }}>
                   {loading ? 'Applying...' : 'Apply'}
                 </button>
               </div>
