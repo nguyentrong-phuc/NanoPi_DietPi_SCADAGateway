@@ -1,6 +1,5 @@
 node_modules/
 .env
 .DS_Store
-frontend/dist/
 config_data/*.json
 backend.zip
