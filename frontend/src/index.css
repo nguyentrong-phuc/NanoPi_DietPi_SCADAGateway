@@ -318,6 +318,7 @@ select.form-input-standard {
   border-collapse: collapse;
   text-align: center;
   font-size: 13px;
+  table-layout: fixed;
 }
 
 .table-unified th {
