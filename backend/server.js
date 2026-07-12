@@ -932,7 +932,7 @@ app.get('/api/system/schedule-reboot', (req, res) => {
 
 app.post('/api/system/schedule-reboot', (req, res) => {
   const { enabled, time } = req.body;
-  logEvent('System Management', `Updated Schedule Reboot: ${enabled ? \`Enabled at \${time}\` : 'Disabled'}`, 'admin');
+  logEvent('System Management', `Updated Schedule Reboot: ${enabled ? 'Enabled at ' + time : 'Disabled'}`, 'admin');
   try {
     if (isLinux) {
       let crontab = '';

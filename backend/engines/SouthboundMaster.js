@@ -6,6 +6,101 @@ const LiveDatabase = require('./LiveDatabase');
 
 const DATA_POINTS_FILE = path.join(__dirname, '..', 'data-points.json');
 
+const getRegisterCount = (type) => {
+  if (!type) return 1;
+  if (type.includes('64 Bit')) return 4;
+  if (type.includes('32 Bit')) return 2;
+  return 1;
+};
+
+const parseModbusBuffer = (buffer, type) => {
+  let finalValue = 0;
+  type = type || '16 Bit Unsigned';
+  
+  // Clone buffer to avoid mutating the original block buffer
+  const buf = Buffer.from(buffer);
+  
+  if (type.includes('CDAB')) {
+    for (let i = 0; i < buf.length; i += 4) {
+      if (i + 4 <= buf.length) {
+        const temp = Buffer.from(buf.subarray(i, i + 2));
+        buf.subarray(i + 2, i + 4).copy(buf, i);
+        temp.copy(buf, i + 2);
+      }
+    }
+  } else if (type.includes('BADC')) {
+    for (let i = 0; i < buf.length; i += 2) {
+      const b0 = buf[i];
+      buf[i] = buf[i + 1];
+      buf[i + 1] = b0;
+    }
+  } else if (type.includes('DCBA')) {
+    buf.reverse();
+  }
+
+  try {
+    if (type.includes('16 Bit Signed')) finalValue = buf.readInt16BE(0);
+    else if (type.includes('16 Bit Unsigned') || type === 'Bit') finalValue = buf.readUInt16BE(0);
+    else if (type.includes('32 Bit Signed')) finalValue = buf.readInt32BE(0);
+    else if (type.includes('32 Bit Unsigned')) finalValue = buf.readUInt32BE(0);
+    else if (type.includes('32 Bit Float')) finalValue = buf.readFloatBE(0);
+    else if (type.includes('64 Bit Float')) finalValue = buf.readDoubleBE(0);
+    else if (type.includes('64 Bit Signed')) finalValue = Number(buf.readBigInt64BE(0));
+    else if (type.includes('64 Bit Unsigned')) finalValue = Number(buf.readBigUInt64BE(0));
+    else finalValue = buf.readUInt16BE(0);
+  } catch(e) { finalValue = 0; }
+  
+  if (type.includes('Float')) {
+    finalValue = parseFloat(finalValue.toFixed(4));
+  }
+  return finalValue;
+};
+
+const buildPollingGroups = (points, maxGap = 5, maxLength = 120) => {
+  const validPoints = points.map(pt => {
+    const addr = parseInt(pt.address, 10);
+    if (isNaN(addr)) return null;
+    let offset = addr;
+    if (addr >= 40001) offset = addr - 40001;
+    else if (addr >= 30001) offset = addr - 30001;
+    const count = getRegisterCount(pt.type);
+    return { ...pt, offset, count };
+  }).filter(p => p !== null).sort((a, b) => a.offset - b.offset);
+
+  if (validPoints.length === 0) return [];
+
+  const groups = [];
+  let currentGroup = {
+    startOffset: validPoints[0].offset,
+    endOffset: validPoints[0].offset + validPoints[0].count,
+    points: [validPoints[0]]
+  };
+
+  for (let i = 1; i < validPoints.length; i++) {
+    const pt = validPoints[i];
+    const gap = pt.offset - currentGroup.endOffset;
+    const newEndOffset = Math.max(currentGroup.endOffset, pt.offset + pt.count);
+    const newLength = newEndOffset - currentGroup.startOffset;
+
+    if (gap <= maxGap && newLength <= maxLength) {
+      currentGroup.endOffset = newEndOffset;
+      currentGroup.points.push(pt);
+    } else {
+      currentGroup.totalRegisters = currentGroup.endOffset - currentGroup.startOffset;
+      groups.push(currentGroup);
+      currentGroup = {
+        startOffset: pt.offset,
+        endOffset: pt.offset + pt.count,
+        points: [pt]
+      };
+    }
+  }
+  currentGroup.totalRegisters = currentGroup.endOffset - currentGroup.startOffset;
+  groups.push(currentGroup);
+
+  return groups;
+};
+
 class SouthboundMaster {
   constructor() {
     this.slaves = [];
@@ -61,75 +156,57 @@ class SouthboundMaster {
 
       // Poll interval
       const slavePoints = this.points[slave.id] || [];
+      const isMerge = slave.merge === 'Open' || slave.merge === true;
+      const pollingGroups = isMerge ? buildPollingGroups(slavePoints) : [];
       
       this.intervals[slave.id] = setInterval(async () => {
         if (!client.isOpen) return;
 
-        for (const pt of slavePoints) {
-          try {
-            const addr = parseInt(pt.address, 10);
-            if (!isNaN(addr)) {
-               let offset = addr;
-               if (addr >= 40001) offset = addr - 40001;
-               
-               let count = 1;
-               if (pt.type && pt.type.includes('64 Bit')) count = 4;
-               else if (pt.type && pt.type.includes('32 Bit')) count = 2;
-
-               const res = await client.readHoldingRegisters(offset, count);
-               
-               // Parse data based on type
-               let finalValue = 0;
-               if (res.data && res.data.length > 0) {
-                 const buffer = Buffer.alloc(res.data.length * 2);
-                 for (let i = 0; i < res.data.length; i++) {
-                   buffer.writeUInt16BE(res.data[i], i * 2);
-                 }
-                 
-                 const type = pt.type || '16 Bit Unsigned';
-                 if (type.includes('CDAB')) {
-                   for (let i = 0; i < buffer.length; i += 4) {
-                     if (i + 4 <= buffer.length) {
-                       const temp = Buffer.from(buffer.subarray(i, i + 2));
-                       buffer.subarray(i + 2, i + 4).copy(buffer, i);
-                       temp.copy(buffer, i + 2);
-                     }
-                   }
-                 } else if (type.includes('BADC')) {
-                   for (let i = 0; i < buffer.length; i += 2) {
-                     const b0 = buffer[i];
-                     buffer[i] = buffer[i + 1];
-                     buffer[i + 1] = b0;
-                   }
-                 } else if (type.includes('DCBA')) {
-                   buffer.reverse();
-                 }
-
-                 try {
-                   if (type.includes('16 Bit Signed')) finalValue = buffer.readInt16BE(0);
-                   else if (type.includes('16 Bit Unsigned') || type === 'Bit') finalValue = buffer.readUInt16BE(0);
-                   else if (type.includes('32 Bit Signed')) finalValue = buffer.readInt32BE(0);
-                   else if (type.includes('32 Bit Unsigned')) finalValue = buffer.readUInt32BE(0);
-                   else if (type.includes('32 Bit Float')) finalValue = buffer.readFloatBE(0);
-                   else if (type.includes('64 Bit Float')) finalValue = buffer.readDoubleBE(0);
-                   else if (type.includes('64 Bit Signed')) finalValue = Number(buffer.readBigInt64BE(0));
-                   else if (type.includes('64 Bit Unsigned')) finalValue = Number(buffer.readBigUInt64BE(0));
-                   else finalValue = buffer.readUInt16BE(0);
-                 } catch(e) { finalValue = 0; }
-               }
-               
-               // Format float precision if needed
-               if (pt.type && pt.type.includes('Float')) {
-                  finalValue = parseFloat(finalValue.toFixed(4));
-               }
-
-               LiveDatabase.setPointValue(`${slave.id}_${pt.id}`, finalValue);
+        if (isMerge && pollingGroups.length > 0) {
+          // Block Polling (Merge Acquisition)
+          for (const group of pollingGroups) {
+            try {
+              const res = await client.readHoldingRegisters(group.startOffset, group.totalRegisters);
+              if (res.data && res.data.length === group.totalRegisters) {
+                const groupBuffer = Buffer.alloc(res.data.length * 2);
+                for (let i = 0; i < res.data.length; i++) {
+                  groupBuffer.writeUInt16BE(res.data[i], i * 2);
+                }
+                
+                for (const pt of group.points) {
+                  const relativeOffset = pt.offset - group.startOffset;
+                  const ptBuffer = groupBuffer.subarray(relativeOffset * 2, (relativeOffset + pt.count) * 2);
+                  const finalValue = parseModbusBuffer(ptBuffer, pt.type);
+                  LiveDatabase.setPointValue(`${slave.id}_${pt.id}`, finalValue);
+                }
+              }
+            } catch (err) {
+              // Ignore or log error
             }
-          } catch (err) {
-            // console.error(`[Southbound] Polling error for slave ${slave.name}:`, err.message);
+          }
+        } else {
+          // Individual Polling
+          for (const pt of slavePoints) {
+            try {
+              const addr = parseInt(pt.address, 10);
+              if (!isNaN(addr)) {
+                 let offset = addr;
+                 if (addr >= 40001) offset = addr - 40001;
+                 const count = getRegisterCount(pt.type);
+                 const res = await client.readHoldingRegisters(offset, count);
+                 if (res.data && res.data.length === count) {
+                   const ptBuffer = Buffer.alloc(res.data.length * 2);
+                   for (let i = 0; i < res.data.length; i++) {
+                     ptBuffer.writeUInt16BE(res.data[i], i * 2);
+                   }
+                   const finalValue = parseModbusBuffer(ptBuffer, pt.type);
+                   LiveDatabase.setPointValue(`${slave.id}_${pt.id}`, finalValue);
+                 }
+              }
+            } catch (err) {}
           }
         }
-      }, 5000);
+      }, parseInt(slave.interval, 10) || 5000);
     } else {
       LiveDatabase.setSlaveStatus(slave.id, 'Disconnected');
     }
