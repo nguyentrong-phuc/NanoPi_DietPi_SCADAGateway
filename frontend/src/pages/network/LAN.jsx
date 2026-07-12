@@ -101,6 +101,20 @@ const LAN = () => {
       message.error('MAC and IPv4 are required');
       return;
     }
+    
+    // Validate MAC Address format (XX:XX:XX:XX:XX:XX)
+    const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+    if (!macRegex.test(newHost.mac)) {
+      message.error('Invalid MAC Address format. E.g. 1A:2B:3C:4D:5E:6F');
+      return;
+    }
+
+    // Validate IP Address format
+    const ipRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (!ipRegex.test(newHost.ip)) {
+      message.error('Invalid IPv4 Address format');
+      return;
+    }
     setLanConfig(prev => ({
       ...prev,
       staticHosts: [...(prev.staticHosts || []), { ...newHost }]
@@ -408,19 +422,19 @@ const LAN = () => {
                 <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
                   <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>Hostname:
                 </div>
-                <input type="text" placeholder="Please enter" value={newHost.hostname} onChange={(e) => setNewHost({...newHost, hostname: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                <input type="text" placeholder="e.g. My-Laptop" value={newHost.hostname} onChange={(e) => setNewHost({...newHost, hostname: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                 <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
                   <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>MAC:
                 </div>
-                <input type="text" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value.toUpperCase()})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                <input type="text" placeholder="e.g. 1A:2B:3C:4D:5E:6F" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value.toUpperCase()})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <div style={{ width: '100px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
                   <span style={{ color: '#ef4444', marginRight: '4px' }}>*</span>IPv4:
                 </div>
-                <input type="text" placeholder="Please enter" value={newHost.ip} onChange={(e) => setNewHost({...newHost, ip: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
+                <input type="text" placeholder="e.g. 192.168.1.100" value={newHost.ip} onChange={(e) => setNewHost({...newHost, ip: e.target.value})} style={{ width: '280px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
             </div>
             <div style={{ padding: '15px 20px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
