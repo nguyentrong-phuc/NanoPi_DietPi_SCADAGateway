@@ -384,12 +384,10 @@ const DataPoint = () => {
                     <option>32 Bit Float</option>
                   </select>
                 </div>
-                {modalConfig.mode === 'addPoint' && (
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Address</span>
-                    <input type="text" className="form-control" defaultValue={modalConfig.data?.address || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, address: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
-                  </div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}><span style={{ color: '#ef4444' }}>*</span> Address</span>
+                  <input type="text" className="form-control" defaultValue={modalConfig.data?.address || ''} onChange={e => setModalConfig({ ...modalConfig, data: { ...modalConfig.data, address: e.target.value }})} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none' }} />
+                </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>Decimal Number</span>
                   <select className="form-control" defaultValue={modalConfig.data?.decimal || 0} style={{ flex: 1, height: '34px', padding: '6px 12px', fontSize: '13px', border: '1px solid #dcdfe6', borderRadius: '4px', outline: 'none', backgroundColor: 'white', color: '#606266' }}>
