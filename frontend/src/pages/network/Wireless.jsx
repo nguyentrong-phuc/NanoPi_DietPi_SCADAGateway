@@ -183,6 +183,10 @@ const NetworkWireless = () => {
                 </>
               )}
               
+              {/* Close the config.enabled block here */}
+              </>
+              )}
+
               <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
                 <button 
                   type="submit" 
