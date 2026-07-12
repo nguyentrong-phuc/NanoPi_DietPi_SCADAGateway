@@ -436,11 +436,7 @@ const IEC104Config = ({ config, setConfig, saveConfig }) => {
 const Protocol = () => {
   const tabs = ['Modbus RTU', 'Modbus TCP', 'IEC104'];
   const [activeTab, setActiveTab] = useState('Modbus RTU');
-  const [protocolState, setProtocolState] = useState({
-    'Modbus RTU': true,
-    'Modbus TCP': true,
-    'IEC104': true
-  });
+
   
   const [config, setConfig] = useState({ basicSettings: {}, nodes: [] });
 
@@ -473,13 +469,16 @@ const Protocol = () => {
   };
 
   const toggleProtocol = () => {
-    setProtocolState({
-      ...protocolState,
-      [activeTab]: !protocolState[activeTab]
+    setConfig({
+      ...config,
+      basicSettings: {
+        ...config.basicSettings,
+        enabled: !(config.basicSettings?.enabled ?? false)
+      }
     });
   };
 
-  const isOpen = protocolState[activeTab];
+  const isOpen = config.basicSettings?.enabled ?? false;
 
   return (
     <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
