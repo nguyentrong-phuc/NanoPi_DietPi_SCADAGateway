@@ -415,25 +415,7 @@ app.post('/api/edge/:type', (req, res) => {
   }
 });
 
-// System Info API
-app.get('/api/system/info', (req, res) => {
-  const cpus = os.cpus();
-  const totalMem = os.totalmem();
-  const freeMem = os.freemem();
-  const usedMem = totalMem - freeMem;
-  
-  res.json({
-    hostname: os.hostname(),
-    platform: os.platform(),
-    arch: os.arch(),
-    uptime: os.uptime(),
-    cpuModel: cpus[0] ? cpus[0].model : 'Unknown',
-    cpuUsage: Math.floor(Math.random() * 20) + 5, // TODO: calculate real usage
-    totalMem: totalMem,
-    usedMem: usedMem,
-    memUsagePct: Math.round((usedMem / totalMem) * 100)
-  });
-});
+
 
 // System Management API (Reboot)
 app.post('/api/system/reboot', (req, res) => {
