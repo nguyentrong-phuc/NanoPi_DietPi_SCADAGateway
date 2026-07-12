@@ -40,12 +40,17 @@ const Overview = () => {
     </div>
   );
 
-  const FieldRow = ({ label, value, valueColor = '#444', labelWidth = '110px' }) => (
-    <div style={{ display: 'flex', marginBottom: '12px', fontSize: '14px' }}>
-      <span style={{ width: labelWidth, color: '#333', fontWeight: 600 }}>{label}</span>
-      <span style={{ color: valueColor, flex: 1, wordBreak: 'break-all' }}>{value ?? '--'}</span>
-    </div>
-  );
+  const FieldRow = ({ label, value, valueColor = '#333', labelWidth = '110px' }) => {
+    const displayValue = (value === undefined || value === null || value === '') ? '--' : value;
+    return (
+      <div style={{ display: 'flex', marginBottom: '12px', fontSize: '14px' }}>
+        <span style={{ width: labelWidth, color: '#333', fontWeight: 600 }}>{label}</span>
+        <span style={{ color: valueColor, flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {displayValue}
+        </span>
+      </div>
+    );
+  };
 
   const ProgressBar = ({ label, percentage }) => (
     <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px', fontSize: '14px' }}>
