@@ -7,6 +7,8 @@ const Overview = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showHostnameModal, setShowHostnameModal] = useState(false);
+  const [newHostname, setNewHostname] = useState('');
 
   useEffect(() => {
     const fetchInfo = () => {
@@ -21,11 +23,11 @@ const Overview = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const CardHeader = ({ title }) => (
-    <div className="card-header" style={{ marginBottom: '15px' }}>
+  const CardHeader = ({ title, onSettingsClick }) => (
+    <div className="card-header" style={{ marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
       <span className="card-header-line"></span>
       <span className="card-title" style={{ flex: 1, fontSize: '16px' }}>{title}</span>
-      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Settings</span>
+      {onSettingsClick && <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Settings</span>}
     </div>
   );
 
@@ -68,7 +70,10 @@ const Overview = () => {
         
         {/* System Information */}
         <div className="card-panel" style={{ padding: '20px' }}>
-          <CardHeader title="System Information" />
+          <CardHeader title="System Information" onSettingsClick={() => {
+            setNewHostname(info?.name || '');
+            setShowHostnameModal(true);
+          }} />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ flex: '0 0 28%' }}>
               <FieldRow labelWidth="80px" label="Name:" value={info?.name} />
@@ -165,6 +170,52 @@ const Overview = () => {
         </div>
       </div>
       
+      {/* Hostname Modal */}
+      {showHostnameModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ backgroundColor: 'white', padding: '25px', borderRadius: '4px', width: '400px' }}>
+            <h3 style={{ marginTop: 0, marginBottom: '20px', color: '#333' }}>Change Device Name</h3>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: '#555' }}>Hostname</label>
+              <input 
+                type="text" 
+                value={newHostname} 
+                onChange={e => setNewHostname(e.target.value)}
+                style={{ width: '100%', padding: '8px 12px', border: '1px solid #ccc', borderRadius: '4px', boxSizing: 'border-box' }}
+              />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button 
+                onClick={() => setShowHostnameModal(false)}
+                style={{ padding: '8px 15px', backgroundColor: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer', color: '#475569', fontWeight: 600 }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  fetch(`${API_URL}/api/system/hostname`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hostname: newHostname })
+                  })
+                  .then(res => res.json())
+                  .then(res => {
+                    if (res.success) {
+                      setShowHostnameModal(false);
+                      setInfo(prev => ({ ...prev, name: newHostname }));
+                    } else {
+                      alert('Failed to update hostname');
+                    }
+                  });
+                }}
+                style={{ padding: '8px 15px', backgroundColor: '#003fb4', border: 'none', borderRadius: '4px', cursor: 'pointer', color: 'white', fontWeight: 600 }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -409,19 +409,50 @@ app.get('/api/network/routing', (req, res) => {
   let routes = [];
   if (isLinux) {
     try {
-      const output = execSync('route -n').toString().trim();
-      const lines = output.split('\n').slice(2); // Skip header lines
+      const output = execSync('ip route').toString().trim();
+      const lines = output.split('\n');
       routes = lines.map(line => {
         const parts = line.trim().split(/\s+/);
+        // Default format: default via 192.168.1.1 dev eth0 src 192.168.1.10 metric 202
+        // Subnet format: 192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.10 metric 202
+        let target = parts[0];
+        let gateway = '0.0.0.0';
+        let netmask = '255.255.255.255';
+        let flags = 'U';
+        let iface = '';
+        let metric = '0';
+        
+        if (target === 'default') {
+          target = '0.0.0.0';
+          netmask = '0.0.0.0';
+          flags = 'UG';
+        } else if (target.includes('/')) {
+          const [ip, cidr] = target.split('/');
+          target = ip;
+          // approximate netmask from cidr
+          const maskBits = parseInt(cidr, 10);
+          const mask = ~((1 << (32 - maskBits)) - 1) >>> 0;
+          netmask = [ (mask >>> 24) & 255, (mask >>> 16) & 255, (mask >>> 8) & 255, mask & 255 ].join('.');
+        }
+
+        const viaIdx = parts.indexOf('via');
+        if (viaIdx !== -1) gateway = parts[viaIdx + 1];
+
+        const devIdx = parts.indexOf('dev');
+        if (devIdx !== -1) iface = parts[devIdx + 1];
+
+        const metricIdx = parts.indexOf('metric');
+        if (metricIdx !== -1) metric = parts[metricIdx + 1];
+
         return {
-          target: parts[0],
-          gateway: parts[1],
-          netmask: parts[2],
-          flag: parts[3],
-          metric: parts[4],
-          ref: parts[5],
-          use: parts[6],
-          interface: parts[7]
+          target,
+          gateway,
+          netmask,
+          flag: flags,
+          metric,
+          ref: '0',
+          use: '0',
+          interface: iface
         };
       });
     } catch(e) {
@@ -548,6 +579,21 @@ app.post('/api/system/reboot', (req, res) => {
   }
 });
 
+// System Management API (Hostname)
+app.post('/api/system/hostname', (req, res) => {
+  const { hostname } = req.body;
+  if (!hostname) return res.status(400).json({ error: 'Hostname is required' });
+  try {
+    if (isLinux) {
+      execSync(`hostnamectl set-hostname "${hostname}"`);
+      fs.writeFileSync('/etc/hostname', hostname + '\n');
+    }
+    res.json({ success: true, message: 'Hostname updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update hostname', details: error.message });
+  }
+});
+
 // System Management API (Schedule Reboot via cron)
 app.get('/api/system/schedule-reboot', (req, res) => {
   let enabled = false;
@@ -659,7 +705,7 @@ app.get('/api/system/info', (req, res) => {
   const wlanConfig = config.wlan;
 
   const result = {
-    name: 'RaitekEdge R2S',
+    name: os.hostname(),
     model: 'NanoPi R2S',
     version: '2.0.0',
     os: 'Linux (DietPi)',
@@ -771,6 +817,27 @@ app.get('/api/system/info', (req, res) => {
   }
 
   res.json(result);
+});
+
+// Network Diagnostics API (Ping / Traceroute)
+app.post('/api/network/diagnostics', (req, res) => {
+  const { target, type } = req.body;
+  if (!target || !['Ping', 'Traceroute'].includes(type)) return res.status(400).json({ error: 'Invalid parameters' });
+
+  // Basic sanitization to prevent command injection
+  if (!/^[a-zA-Z0-9.-]+$/.test(target)) return res.status(400).json({ error: 'Invalid target format' });
+
+  let cmd = '';
+  if (isLinux) {
+    cmd = type === 'Ping' ? `ping -c 4 -W 2 ${target}` : `traceroute -m 20 -w 2 ${target}`;
+  } else {
+    cmd = type === 'Ping' ? `ping -n 4 -w 2000 ${target}` : `tracert -h 20 -w 2000 ${target}`;
+  }
+
+  require('child_process').exec(cmd, { timeout: 35000 }, (error, stdout, stderr) => {
+    // We return stdout if available, otherwise stderr, otherwise error message
+    res.json({ output: stdout || stderr || (error ? error.message : 'No output') });
+  });
 });
 
 // Serve Frontend Static Files
