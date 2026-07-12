@@ -214,7 +214,7 @@ const LAN = () => {
                 <input type="text" value={lanConfig.dns} onChange={(e) => handleChange(e, 'dns')} style={{ width: '300px', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
 
-              <div style={{ marginLeft: '175px', marginTop: '30px' }}>
+              <div style={{ marginLeft: '160px', marginTop: '30px' }}>
                 <button 
                   type="submit" 
                   disabled={loading || !hasChanges} 
