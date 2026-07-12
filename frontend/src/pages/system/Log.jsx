@@ -2,69 +2,69 @@ import React from 'react';
 
 const Log = () => {
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ backgroundColor: '#eaedf2', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', margin: 0 }}>
-          LOG
-        </h2>
+    <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
+      <div className="page-title-container">
+        <h2 className="page-title">LOG</h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Log Viewer</span>
+      <div className="content-area" style={{ padding: '20px' }}>
+        <div className="card-panel">
+          <div className="card-header" style={{ justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span className="card-header-line"></span>
+              <span className="card-title">Log Viewer</span>
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button className="btn btn-primary">Start</button>
+              <button className="btn" style={{ backgroundColor: '#28a745', color: 'white' }}>Download Log</button>
+              <button className="btn btn-danger solid">Clear History Log</button>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button style={{ backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Start</button>
-            <button style={{ backgroundColor: '#10b981', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Download Log</button>
-            <button style={{ backgroundColor: '#e71562', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}>Clear History Log</button>
-          </div>
-        </div>
 
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '13px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#eaedf2', color: '#333', fontWeight: 700 }}>
-                <th style={{ padding: '12px 15px', border: 'none', width: '60px' }}>ID</th>
-                <th style={{ padding: '12px 15px', border: 'none', width: '150px' }}>Time</th>
-                <th style={{ padding: '12px 15px', border: 'none', width: '100px' }}>Level</th>
-                <th style={{ padding: '12px 15px', border: 'none', textAlign: 'left' }}>Log</th>
+          <div className="table-container">
+            <table className="table-unified">
+              <thead>
+                <tr>
+                  <th style={{ width: '60px' }}>ID</th>
+                  <th style={{ width: '150px' }}>Time</th>
+                  <th style={{ width: '100px' }}>Level</th>
+                  <th style={{ textAlign: 'left' }}>Log</th>
+                </tr>
+              </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>01046.598</td>
+                <td style={{ color: '#f5a623', fontWeight: 600 }}>Warning</td>
+                <td style={{ textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
               </tr>
-            </thead>
-          <tbody>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '12px 15px' }}>1</td>
-              <td style={{ padding: '12px 15px' }}>01046.598</td>
-              <td style={{ padding: '12px 15px', color: '#f59e0b', fontWeight: 600 }}>Warning</td>
-              <td style={{ padding: '12px 15px', textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '12px 15px' }}>2</td>
-              <td style={{ padding: '12px 15px' }}>00381.591</td>
-              <td style={{ padding: '12px 15px', color: '#f59e0b', fontWeight: 600 }}>Warning</td>
-              <td style={{ padding: '12px 15px', textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '12px 15px' }}>3</td>
-              <td style={{ padding: '12px 15px' }}>00382.577</td>
-              <td style={{ padding: '12px 15px', color: '#f59e0b', fontWeight: 600 }}>Warning</td>
-              <td style={{ padding: '12px 15px', textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '12px 15px' }}>4</td>
-              <td style={{ padding: '12px 15px' }}>00383.579</td>
-              <td style={{ padding: '12px 15px', color: '#f59e0b', fontWeight: 600 }}>Warning</td>
-              <td style={{ padding: '12px 15px', textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
-            </tr>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '12px 15px' }}>5</td>
-              <td style={{ padding: '12px 15px' }}>00384.591</td>
-              <td style={{ padding: '12px 15px', color: '#f59e0b', fontWeight: 600 }}>Warning</td>
-              <td style={{ padding: '12px 15px', textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
-            </tr>
-          </tbody>
-        </table>
+              <tr>
+                <td>2</td>
+                <td>00381.591</td>
+                <td style={{ color: '#f5a623', fontWeight: 600 }}>Warning</td>
+                <td style={{ textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>00382.577</td>
+                <td style={{ color: '#f5a623', fontWeight: 600 }}>Warning</td>
+                <td style={{ textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>00383.579</td>
+                <td style={{ color: '#f5a623', fontWeight: 600 }}>Warning</td>
+                <td style={{ textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>00384.591</td>
+                <td style={{ color: '#f5a623', fontWeight: 600 }}>Warning</td>
+                <td style={{ textAlign: 'left' }}>[nodered_module][nodered_service.c][163]:edge_read_write error.</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
         </div>
       </div>
     </div>

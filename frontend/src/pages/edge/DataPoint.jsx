@@ -103,29 +103,27 @@ const DataPoint = () => {
   };
 
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: '#eaedf2', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
       
       {/* Top Header */}
-      <div style={{ padding: '15px 20px' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', margin: 0 }}>
-          Data Point
-        </h2>
+      <div className="page-title-container">
+        <h2 className="page-title">Data Point</h2>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="content-area">
         
-        {/* SLAVE SECTION (White Background) */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderTop: '1px solid #dee2e6', borderBottom: '1px solid #dee2e6', marginBottom: '15px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', justifyContent: 'space-between' }}>
+        {/* SLAVE SECTION */}
+        <div className="card-panel" style={{ marginBottom: '15px' }}>
+          <div className="card-header" style={{ justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
-              <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Slave</span>
+              <span className="card-header-line"></span>
+              <span className="card-title">Slave</span>
             </div>
             <div>
-              <span style={{ fontSize: '12px', color: '#666', marginRight: '20px' }}>Version: 1779939851</span>
-              <button className="btn btn-primary active-btn" onClick={openAddModal} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px' }}>Add</button>
-              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'import', data: null })} style={{ padding: '6px 20px', marginRight: '10px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Import</button>
-              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'export', data: null })} style={{ padding: '6px 20px', fontWeight: 600, fontSize: '13px', backgroundColor: 'white', border: '1px solid var(--primary-color)', color: 'var(--primary-color)' }}>Export</button>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)', marginRight: '20px' }}>Version: 1779939851</span>
+              <button className="btn btn-primary" onClick={openAddModal} style={{ marginRight: '10px' }}>Add</button>
+              <button className="btn btn-outline" onClick={() => setModalConfig({ isOpen: true, mode: 'import', data: null })} style={{ marginRight: '10px' }}>Import</button>
+              <button className="btn btn-outline" onClick={() => setModalConfig({ isOpen: true, mode: 'export', data: null })}>Export</button>
             </div>
           </div>
 
@@ -177,61 +175,70 @@ const DataPoint = () => {
           </div>
         </div>
 
-        {/* LIST OF SLAVE POINTS SECTION (White Background) */}
-        <div style={{ backgroundColor: 'white', flex: 1, borderTop: '1px solid #dee2e6' }}>
-          <div style={{ padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', borderBottom: '1px solid #ebeef5' }}>
+        {/* LIST OF SLAVE POINTS SECTION */}
+        <div className="card-panel" style={{ flex: 1, padding: 0 }}>
+          <div className="card-header" style={{ justifyContent: 'space-between', padding: '15px 20px', margin: 0, borderBottom: '1px solid var(--border-color)', backgroundColor: 'white' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: '3px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></div>
-              <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>List of slave points</span>
+              <div className="card-header-line"></div>
+              <span className="card-title">List of slave points</span>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn" onClick={() => setModalConfig({ isOpen: true, mode: 'addPoint', data: null })} style={{ backgroundColor: 'var(--primary-color)', color: 'white', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: 'none', borderRadius: '4px' }}>Add</button>
-              <button className="btn" style={{ backgroundColor: '#fff', color: '#f56c6c', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', border: '1px solid #f56c6c', borderRadius: '4px' }}>Delete</button>
-              <input type="text" placeholder="Please enterPoint Screen" className="form-control" style={{ padding: '6px 12px', fontSize: '13px', width: '220px', height: '32px', marginLeft: '10px' }} />
-              <button className="btn" style={{ backgroundColor: 'white', color: 'var(--primary-color)', border: '1px solid var(--primary-color)', padding: '0 20px', height: '32px', fontWeight: 600, fontSize: '13px', borderRadius: '4px' }}>Point Screen</button>
+              {isCustomSlave && (
+                <>
+                  <button className="btn btn-primary" onClick={() => setModalConfig({ isOpen: true, mode: 'addPoint', data: null })}>Add</button>
+                  <button className="btn btn-danger solid">Delete</button>
+                </>
+              )}
+            </div>
+          </div>
+          
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '15px 20px', backgroundColor: 'white', borderBottom: '1px solid var(--border-color)' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <input type="text" placeholder="Please enterPoint Screen" className="form-input-standard" style={{ width: '220px' }} />
+              <button className="btn btn-primary">Point Screen</button>
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto', padding: '0 20px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center' }}>
+          <div className="table-container" style={{ padding: '0 20px', marginTop: '20px' }}>
+            <table className="table-unified">
               <thead>
-                <tr style={{ backgroundColor: '#e2e6ec', borderBottom: '1px solid #ebeef5' }}>
-                  <th style={{ padding: '12px 10px', width: '40px' }}><input type="checkbox" /></th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>ID</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Node name</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Data Type</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Decimal Number</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Address</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Read Write Status</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Priority</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Timeout(ms)</th>
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Data</th>
-                  {showFormulaCols && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Acquisition formula</th>}
-                  {showFormulaCols && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Control formula</th>}
-                  <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Node desc</th>
-                  {isCustomSlave && <th style={{ padding: '12px 10px', fontWeight: 600, color: '#333' }}>Operation</th>}
+                <tr>
+                  <th style={{ width: '40px' }}><input type="checkbox" /></th>
+                  <th>ID</th>
+                  <th>Node name</th>
+                  <th>Data Type</th>
+                  <th>Decimal Number</th>
+                  <th>Address</th>
+                  <th>Read Write Status</th>
+                  <th>Priority</th>
+                  <th>Timeout(ms)</th>
+                  <th>Data</th>
+                  {showFormulaCols && <th>Acquisition formula</th>}
+                  {showFormulaCols && <th>Control formula</th>}
+                  <th>Node desc</th>
+                  {isCustomSlave && <th>Operation</th>}
                 </tr>
               </thead>
               <tbody>
                 {displayedPoints.length > 0 ? displayedPoints.map(point => (
-                  <tr key={point.id} style={{ borderBottom: '1px solid #f0f0f0', color: '#555' }}>
-                    <td style={{ padding: '10px' }}><input type="checkbox" style={{ margin: 0 }} /></td>
-                    <td style={{ padding: '10px' }}>{point.id}</td>
-                    <td style={{ padding: '10px' }}>{point.name}</td>
-                    <td style={{ padding: '10px' }}>{point.type}</td>
-                    <td style={{ padding: '10px' }}>{point.decimal}</td>
-                    <td style={{ padding: '10px' }}>{point.address}</td>
-                    <td style={{ padding: '10px' }}>{point.rw}</td>
-                    <td style={{ padding: '10px' }}>{point.priority}</td>
-                    <td style={{ padding: '10px' }}>{point.timeout}</td>
-                    <td style={{ padding: '10px' }}>{point.data}</td>
-                    {showFormulaCols && <td style={{ padding: '10px' }}>{point.acq || '--'}</td>}
-                    {showFormulaCols && <td style={{ padding: '10px' }}>{point.ctrl || '--'}</td>}
-                    <td style={{ padding: '10px' }}>{point.desc}</td>
+                  <tr key={point.id}>
+                    <td><input type="checkbox" style={{ margin: 0 }} /></td>
+                    <td>{point.id}</td>
+                    <td>{point.name}</td>
+                    <td>{point.type}</td>
+                    <td>{point.decimal}</td>
+                    <td>{point.address}</td>
+                    <td>{point.rw}</td>
+                    <td>{point.priority}</td>
+                    <td>{point.timeout}</td>
+                    <td>{point.data}</td>
+                    {showFormulaCols && <td>{point.acq || '--'}</td>}
+                    {showFormulaCols && <td>{point.ctrl || '--'}</td>}
+                    <td>{point.desc}</td>
                     {isCustomSlave && (
-                      <td style={{ padding: '10px', fontWeight: 600 }}>
-                        <span onClick={() => setModalConfig({ isOpen: true, mode: 'editPoint', data: point })} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px', opacity: 0.9 }}>Edit</span>
-                        <span style={{ color: '#f56c6c', cursor: 'pointer', opacity: 0.9 }}>Delete</span>
+                      <td style={{ fontWeight: 600 }}>
+                        <span onClick={() => setModalConfig({ isOpen: true, mode: 'editPoint', data: point })} style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '12px' }}>Edit</span>
+                        <span style={{ color: 'var(--danger-color)', cursor: 'pointer' }}>Delete</span>
                       </td>
                     )}
                   </tr>
@@ -246,47 +253,39 @@ const DataPoint = () => {
 
           {/* Pagination */}
           {totalItems > 0 && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: '#333', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '13px', color: 'var(--text-dark)', padding: '20px' }}>
               <span style={{ marginRight: '15px' }}>Total {totalItems}</span>
-              <select style={{ padding: '4px 8px', border: '1px solid #ddd', borderRadius: '3px', marginRight: '15px', color: '#333' }}>
+              <select className="form-input-standard" style={{ width: 'auto', padding: '4px 8px', marginRight: '15px' }}>
                 <option>15/page</option>
               </select>
               <div style={{ display: 'flex', gap: '5px' }}>
                 <button 
-                  className="btn" 
+                  className="btn btn-default" 
                   disabled={currentPage === 1} 
                   onClick={() => handlePageChange(currentPage - 1)}
-                  style={{ padding: '4px 10px', backgroundColor: 'white', border: '1px solid #dcdfe6', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', color: currentPage === 1 ? '#c0c4cc' : '#606266', fontSize: '13px' }}
+                  style={{ padding: '4px 10px' }}
                 >Last</button>
                 
                 {[...Array(totalPages)].map((_, i) => (
                   <button 
                     key={i} 
-                    className="btn" 
+                    className={`btn ${currentPage === i + 1 ? 'btn-primary' : 'btn-default'}`} 
                     onClick={() => handlePageChange(i + 1)}
-                    style={{ 
-                      padding: '4px 12px', 
-                      backgroundColor: currentPage === i + 1 ? 'var(--primary-color)' : 'white', 
-                      color: currentPage === i + 1 ? 'white' : '#606266', 
-                      border: currentPage === i + 1 ? 'none' : '1px solid #dcdfe6', 
-                      cursor: 'pointer',
-                      fontSize: '13px',
-                      fontWeight: currentPage === i + 1 ? 600 : 400
-                    }}
+                    style={{ padding: '4px 12px' }}
                   >
                     {i + 1}
                   </button>
                 ))}
                 
                 <button 
-                  className="btn" 
+                  className="btn btn-default" 
                   disabled={currentPage === totalPages} 
                   onClick={() => handlePageChange(currentPage + 1)}
-                  style={{ padding: '4px 10px', backgroundColor: 'white', border: '1px solid #dcdfe6', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', color: currentPage === totalPages ? '#c0c4cc' : '#606266', fontSize: '13px' }}
+                  style={{ padding: '4px 10px' }}
                 >Next</button>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', marginLeft: '15px' }}>
-                Go to <input type="number" min="1" max={totalPages} defaultValue={currentPage} style={{ width: '40px', padding: '4px', margin: '0 5px', border: '1px solid #ddd', borderRadius: '3px', textAlign: 'center' }} />
+                Go to <input type="number" min="1" max={totalPages} defaultValue={currentPage} className="form-input-standard" style={{ width: '40px', padding: '4px', margin: '0 5px', textAlign: 'center' }} />
               </div>
             </div>
           )}
@@ -482,10 +481,10 @@ const DataPoint = () => {
             )}
             
             {/* Footer */}
-            <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
-              <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn btn-primary" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none' }}>
-                {modalConfig.mode === 'import' ? 'import' : (modalConfig.mode === 'export' || modalConfig.mode === 'addPoint' || modalConfig.mode === 'editPoint') ? 'sure' : 'sure'}
+            <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #f0f0f0' }}>
+              <button className="btn btn-default" onClick={closeModal}>Cancel</button>
+              <button className="btn btn-primary" onClick={closeModal}>
+                {modalConfig.mode === 'import' ? 'Import' : 'Sure'}
               </button>
             </div>
             

@@ -2,59 +2,62 @@ import React from 'react';
 
 const Communication = () => {
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #e5e7eb' }}>
-        Communication
-      </h2>
+    <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
+      <div className="page-title-container">
+        <h2 className="page-title">Communication</h2>
+      </div>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', flex: 1 }}>
         {/* Sub-sidebar for Channels */}
-        <div style={{ width: '150px', borderRight: '1px solid #e5e7eb', marginRight: '20px' }}>
-          <div style={{ padding: '10px', cursor: 'pointer', backgroundColor: '#fff3e0', color: 'var(--primary-color)', borderRight: '3px solid var(--primary-color)', fontWeight: 600 }}>Communication1</div>
-          <div style={{ padding: '10px', cursor: 'pointer', backgroundColor: 'var(--bg-dark)', color: 'var(--text-dark)', borderRight: '3px solid transparent' }}>Communication2</div>
+        <div style={{ width: '180px', backgroundColor: 'white', borderRight: '8px solid var(--bg-dark)' }}>
+          <div style={{ padding: '15px 20px', cursor: 'pointer', backgroundColor: 'var(--primary-light, #f0f4f8)', color: 'var(--primary-color)', fontWeight: 600, fontSize: '14px', textAlign: 'center' }}>Communication1</div>
+          <div style={{ padding: '15px 20px', cursor: 'pointer', backgroundColor: 'white', color: '#555', fontSize: '14px', textAlign: 'center' }}>Communication2</div>
         </div>
 
         {/* Content */}
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', backgroundColor: 'white', padding: '15px', borderRadius: '4px', border: '1px solid #e5e7eb' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 600, fontSize: '14px', flex: 1 }}>Communication1</span>
+        <div style={{ flex: 1, backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
+          <div className="card-header" style={{ padding: '20px', borderBottom: '1px solid var(--border-color)' }}>
+            <span className="card-header-line"></span>
+            <span className="card-title" style={{ flex: 1 }}>Communication1</span>
             {/* Toggle switch placeholder */}
-            <div style={{ width: '36px', height: '18px', backgroundColor: 'var(--primary-color)', borderRadius: '10px', position: 'relative' }}>
-              <div style={{ width: '14px', height: '14px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', top: '2px', right: '2px' }}></div>
+            <div style={{ width: '40px', height: '20px', backgroundColor: 'var(--primary-color)', borderRadius: '10px', position: 'relative', cursor: 'pointer' }}>
+              <div style={{ width: '16px', height: '16px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', top: '2px', left: '22px', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}></div>
             </div>
           </div>
 
-          <div style={{ backgroundColor: 'white', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '4px' }}>
-            <div style={{ color: 'var(--primary-color)', fontWeight: 600, marginBottom: '20px' }}>Basic settings</div>
+          <div style={{ padding: '20px', flex: 1 }}>
+            <div className="card-header" style={{ marginBottom: '20px' }}>
+              <span className="card-header-line"></span>
+              <span className="card-title">Basic settings</span>
+            </div>
 
-            <div style={{ maxWidth: '500px', border: '1px solid red', padding: '15px', borderRadius: '4px' }}>
+            <div className="card-panel" style={{ maxWidth: '500px', padding: '20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Communication Protocol:</span>
-                <select style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="TCP Client">
+                <span className="form-label-bold form-label-required" style={{ width: '180px' }}>Communication Protocol:</span>
+                <select className="form-input-standard" style={{ flex: 1 }} defaultValue="TCP Client">
                   <option value="TCP Client">TCP Client</option>
                   <option value="MQTT">MQTT Client</option>
                 </select>
               </div>
               
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Remote Server Address:</span>
-                <input type="text" style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="192.168.1.99" />
+                <span className="form-label-bold form-label-required" style={{ width: '180px' }}>Remote Server Address:</span>
+                <input type="text" className="form-input-standard" style={{ flex: 1 }} defaultValue="192.168.1.99" />
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Local Port:</span>
-                <input type="text" style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="0" />
+                <span className="form-label-bold form-label-required" style={{ width: '180px' }}>Local Port:</span>
+                <input type="text" className="form-input-standard" style={{ flex: 1 }} defaultValue="0" />
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                <span style={{ width: '150px', color: '#666', fontSize: '13px' }}>* Remote Port:</span>
-                <input type="text" style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }} defaultValue="8234" />
+                <span className="form-label-bold form-label-required" style={{ width: '180px' }}>Remote Port:</span>
+                <input type="text" className="form-input-standard" style={{ flex: 1 }} defaultValue="8234" />
               </div>
             </div>
             
-            <div style={{ marginTop: '20px', marginLeft: '150px' }}>
-              <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'pointer' }}>apply</button>
+            <div style={{ marginTop: '20px', marginLeft: '180px' }}>
+              <button className="btn btn-primary" style={{ padding: '0 30px' }}>Apply</button>
             </div>
           </div>
         </div>

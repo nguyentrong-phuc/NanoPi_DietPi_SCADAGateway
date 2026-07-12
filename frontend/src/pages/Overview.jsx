@@ -61,22 +61,18 @@ const Overview = () => {
 
   // Reusable components
   const CardHeader = ({ title }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #e0e0e0', paddingBottom: '8px' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ display: 'inline-block', width: '4px', height: '16px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
-        <span style={{ fontWeight: 700, fontSize: '18px', color: '#111' }}>{title}</span>
-      </div>
-      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>
+    <div className="card-header" style={{ marginBottom: '15px' }}>
+      <span className="card-header-line"></span>
+      <span className="card-title" style={{ flex: 1, fontSize: '16px' }}>{title}</span>
+      <span style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Settings</span>
     </div>
   );
 
   const SubCardHeader = ({ title, onSettingsClick }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '8px', borderRadius: '1.5px' }}></span>
-        <span style={{ fontWeight: 700, fontSize: '16px', color: '#222' }}>{title}</span>
-      </div>
-      {onSettingsClick && <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 500 }}>Settings</span>}
+    <div className="card-header" style={{ marginBottom: '15px' }}>
+      <span className="card-header-line" style={{ height: '14px', width: '3px' }}></span>
+      <span className="card-title" style={{ flex: 1 }}>{title}</span>
+      {onSettingsClick && <span onClick={onSettingsClick} style={{ color: 'var(--primary-color)', fontSize: '13px', cursor: 'pointer', fontWeight: 600 }}>Settings</span>}
     </div>
   );
 
@@ -98,13 +94,13 @@ const Overview = () => {
   );
 
   return (
-    <div className="page-content" style={{ padding: '20px', backgroundColor: '#f0f2f5', minHeight: '100vh', margin: '-20px' }}>
+    <div className="app-container" style={{ padding: '20px', backgroundColor: 'var(--bg-dark)', minHeight: 'calc(100vh - 60px)', margin: '-20px' }}>
       
       {/* Top Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 58%) minmax(0, 21%) minmax(0, 21%)', gap: '15px', marginBottom: '15px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 58%) minmax(0, 21%) minmax(0, 21%)', gap: '20px', marginBottom: '20px' }}>
         
         {/* System Information */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div className="card-panel" style={{ padding: '20px' }}>
           <CardHeader title="System Information" />
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ flex: '0 0 28%' }}>
@@ -131,7 +127,7 @@ const Overview = () => {
         </div>
 
         {/* Flow Usage Monitoring */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div className="card-panel" style={{ padding: '20px' }}>
           <CardHeader title="Flow Usage Monitoring" />
           <div style={{ paddingTop: '5px' }}>
             <FieldRow labelWidth="150px" label="Data Usage(Day):" value={flow.dataUsageDay} />
@@ -142,7 +138,7 @@ const Overview = () => {
         </div>
 
         {/* Performance */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+        <div className="card-panel" style={{ padding: '20px' }}>
           <CardHeader title="Performance" />
           <ProgressBar label="CPU" percentage={perf.cpu} />
           <ProgressBar label="Memory" percentage={perf.memory} />
@@ -152,10 +148,10 @@ const Overview = () => {
       </div>
 
       {/* Bottom Section - Device Status */}
-      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-           <span style={{ display: 'inline-block', width: '4px', height: '18px', backgroundColor: 'var(--primary-color)', marginRight: '10px', borderRadius: '2px' }}></span>
-           <span style={{ fontWeight: 700, fontSize: '18px', color: '#111' }}>Device Status</span>
+      <div className="card-panel" style={{ padding: '20px' }}>
+        <div className="card-header" style={{ marginBottom: '20px' }}>
+           <span className="card-header-line"></span>
+           <span className="card-title" style={{ fontSize: '16px' }}>Device Status</span>
         </div>
 
         {/* 2-Column Grid for Device Status items */}
@@ -163,7 +159,7 @@ const Overview = () => {
           
           {/* Column 1: WAN & LAN */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px' }}>
+            <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px' }}>
               <SubCardHeader title="WAN" onSettingsClick={() => navigate('/network/wan')} />
               <FieldRow label="Mode:" value={networkInfo.wan.mode} />
               <FieldRow label="WAN IP:" value={networkInfo.wan.ip} />
@@ -173,7 +169,7 @@ const Overview = () => {
               <FieldRow label="DNS-2:" value={networkInfo.wan.dns2} />
             </div>
             
-            <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px', flex: 1 }}>
+            <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', flex: 1 }}>
               <SubCardHeader title="LAN" onSettingsClick={() => navigate('/network/lan')} />
               <FieldRow label="LAN IP:" value={networkInfo.lan.ip} />
               <FieldRow label="Netmask:" value={networkInfo.lan.netmask} />
@@ -184,7 +180,7 @@ const Overview = () => {
           {/* Column 2: Location */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-            <div style={{ border: '1px solid #eee', padding: '15px', borderRadius: '4px', flex: 1 }}>
+            <div style={{ border: '1px solid var(--border-color)', padding: '20px', borderRadius: '4px', flex: 1 }}>
               <SubCardHeader title="LOCATION" />
               <FieldRow label="Longitude:" value={networkInfo.location.longitude} />
               <FieldRow label="Latitude:" value={networkInfo.location.latitude} />

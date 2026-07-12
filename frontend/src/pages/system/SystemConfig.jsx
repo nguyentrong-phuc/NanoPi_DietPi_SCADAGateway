@@ -21,51 +21,51 @@ const SystemConfig = () => {
   };
 
   return (
-    <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ backgroundColor: '#eaedf2', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', margin: 0 }}>
-          Configuration Management
-        </h2>
+    <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
+      <div className="page-title-container">
+        <h2 className="page-title">Configuration Management</h2>
       </div>
 
-      <div style={{ padding: '20px 20px', flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-          <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
-          <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>System Config</span>
-        </div>
+      <div className="content-area">
+        <div className="card-panel" style={{ maxWidth: '800px' }}>
+          <div className="card-header">
+            <span className="card-header-line"></span>
+            <span className="card-title">System Config</span>
+          </div>
         
-        <div style={{ paddingLeft: '20px', maxWidth: '600px' }}>
-          <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ width: '150px', textAlign: 'right', paddingRight: '20px', color: '#333', fontSize: '13px' }}>Export:</span>
-            <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px', width: '200px' }} onClick={() => handleExport('system')}>Export Config</button>
-          </div>
-          <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ width: '150px', textAlign: 'right', paddingRight: '20px', color: '#333', fontSize: '13px' }}>Import:</span>
-            <button style={{ backgroundColor: '#003fb4', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px', width: '200px' }}>Import Config</button>
-          </div>
-          <div style={{ marginBottom: '40px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ width: '150px', textAlign: 'right', paddingRight: '20px', color: '#333', fontSize: '13px' }}>Restore Factory:</span>
-            <button style={{ backgroundColor: '#e71562', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px', width: '200px' }}>Restore Factory</button>
-          </div>
-        </div>
-
-        <div style={{ borderTop: '1px solid #eaedf2', paddingTop: '30px', marginTop: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-            <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
-            <span style={{ fontWeight: 700, fontSize: '16px', color: '#333' }}>Edge Computing Config</span>
+          <div style={{ paddingLeft: '20px' }}>
+            <div className="form-group-unified-row">
+              <span className="form-label-bold">Export:</span>
+              <button className="btn btn-primary" style={{ width: '200px' }} onClick={() => handleExport('system')}>Export Config</button>
+            </div>
+            <div className="form-group-unified-row">
+              <span className="form-label-bold">Import:</span>
+              <button className="btn btn-primary" style={{ width: '200px' }} onClick={() => setModalConfig({ isOpen: true, mode: 'import_system' })}>Import Config</button>
+            </div>
+            <div className="form-group-unified-row" style={{ marginBottom: '40px' }}>
+              <span className="form-label-bold">Restore Factory:</span>
+              <button className="btn btn-danger solid" style={{ width: '200px' }}>Restore Factory</button>
+            </div>
           </div>
 
-          <div style={{ paddingLeft: '20px', maxWidth: '600px' }}>
-            <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', textAlign: 'right', paddingRight: '20px', color: '#333', fontSize: '13px' }}>Export:</span>
-              <button style={{ backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px', width: '200px' }} onClick={() => setModalConfig({ isOpen: true, mode: 'export' })}>Export Config</button>
+          <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '30px', marginTop: '20px' }}>
+            <div className="card-header">
+              <span className="card-header-line"></span>
+              <span className="card-title">Edge Computing Config</span>
             </div>
-            <div style={{ marginBottom: '5px', display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', textAlign: 'right', paddingRight: '20px', color: '#333', fontSize: '13px' }}>Import:</span>
-              <button style={{ backgroundColor: 'var(--primary-color)', color: 'white', border: 'none', padding: '6px 20px', borderRadius: '3px', cursor: 'pointer', fontWeight: 600, fontSize: '13px', width: '200px' }} onClick={() => setModalConfig({ isOpen: true, mode: 'import' })}>Import Config</button>
-            </div>
-            <div style={{ paddingLeft: '150px', color: '#999', fontSize: '12px', lineHeight: 1.5, marginTop: '10px' }}>
-              Note: The export point table will synchronously export the data point table, protocol conversion data point table, linkage control event table, and data reporting group table, and will be updated synchronously after importing
+
+            <div style={{ paddingLeft: '20px' }}>
+              <div className="form-group-unified-row">
+                <span className="form-label-bold">Export:</span>
+                <button className="btn btn-primary" style={{ width: '200px' }} onClick={() => setModalConfig({ isOpen: true, mode: 'export' })}>Export Config</button>
+              </div>
+              <div className="form-group-unified-row" style={{ marginBottom: '5px' }}>
+                <span className="form-label-bold">Import:</span>
+                <button className="btn btn-primary" style={{ width: '200px' }} onClick={() => setModalConfig({ isOpen: true, mode: 'import' })}>Import Config</button>
+              </div>
+              <div style={{ paddingLeft: '155px', color: 'var(--text-muted)', fontSize: '12px', lineHeight: 1.5, marginTop: '10px' }}>
+                Note: The export point table will synchronously export the data point table, protocol conversion data point table, linkage control event table, and data reporting group table, and will be updated synchronously after importing
+              </div>
             </div>
           </div>
         </div>
@@ -79,13 +79,14 @@ const SystemConfig = () => {
             {/* Header */}
             <div style={{ padding: '15px 25px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: '#333' }}>
-                {modalConfig.mode === 'import' ? 'Import mapping table' : 'Export'}
+                {modalConfig.mode === 'import' ? 'Import mapping table' : 
+                 modalConfig.mode === 'import_system' ? 'Import configuration file' : 'Export'}
               </h3>
               <span onClick={closeModal} style={{ cursor: 'pointer', fontSize: '18px', color: '#999' }}>&times;</span>
             </div>
             
             {/* Body */}
-            {modalConfig.mode === 'import' ? (
+            {(modalConfig.mode === 'import' || modalConfig.mode === 'import_system') ? (
               <div style={{ padding: '40px 40px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <span style={{ width: '135px', textAlign: 'right', paddingRight: '15px', fontSize: '13px', color: '#333' }}>
@@ -111,10 +112,10 @@ const SystemConfig = () => {
             )}
             
             {/* Footer */}
-            <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '15px', borderTop: '1px solid #f0f0f0' }}>
-              <button className="btn" onClick={closeModal} style={{ padding: '8px 25px', fontSize: '13px', backgroundColor: 'white', border: '1px solid #dcdfe6', color: '#606266', borderRadius: '4px', cursor: 'pointer' }}>cancel</button>
-              <button className="btn btn-primary" onClick={() => { if(modalConfig.mode === 'export') handleExport('edge'); closeModal(); }} style={{ padding: '8px 25px', fontSize: '13px', borderRadius: '4px', fontWeight: 600, cursor: 'pointer', backgroundColor: 'var(--primary-color)', color: 'white', border: 'none' }}>
-                {modalConfig.mode === 'import' ? 'Import' : 'sure'}
+            <div style={{ padding: '15px 25px', display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #f0f0f0' }}>
+              <button className="btn btn-default" onClick={closeModal}>Cancel</button>
+              <button className="btn btn-primary" onClick={() => { if(modalConfig.mode === 'export') handleExport('edge'); closeModal(); }}>
+                {(modalConfig.mode === 'import' || modalConfig.mode === 'import_system') ? 'Import' : 'Sure'}
               </button>
             </div>
             

@@ -2,53 +2,57 @@ import React from 'react';
 
 const DataQueryControl = () => {
   return (
-    <div className="page-content" style={{ padding: '20px' }}>
-      <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-dark)', marginBottom: '20px', paddingBottom: '10px', borderBottom: '1px solid #e5e7eb' }}>
-        Data Query/Control
-      </h2>
-
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', backgroundColor: 'white', padding: '15px', borderRadius: '4px', border: '1px solid #e5e7eb' }}>
-        <span style={{ display: 'inline-block', width: '3px', height: '14px', backgroundColor: 'var(--primary-color)', marginRight: '10px' }}></span>
-        <span style={{ fontWeight: 600, fontSize: '14px', flex: 1 }}>Data Query/Control</span>
-        <div style={{ width: '36px', height: '18px', backgroundColor: 'var(--primary-color)', borderRadius: '10px', position: 'relative' }}>
-          <div style={{ width: '14px', height: '14px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', top: '2px', right: '2px' }}></div>
-        </div>
+    <div className="app-container" style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'var(--bg-dark)' }}>
+      <div className="page-title-container">
+        <h2 className="page-title">Data Query/Control</h2>
       </div>
 
-      <div style={{ backgroundColor: 'white', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '4px', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
-          <button style={{ backgroundColor: '#f39c12', color: 'white', border: 'none', padding: '5px 25px', borderRadius: '4px', cursor: 'pointer' }}>Add</button>
+      <div style={{ padding: '20px' }}>
+        <div className="card-header" style={{ marginBottom: '20px', backgroundColor: 'white', padding: '15px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
+          <span className="card-header-line"></span>
+          <span className="card-title" style={{ flex: 1 }}>Data Query/Control</span>
+          <div style={{ width: '40px', height: '20px', backgroundColor: 'var(--primary-color)', borderRadius: '10px', position: 'relative', cursor: 'pointer' }}>
+            <div style={{ width: '16px', height: '16px', backgroundColor: 'white', borderRadius: '50%', position: 'absolute', top: '2px', right: '2px', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }}></div>
+          </div>
         </div>
 
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'center', backgroundColor: 'white' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#e2e6eb', color: '#333' }}>
-              <th style={{ padding: '10px' }}>Select Channel</th>
-              <th style={{ padding: '10px' }}>Public Topic</th>
-              <th style={{ padding: '10px' }}>Subscribe Topic</th>
-              <th style={{ padding: '10px' }}>Operation</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: '10px' }}>Link one</td>
-              <td>--</td>
-              <td>--</td>
-              <td>
-                <span style={{ color: '#e74c3c', cursor: 'pointer' }}>Delete</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div className="card-panel" style={{ padding: '20px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '15px' }}>
+            <button className="btn btn-primary" style={{ padding: '0 25px' }}>Add</button>
+          </div>
 
-      <div style={{ backgroundColor: 'white', padding: '20px', border: '1px solid #e5e7eb', borderRadius: '4px', borderLeft: '2px solid red' }}>
-        <div style={{ display: 'flex', marginBottom: '15px' }}>
-          <span style={{ width: '50px', color: '#666', fontSize: '13px' }}>Json:</span>
-          <textarea 
-            readOnly
-            style={{ flex: 1, height: '300px', padding: '10px', backgroundColor: '#fafafa', border: '1px solid #ccc', borderRadius: '4px', fontFamily: 'monospace', fontSize: '12px' }}
-            defaultValue={`{
+          <div className="table-container">
+            <table className="table-unified">
+              <thead>
+                <tr>
+                  <th>Select Channel</th>
+                  <th>Public Topic</th>
+                  <th>Subscribe Topic</th>
+                  <th>Operation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Link one</td>
+                  <td>--</td>
+                  <td>--</td>
+                  <td style={{ fontWeight: 600 }}>
+                    <span style={{ color: 'var(--danger-color)', cursor: 'pointer' }}>Delete</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="card-panel" style={{ padding: '20px', borderLeft: '2px solid var(--danger-color)' }}>
+          <div style={{ display: 'flex', marginBottom: '15px' }}>
+            <span className="form-label-bold" style={{ width: '80px', paddingTop: '10px' }}>Json:</span>
+            <textarea 
+              readOnly
+              className="form-input-standard"
+              style={{ flex: 1, height: '300px', backgroundColor: '#fafafa', fontFamily: 'monospace' }}
+              defaultValue={`{
   "rw_prot": {
     "Ver": "1.0.1",
     "dir": "down",
@@ -62,11 +66,12 @@ const DataQueryControl = () => {
     }]
   }
 }`}
-          />
-        </div>
-        
-        <div style={{ marginLeft: '50px' }}>
-          <button style={{ backgroundColor: '#e0e0e0', color: '#999', border: 'none', padding: '8px 25px', borderRadius: '4px', cursor: 'not-allowed' }}>apply</button>
+            />
+          </div>
+          
+          <div style={{ marginLeft: '80px' }}>
+            <button className="btn" style={{ backgroundColor: '#e0e0e0', color: '#999', padding: '0 30px', cursor: 'not-allowed' }} disabled>Apply</button>
+          </div>
         </div>
       </div>
     </div>
