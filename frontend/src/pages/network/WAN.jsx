@@ -42,7 +42,13 @@ const WAN = () => {
   const handleChange = (e, field) => {
     const value = e.target.value;
     if (field === 'mode') {
-      setConfig({ ...config, mode: value, dnsMode: value === 'Static IP' ? 'Manual' : config.dnsMode });
+      const newConfig = { ...config, mode: value, dnsMode: value === 'Static IP' ? 'Manual' : config.dnsMode };
+      if (value === 'Static IP' && config.mode === 'DHCP') {
+        newConfig.staticIp = networkStats.liveIp && networkStats.liveIp !== '--' ? networkStats.liveIp : config.staticIp;
+        newConfig.gateway = networkStats.liveGateway && networkStats.liveGateway !== '--' ? networkStats.liveGateway : config.gateway;
+        newConfig.netmask = networkStats.netmask && networkStats.netmask !== '--' ? networkStats.netmask : config.netmask;
+      }
+      setConfig(newConfig);
     } else {
       setConfig({ ...config, [field]: value });
     }
