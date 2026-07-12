@@ -667,12 +667,31 @@ app.get('/api/edge/data-points', (req, res) => {
     'node': []
   };
 
+  // Helper: rebuild Slave_Status points from custom slaves
+  const buildSlaveStatusPoints = (slaves, points) => {
+    const customSlaves = slaves.filter(s => s.isCustom !== false);
+    const autoPoints = customSlaves.map((s, i) => ({
+      id: i + 1,
+      name: s.name,
+      type: '8 Bit Signed',
+      decimalNumber: 0,
+      address: '--',
+      rw: 'Only Read',
+      priority: 'Level 1',
+      timeout: 2000,
+      data: s.status === 'online' ? 2 : s.status === 'abnormal' ? 1 : s.status === 'stop' ? 3 : 0,
+      acquisitionFormula: '--',
+      controlFormula: '--',
+      desc: s.name
+    }));
+    return { ...points, 'slave_status': autoPoints };
+  };
+
   if (fs.existsSync(filePath)) {
     try {
       const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      // Ensure system nodes exist
       const slaves = data.slaves || defaultSlaves;
-      const points = data.points || defaultPoints;
+      const points = buildSlaveStatusPoints(slaves, data.points || defaultPoints);
       res.json({ slaves, points });
     } catch (e) {
       res.json({ slaves: defaultSlaves, points: defaultPoints });
