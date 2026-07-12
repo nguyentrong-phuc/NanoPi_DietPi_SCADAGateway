@@ -20,7 +20,9 @@ const ToggleSwitch = ({ isOn, handleToggle }) => {
   );
 };
 
-const ModbusConfig = () => {
+const ModbusConfig = ({ activeTab }) => {
+  const [rs485, setRs485] = useState(false);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: '30px' }}>
       {/* Basic settings */}
@@ -34,6 +36,12 @@ const ModbusConfig = () => {
           {/* Connection Config */}
           <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Connection Config</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px', marginBottom: '30px' }}>
+            {activeTab === 'Modbus RTU' && (
+              <div style={{ flex: '1', minWidth: '300px', display: 'flex', alignItems: 'center' }}>
+                <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> RS485:</span>
+                <ToggleSwitch isOn={rs485} handleToggle={() => setRs485(!rs485)} />
+              </div>
+            )}
             <div style={{ flex: '1', minWidth: '300px', display: 'flex', alignItems: 'center' }}>
               <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Protocol:</span>
               <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '13px', height: '32px' }}>
@@ -114,38 +122,44 @@ const ModbusConfig = () => {
               </tr>
             </thead>
             <tbody>
-              {[
-                { id: 1, pos: 'COS', src: 'Node', type: '32 Bit Float', addr: '30024', rw: 'Read/Write' },
-                { id: 2, pos: 'HZ', src: 'Node', type: '32 Bit Float', addr: '30022', rw: 'Read/Write' },
-                { id: 3, pos: 'IC', src: 'Node', type: '32 Bit Float', addr: '30020', rw: 'Read/Write' },
-                { id: 4, pos: 'IB', src: 'Node', type: '32 Bit Float', addr: '30018', rw: 'Read/Write' },
-                { id: 5, pos: 'IA', src: 'Node', type: '32 Bit Float', addr: '30016', rw: 'Read/Write' },
-                { id: 6, pos: 'VC', src: 'Node', type: '32 Bit Float', addr: '30014', rw: 'Read/Write' },
-                { id: 7, pos: 'VB', src: 'Node', type: '32 Bit Float', addr: '30012', rw: 'Read/Write' },
-                { id: 8, pos: 'VA', src: 'Node', type: '32 Bit Float', addr: '30010', rw: 'Read/Write' },
-                { id: 9, pos: 'QOUT', src: 'Node', type: '32 Bit Float', addr: '30008', rw: 'Read/Write' },
-                { id: 10, pos: 'AINV_D1', src: 'Node', type: '32 Bit Float', addr: '30006', rw: 'Read/Write' }
-              ].map(row => (
-                <tr key={row.id} style={{ borderBottom: '1px solid #f0f0f0', color: '#555' }}>
-                  <td style={{ padding: '10px' }}><input type="checkbox" style={{ margin: 0 }} /></td>
-                  <td style={{ padding: '10px' }}>{row.id}</td>
-                  <td style={{ padding: '10px' }}>{row.pos}</td>
-                  <td style={{ padding: '10px' }}>{row.src}</td>
-                  <td style={{ padding: '10px' }}>{row.type}</td>
-                  <td style={{ padding: '10px' }}>{row.addr}</td>
-                  <td style={{ padding: '10px' }}>{row.rw}</td>
-                  <td style={{ padding: '10px' }}>
-                    <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px' }}>Edit</span>
-                    <span style={{ color: '#dc3545', cursor: 'pointer' }}>Delete</span>
-                  </td>
+              {activeTab === 'Modbus RTU' ? (
+                <tr>
+                  <td colSpan="8" style={{ padding: '40px', color: '#999', fontSize: '13px' }}>No data yet</td>
                 </tr>
-              ))}
+              ) : (
+                [
+                  { id: 1, pos: 'COS', src: 'Node', type: '32 Bit Float', addr: '30024', rw: 'Read/Write' },
+                  { id: 2, pos: 'HZ', src: 'Node', type: '32 Bit Float', addr: '30022', rw: 'Read/Write' },
+                  { id: 3, pos: 'IC', src: 'Node', type: '32 Bit Float', addr: '30020', rw: 'Read/Write' },
+                  { id: 4, pos: 'IB', src: 'Node', type: '32 Bit Float', addr: '30018', rw: 'Read/Write' },
+                  { id: 5, pos: 'IA', src: 'Node', type: '32 Bit Float', addr: '30016', rw: 'Read/Write' },
+                  { id: 6, pos: 'VC', src: 'Node', type: '32 Bit Float', addr: '30014', rw: 'Read/Write' },
+                  { id: 7, pos: 'VB', src: 'Node', type: '32 Bit Float', addr: '30012', rw: 'Read/Write' },
+                  { id: 8, pos: 'VA', src: 'Node', type: '32 Bit Float', addr: '30010', rw: 'Read/Write' },
+                  { id: 9, pos: 'QOUT', src: 'Node', type: '32 Bit Float', addr: '30008', rw: 'Read/Write' },
+                  { id: 10, pos: 'AINV_D1', src: 'Node', type: '32 Bit Float', addr: '30006', rw: 'Read/Write' }
+                ].map(row => (
+                  <tr key={row.id} style={{ borderBottom: '1px solid #f0f0f0', color: '#555' }}>
+                    <td style={{ padding: '10px' }}><input type="checkbox" style={{ margin: 0 }} /></td>
+                    <td style={{ padding: '10px' }}>{row.id}</td>
+                    <td style={{ padding: '10px' }}>{row.pos}</td>
+                    <td style={{ padding: '10px' }}>{row.src}</td>
+                    <td style={{ padding: '10px' }}>{row.type}</td>
+                    <td style={{ padding: '10px' }}>{row.addr}</td>
+                    <td style={{ padding: '10px' }}>{row.rw}</td>
+                    <td style={{ padding: '10px' }}>
+                      <span style={{ color: 'var(--primary-color)', cursor: 'pointer', marginRight: '10px' }}>Edit</span>
+                      <span style={{ color: '#dc3545', cursor: 'pointer' }}>Delete</span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', fontSize: '12px', color: '#666' }}>
-          <span style={{ marginRight: '15px' }}>Total 26</span>
+          <span style={{ marginRight: '15px' }}>Total {activeTab === 'Modbus RTU' ? 0 : 26}</span>
           <select style={{ padding: '4px 8px', border: '1px solid #ddd', borderRadius: '3px', marginRight: '15px', color: '#333' }}>
             <option>10/page</option>
           </select>
@@ -386,7 +400,7 @@ const Protocol = () => {
                 </div>
               </>
             ) : (
-              activeTab === 'IEC104' ? <IEC104Config /> : <ModbusConfig />
+              activeTab === 'IEC104' ? <IEC104Config /> : <ModbusConfig activeTab={activeTab} />
             )}
           </div>
 
