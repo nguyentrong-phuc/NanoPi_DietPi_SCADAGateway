@@ -214,8 +214,13 @@ const DataPoint = () => {
                 </div>
                 <div style={{ fontSize: '13px', color: '#555', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                   <p style={{ margin: 0, whiteSpace: 'pre-line', lineHeight: '1.4' }}>{slave.desc}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <p style={{ margin: 0 }}>protocol: <strong style={{ color: '#333' }}>{slave.protocol}</strong></p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <p style={{ margin: 0 }}>protocol: <strong style={{ color: '#333' }}>{slave.protocol}</strong></p>
+                      {slave.protocol === 'Modbus_TCP' && slave.ip && (
+                        <p style={{ margin: 0, fontSize: '12px', color: '#777' }}>IP: {slave.ip}:{slave.port}</p>
+                      )}
+                    </div>
                     {slave.isCustom && (
                       <div style={{ fontSize: '13px', fontWeight: 600 }}>
                         <span onClick={(e) => openEditModal(slave, e)} style={{ color: 'var(--primary-color)', opacity: 0.9, marginRight: '12px', cursor: 'pointer' }}>Edit</span>
