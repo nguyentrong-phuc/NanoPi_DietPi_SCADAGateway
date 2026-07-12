@@ -175,9 +175,22 @@ const WAN = () => {
                 <input type="text" value={config.mtu} onChange={(e) => handleChange(e, 'mtu')} style={{ flex: 1, padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', outline: 'none', color: '#333' }} />
               </div>
 
-              <div style={{ marginLeft: '-50px' }}>
-                <button type="submit" disabled={loading || !hasChanges} style={{ backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', cursor: hasChanges ? 'pointer' : 'not-allowed', border: 'none', padding: '8px 30px', borderRadius: '2px', fontWeight: 600, fontSize: '14px' }}>
-                  apply
+              <div style={{ marginLeft: '140px', marginTop: '30px' }}>
+                <button 
+                  type="submit" 
+                  disabled={loading || !hasChanges} 
+                  style={{ 
+                    backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', 
+                    color: hasChanges ? 'white' : '#999', 
+                    cursor: hasChanges ? 'pointer' : 'not-allowed', 
+                    border: 'none', 
+                    padding: '8px 40px', 
+                    borderRadius: '4px', 
+                    fontWeight: 600, 
+                    fontSize: '14px',
+                    opacity: loading ? 0.7 : 1
+                  }}>
+                  {loading ? 'Applying...' : 'Apply'}
                 </button>
               </div>
             </form>
