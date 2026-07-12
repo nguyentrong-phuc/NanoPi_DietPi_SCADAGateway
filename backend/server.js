@@ -32,7 +32,7 @@ let interfacesContent = fs.existsSync(interfacesPath) ? fs.readFileSync(interfac
 
 // If the file is not managed by us yet, forcefully rewrite it to our defaults
 if (!interfacesContent.includes(interfacesHeader)) {
-  interfacesContent = `${interfacesHeader}\nauto lo\niface lo inet loopback\n\nauto eth0\niface eth0 inet dhcp\n\nauto eth1\niface eth1 inet static\n  address 170.0.0.1\n  netmask 255.255.255.0\n\nauto wlan0\niface wlan0 inet dhcp\n  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n`;
+  interfacesContent = `${interfacesHeader}\nauto lo\niface lo inet loopback\n\nauto eth0\niface eth0 inet dhcp\n\nauto eth1\niface eth1 inet static\n  address 170.0.0.1\n  netmask 255.255.255.0\n\n# Fallback Virtual IP for Rescue\nauto eth1:0\niface eth1:0 inet static\n  address 10.10.10.254\n  netmask 255.255.255.0\n\nauto wlan0\niface wlan0 inet dhcp\n  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf\n`;
   fs.writeFileSync(interfacesPath, interfacesContent);
   if (isLinux) { try { execSync('systemctl restart networking'); } catch(e) {} }
 }
@@ -288,6 +288,11 @@ app.post('/api/network', (req, res) => {
       interfacesContent += `iface eth1 inet static\n`;
       interfacesContent += `  address ${lanToSave.ip}\n`;
       interfacesContent += `  netmask ${lanToSave.netmask}\n\n`;
+      interfacesContent += `# Fallback Virtual IP for Rescue\n`;
+      interfacesContent += `auto eth1:0\n`;
+      interfacesContent += `iface eth1:0 inet static\n`;
+      interfacesContent += `  address 10.10.10.254\n`;
+      interfacesContent += `  netmask 255.255.255.0\n\n`;
     }
 
     // WLAN

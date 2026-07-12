@@ -29,6 +29,13 @@ Open a browser and navigate to the IP address of your NanoPi:
 - **Username**: `admin`
 - **Password**: `admin`
 
+## 🚑 Emergency Rescue (Fallback IP)
+
+If you misconfigure the LAN IP or lock yourself out of the web interface, you can always recover access using the permanent **Fallback Virtual IP**:
+- Plug your computer directly into the **LAN (eth1)** port.
+- Manually set your computer's IP address to `10.10.10.100` (Subnet Mask: `255.255.255.0`).
+- Open your browser and navigate to `http://10.10.10.254/` to access the Gateway and fix the configuration.
+
 ## Development / Running Locally
 
 If you want to run the project locally without Docker during development:

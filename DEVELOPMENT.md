@@ -24,7 +24,8 @@ Phase 1 (Frontend) and Phase 2 (Backend) are both **COMPLETE**. The application 
   - View logs: `journalctl -u scada-gateway.service -n 50 --no-pager`
   - Restart: `systemctl restart scada-gateway.service`
 - **Backend API endpoints**:
-  - `GET/POST /api/network` → reads/writes `/etc/network/interfaces` and `/etc/dnsmasq.d/scada.conf`
+  - `GET/POST /api/network` → reads/writes `/etc/network/interfaces` and `/etc/dnsmasq.d/scada.conf`. 
+    - *Note:* Always provisions an Emergency Fallback Virtual IP (`eth1:0` at `10.10.10.254`) so users cannot accidentally lock themselves out of the web interface.
   - `GET/POST /api/system/time` → reads/writes timezone, NTP via `timedatectl` and `/etc/systemd/timesyncd.conf`
   - `GET/POST /api/edge/:type` → reads/writes `config_data/<type>.json`
   - `POST /api/system/reboot` → executes `reboot`
@@ -63,6 +64,7 @@ curl -sL https://raw.githubusercontent.com/nguyentrong-phuc/NanoPi_DietPi_SCADAG
 - **`config_data/` directory must exist on Linux**: On first boot, Node.js will crash with `ENOENT` if the `config_data/` folder doesn't exist. **Always create it at the top of `server.js` before any file reads/writes**, using `fs.mkdirSync(configDataDir, { recursive: true })` — do NOT conditionally create it only for Windows/dev.
 - **Port 80 requires root**: The systemd service runs as `User=root` so binding to port 80 works. Do NOT change the user to a non-root account without also adding `CAP_NET_BIND_SERVICE`.
 - **WAN = eth0, LAN = eth1** on NanoPi R2S. Do NOT swap these in any network configuration code.
+- **Emergency Fallback IP**: The `/etc/network/interfaces` logic intentionally hardcodes `eth1:0` to `10.10.10.254`. This ensures a guaranteed backdoor into the gateway if the main LAN DHCP/IP is misconfigured. DO NOT REMOVE THIS LOGIC.
 - **`install.sh` is safe to re-run**: It will `rm -rf /opt/scada-gateway` and clone fresh. Any data in `config_data/` will be lost. Only run it when absolutely necessary (e.g., the service is broken beyond repair).
 
 ## 4. UI/UX Design System & Guidelines
