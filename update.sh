@@ -24,7 +24,7 @@ main() {
   fi
 
   echo "[1/4] Installing missing dependencies..."
-  apt-get install -yq dnsmasq </dev/null
+  apt-get install -yq dnsmasq traceroute iputils-tracepath </dev/null
 
   echo "[2/4] Checking and pulling latest code from GitHub..."
   cd $INSTALL_DIR
