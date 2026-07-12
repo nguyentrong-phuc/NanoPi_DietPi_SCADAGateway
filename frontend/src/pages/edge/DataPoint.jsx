@@ -384,9 +384,21 @@ const DataPoint = () => {
                     <option>8 Bit Signed</option>
                     <option>16 Bit Unsigned</option>
                     <option>16 Bit Signed</option>
-                    <option>32 Bit Unsigned</option>
-                    <option>32 Bit Signed</option>
-                    <option>32 Bit Float</option>
+                    <option>32 Bit Unsigned (ABCD)</option>
+                    <option>32 Bit Unsigned (CDAB)</option>
+                    <option>32 Bit Unsigned (BADC)</option>
+                    <option>32 Bit Unsigned (DCBA)</option>
+                    <option>32 Bit Signed (ABCD)</option>
+                    <option>32 Bit Signed (CDAB)</option>
+                    <option>32 Bit Signed (BADC)</option>
+                    <option>32 Bit Signed (DCBA)</option>
+                    <option>32 Bit Float (ABCD)</option>
+                    <option>32 Bit Float (CDAB)</option>
+                    <option>32 Bit Float (BADC)</option>
+                    <option>32 Bit Float (DCBA)</option>
+                    <option>64 Bit Float</option>
+                    <option>64 Bit Unsigned</option>
+                    <option>64 Bit Signed</option>
                   </select>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
