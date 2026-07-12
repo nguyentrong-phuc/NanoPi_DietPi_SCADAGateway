@@ -105,17 +105,17 @@ const NetworkWireless = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>{networkStats.mode || '--'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WLAN IP:</span> <span style={{ color: '#555' }}>{networkStats.liveIp || '--'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>{networkStats.liveGateway || '--'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{networkStats.mac ? networkStats.mac.toUpperCase() : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.mode || '--') : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WLAN IP:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.liveIp || '--') : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.liveGateway || '--') : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{networkStats.enabled && networkStats.mac ? networkStats.mac.toUpperCase() : '--'}</span></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{networkStats.mode === 'DHCP' ? (networkStats.status === 'Connected' ? (networkStats.liveNetmask || '--') : '--') : (networkStats.netmask || '--')}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{networkStats.receive || '--'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{networkStats.send || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.mode === 'DHCP' ? (networkStats.status === 'Connected' ? (networkStats.liveNetmask || '--') : '--') : (networkStats.netmask || '--')) : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.receive || '--') : '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.send || '--') : '--'}</span></div>
               <div style={{ display: 'flex', alignItems: 'flex-start' }}></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{networkStats.connTime || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{networkStats.enabled ? (networkStats.connTime || '--') : '--'}</span></div>
             </div>
           </div>
           
