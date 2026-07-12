@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { message } from 'antd';
 
 const LAN = () => {
   const [initialLanConfig, setInitialLanConfig] = useState({
@@ -76,9 +77,9 @@ const LAN = () => {
       .then(res => res.json())
       .then(data => {
         setInitialLanConfig(lanConfig);
-        alert(data.message || 'Applied configuration for LAN!');
+        message.success(data.message || 'Apply Successfully', 2);
       })
-      .catch(err => alert('Failed to apply configuration.'))
+      .catch(err => message.error('Failed to apply configuration.', 2))
       .finally(() => setLoading(false));
   };
 

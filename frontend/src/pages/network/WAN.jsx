@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { message } from 'antd';
 
 const WAN = () => {
   const [initialConfig, setInitialConfig] = useState({
@@ -66,11 +67,11 @@ const WAN = () => {
       .then(res => res.json())
       .then(data => {
         setInitialConfig(config);
-        alert(data.message || 'WAN Configuration Applied!');
+        message.success(data.message || 'WAN Configuration Applied!', 2);
       })
       .catch(err => {
         console.error("Error applying config", err);
-        alert("Failed to apply configuration");
+        message.error("Failed to apply configuration", 2);
       })
       .finally(() => {
         setLoading(false);

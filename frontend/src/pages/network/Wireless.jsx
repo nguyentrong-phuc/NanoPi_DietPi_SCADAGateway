@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { message } from 'antd';
 
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
   ? 'http://192.168.0.100' // Dev fallback
@@ -20,6 +21,7 @@ const NetworkWireless = () => {
   const [networkStats, setNetworkStats] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const hasChanges = initialConfig ? JSON.stringify(config) !== JSON.stringify(initialConfig) : false;
 
   useEffect(() => {
     let isFirstLoad = true;
@@ -72,11 +74,11 @@ const NetworkWireless = () => {
       .then(res => res.json())
       .then(data => {
         setInitialConfig(config);
-        alert(data.message || 'WLAN Configuration Applied!');
+        message.success(data.message || 'Apply Successfully', 2);
       })
       .catch(err => {
         console.error("Error applying config", err);
-        alert("Failed to apply configuration. Connection might have been reset.");
+        message.error("Failed to apply configuration. Connection might have been reset.", 2);
       })
       .finally(() => {
         setLoading(false);
@@ -190,8 +192,8 @@ const NetworkWireless = () => {
               <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
                 <button 
                   type="submit" 
-                  disabled={loading}
-                  style={{ flex: 1, padding: '8px 0', border: 'none', backgroundColor: '#003fb4', color: 'white', borderRadius: '4px', cursor: 'pointer', fontWeight: 600, opacity: loading ? 0.7 : 1 }}
+                  disabled={loading || !hasChanges}
+                  style={{ flex: 1, padding: '8px 0', border: 'none', backgroundColor: hasChanges ? '#003fb4' : '#e0e0e0', color: hasChanges ? 'white' : '#999', borderRadius: '4px', cursor: hasChanges ? 'pointer' : 'not-allowed', fontWeight: 600, opacity: loading ? 0.7 : 1 }}
                 >
                   {loading ? 'Applying...' : 'Apply'}
                 </button>
