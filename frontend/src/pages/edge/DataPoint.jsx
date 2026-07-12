@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 
 const ModalToggleSwitch = ({ isOn, handleToggle }) => (
   <div onClick={handleToggle} style={{ width: '36px', height: '20px', borderRadius: '10px', backgroundColor: isOn ? 'var(--primary-color)' : '#dcdfe6', position: 'relative', cursor: 'pointer', transition: 'background-color 0.2s' }}>
@@ -66,26 +66,34 @@ const DataPoint = () => {
 
   const handleDeleteSlave = (slaveId, e) => {
     e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this Data Point?')) {
-      const newSlaves = slaves.filter(s => s.id !== slaveId);
-      const newPoints = { ...points };
-      delete newPoints[slaveId];
-      setSlaves(newSlaves);
-      setPoints(newPoints);
-      saveConfig(newSlaves, newPoints);
-      if (activeSlave === slaveId) {
-        setActiveSlave('slave_status');
+    Modal.confirm({
+      title: 'Delete Slave',
+      content: 'Are you sure you want to delete this Slave?',
+      onOk: () => {
+        const newSlaves = slaves.filter(s => s.id !== slaveId);
+        const newPoints = { ...points };
+        delete newPoints[slaveId];
+        setSlaves(newSlaves);
+        setPoints(newPoints);
+        saveConfig(newSlaves, newPoints);
+        if (activeSlave === slaveId) {
+          setActiveSlave('slave_status');
+        }
       }
-    }
+    });
   };
 
   const handleDeletePoint = (pointId) => {
-    if (window.confirm('Are you sure you want to delete this Point?')) {
-      const newPoints = { ...points };
-      newPoints[activeSlave] = newPoints[activeSlave].filter(p => p.id !== pointId);
-      setPoints(newPoints);
-      saveConfig(slaves, newPoints);
-    }
+    Modal.confirm({
+      title: 'Delete Point',
+      content: 'Are you sure you want to delete this Point?',
+      onOk: () => {
+        const newPoints = { ...points };
+        newPoints[activeSlave] = newPoints[activeSlave].filter(p => p.id !== pointId);
+        setPoints(newPoints);
+        saveConfig(slaves, newPoints);
+      }
+    });
   };
 
   const handleSaveModal = () => {
