@@ -64,7 +64,7 @@ const Overview = () => {
     <div className="app-container" style={{ padding: '20px', backgroundColor: 'var(--bg-dark)', minHeight: 'calc(100vh - 60px)', margin: '-20px' }}>
       
       {/* Top Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 58%) minmax(0, 21%) minmax(0, 21%)', gap: '20px', marginBottom: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 58%) minmax(0, 21%) minmax(0, 21%)', gap: '20px' }}>
         
         {/* System Information */}
         <div className="card-panel" style={{ padding: '20px' }}>
