@@ -34,61 +34,73 @@ const ModbusConfig = ({ activeTab }) => {
         
         <div style={{ padding: '0 15px', borderBottom: '1px solid #eee', paddingBottom: '30px', marginBottom: '30px' }}>
           {/* Connection Config */}
-          <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Connection Config</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '40px' }}>
-            {activeTab === 'Modbus RTU' && (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> RS485:</span>
-                <ToggleSwitch isOn={rs485} handleToggle={() => setRs485(!rs485)} />
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', marginBottom: '25px' }}>
+            <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+              Connection Config
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px 25px' }}>
+              {activeTab === 'Modbus RTU' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> RS485:</span>
+                  <div style={{ height: '36px', display: 'flex', alignItems: 'center' }}>
+                    <ToggleSwitch isOn={rs485} handleToggle={() => setRs485(!rs485)} />
+                  </div>
+                </div>
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Protocol:</span>
+                <select className="form-control" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: 'white' }}>
+                  <option>TCP Server</option>
+                </select>
               </div>
-            )}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Protocol:</span>
-              <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }}>
-                <option>TCP Server</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Local Port:</span>
-              <input type="text" className="form-control" defaultValue="502" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Maximum of Client:</span>
-              <input type="text" className="form-control" defaultValue="2" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Local Port:</span>
+                <input type="text" className="form-control" defaultValue="502" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Maximum of Client:</span>
+                <input type="text" className="form-control" defaultValue="2" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
             </div>
           </div>
 
           {/* Slave Configuration */}
-          <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Slave Configuration</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '30px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Slave Address:</span>
-              <input type="text" className="form-control" defaultValue="1" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', marginBottom: '25px' }}>
+            <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+              Slave Configuration
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px', lineHeight: '1.2' }}><span style={{ color: '#dc3545' }}>*</span> Protocol_Conversion.<br/>bit16_int:</span>
-              <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }}>
-                <option>AB</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> 32 bit integer byte order:</span>
-              <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }}>
-                <option>AB CD</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> 32 bit float byte order:</span>
-              <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }}>
-                <option>AB CD</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}>64 bit integer byte order:</span>
-              <span style={{ fontSize: '12px', color: '#333' }}>ABCDEFGH</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px 25px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Slave Address:</span>
+                <input type="text" className="form-control" defaultValue="1" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Protocol_Conversion.bit16_int:</span>
+                <select className="form-control" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: 'white' }}>
+                  <option>AB</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> 32 bit integer byte order:</span>
+                <select className="form-control" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: 'white' }}>
+                  <option>AB CD</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> 32 bit float byte order:</span>
+                <select className="form-control" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: 'white' }}>
+                  <option>AB CD</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>64 bit integer byte order:</span>
+                <div style={{ height: '36px', display: 'flex', alignItems: 'center', fontSize: '13px', color: '#1e293b', fontWeight: 500 }}>
+                  ABCDEFGH
+                </div>
+              </div>
             </div>
           </div>
-          <button className="btn btn-primary active-btn" style={{ padding: '6px 30px', fontWeight: 600, fontSize: '13px', width: 'fit-content' }}>apply</button>
+          <button className="btn btn-primary active-btn" style={{ padding: '8px 40px', fontWeight: 600, fontSize: '13px', borderRadius: '6px', width: 'fit-content', boxShadow: '0 4px 6px rgba(0,63,180,0.2)' }}>Apply</button>
         </div>
       </div>
 
@@ -189,55 +201,59 @@ const IEC104Config = () => {
         
         <div style={{ padding: '0 15px', borderBottom: '1px solid #eee', paddingBottom: '30px', marginBottom: '30px' }}>
           {/* Connection Config */}
-          <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Connection Config</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '30px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}>Server Address:</span>
-              <input type="text" className="form-control" defaultValue="192.168.30.1" disabled style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px', backgroundColor: '#f5f7fa', color: '#aaa', border: '1px solid #eaeaea' }} />
+          <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '20px', marginBottom: '25px' }}>
+            <div style={{ fontWeight: 700, fontSize: '14px', color: '#1e293b', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+              Connection Config
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Local Port:</span>
-              <input type="text" className="form-control" defaultValue="2404" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> COT size:</span>
-              <select className="form-control" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }}>
-                <option>2</option>
-              </select>
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> K:</span>
-              <input type="text" className="form-control" defaultValue="25" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> W:</span>
-              <input type="text" className="form-control" defaultValue="25" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> T0:</span>
-              <input type="text" className="form-control" defaultValue="30" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> T1:</span>
-              <input type="text" className="form-control" defaultValue="25" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> T2:</span>
-              <input type="text" className="form-control" defaultValue="25" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> T3:</span>
-              <input type="text" className="form-control" defaultValue="25" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Maximum connection:</span>
-              <input type="text" className="form-control" defaultValue="10" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px 25px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}>Server Address:</span>
+                <input type="text" className="form-control" defaultValue="192.168.30.1" disabled style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: '#f1f5f9', color: '#94a3b8' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Local Port:</span>
+                <input type="text" className="form-control" defaultValue="2404" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> COT size:</span>
+                <select className="form-control" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px', backgroundColor: 'white' }}>
+                  <option>2</option>
+                </select>
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> K:</span>
+                <input type="text" className="form-control" defaultValue="25" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> W:</span>
+                <input type="text" className="form-control" defaultValue="25" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> T0:</span>
+                <input type="text" className="form-control" defaultValue="30" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> T1:</span>
+                <input type="text" className="form-control" defaultValue="25" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> T2:</span>
+                <input type="text" className="form-control" defaultValue="25" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> T3:</span>
+                <input type="text" className="form-control" defaultValue="25" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
+  
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '12px', fontWeight: 600, color: '#475569' }}><span style={{ color: '#ef4444' }}>*</span> Maximum connection:</span>
+                <input type="text" className="form-control" defaultValue="10" style={{ padding: '8px 12px', fontSize: '13px', borderRadius: '6px', border: '1px solid #cbd5e1', height: '36px' }} />
+              </div>
             </div>
           </div>
-          <button style={{ backgroundColor: '#e0e0e0', color: '#fff', border: 'none', padding: '6px 30px', borderRadius: '2px', cursor: 'not-allowed', fontSize: '13px', fontWeight: 600, width: 'fit-content' }} disabled>apply</button>
+          <button style={{ backgroundColor: '#e2e8f0', color: '#94a3b8', border: 'none', padding: '8px 40px', borderRadius: '6px', cursor: 'not-allowed', fontSize: '13px', fontWeight: 600, width: 'fit-content' }} disabled>Apply</button>
         </div>
       </div>
 
