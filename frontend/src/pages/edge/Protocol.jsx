@@ -35,7 +35,7 @@ const ModbusConfig = ({ activeTab }) => {
         <div style={{ padding: '0 15px', borderBottom: '1px solid #eee', paddingBottom: '30px', marginBottom: '30px' }}>
           {/* Connection Config */}
           <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Connection Config</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px 30px', marginBottom: '40px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '40px' }}>
             {activeTab === 'Modbus RTU' && (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> RS485:</span>
@@ -60,7 +60,7 @@ const ModbusConfig = ({ activeTab }) => {
 
           {/* Slave Configuration */}
           <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Slave Configuration</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px 30px', marginBottom: '30px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '30px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}><span style={{ color: '#dc3545' }}>*</span> Slave Address:</span>
               <input type="text" className="form-control" defaultValue="1" style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px' }} />
@@ -190,7 +190,7 @@ const IEC104Config = () => {
         <div style={{ padding: '0 15px', borderBottom: '1px solid #eee', paddingBottom: '30px', marginBottom: '30px' }}>
           {/* Connection Config */}
           <div style={{ fontWeight: 700, fontSize: '13px', color: '#333', marginBottom: '20px' }}>Connection Config</div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px 30px', marginBottom: '30px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: '20px 30px', marginBottom: '30px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{ width: '150px', fontSize: '12px', color: '#666', textAlign: 'right', paddingRight: '15px' }}>Server Address:</span>
               <input type="text" className="form-control" defaultValue="192.168.30.1" disabled style={{ flex: 1, padding: '6px 12px', fontSize: '12px', height: '32px', backgroundColor: '#f5f7fa', color: '#aaa', border: '1px solid #eaeaea' }} />
