@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const SystemConfig = () => {
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: '' });
   const [selectedFile, setSelectedFile] = useState(null);
 

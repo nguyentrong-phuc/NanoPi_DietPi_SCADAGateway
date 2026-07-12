@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const Routing = () => {
   const [routes, setRoutes] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
     const fetchRouting = () => {

@@ -58,7 +58,7 @@ const DataPoint = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [modalConfig, setModalConfig] = useState({ isOpen: false, mode: 'add', data: null });
   const itemsPerPage = 15;
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   React.useEffect(() => {
     fetch(`${API_URL}/api/edge/data-points`)

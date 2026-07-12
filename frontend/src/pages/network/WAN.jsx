@@ -9,21 +9,34 @@ const WAN = () => {
     mtu: '1500'
   });
   const [config, setConfig] = useState(initialConfig);
+  const [networkStats, setNetworkStats] = useState({});
   const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
 
   const [loading, setLoading] = useState(false);
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
-    fetch(`${API_URL}/api/network`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.wan) {
-          setConfig(prev => ({ ...prev, ...data.wan }));
-          setInitialConfig(prev => ({ ...prev, ...data.wan }));
-        }
-      })
-      .catch(err => console.error("Error fetching network config:", err));
+    let isFirstLoad = true;
+
+    const fetchStats = () => {
+      fetch(`${API_URL}/api/network`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.wan) {
+            setNetworkStats(data.wan);
+            if (isFirstLoad) {
+              setConfig(prev => ({ ...prev, ...data.wan }));
+              setInitialConfig(prev => ({ ...prev, ...data.wan }));
+              isFirstLoad = false;
+            }
+          }
+        })
+        .catch(err => console.error("Error fetching network config:", err));
+    };
+
+    fetchStats();
+    const timer = setInterval(fetchStats, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleChange = (e, field) => {
@@ -61,7 +74,6 @@ const WAN = () => {
   return (
     <div style={{ margin: '-20px', minHeight: 'calc(100vh - 60px)', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
       
-      {/* Title Bar */}
       <div style={{ backgroundColor: '#eaedf2', padding: '15px 20px', borderBottom: '1px solid #dee2e6' }}>
         <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#333', margin: 0 }}>
           WAN
@@ -75,21 +87,21 @@ const WAN = () => {
             <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '15px', borderBottom: '1px solid #e0e0e0', marginBottom: '15px' }}>
               <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
               <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
-              <span style={{ backgroundColor: (config.status || 'connected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{config.status || 'connected'}</span>
+              <span style={{ backgroundColor: (networkStats.status || 'disconnected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{networkStats.status || 'disconnected'}</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>{config.mode}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>{config.liveIp || 'N/A'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>{config.liveGateway || 'N/A'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{config.mac ? config.mac.toUpperCase() : 'N/A'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Network Type:</span> <span style={{ color: '#555' }}>{networkStats.mode || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>WAN IP:</span> <span style={{ color: '#555' }}>{networkStats.liveIp || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Gateway IP:</span> <span style={{ color: '#555' }}>{networkStats.liveGateway || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{networkStats.mac ? networkStats.mac.toUpperCase() : '--'}</span></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{config.netmask || 'N/A'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>{config.dns1} {config.dns2}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{config.receive || '0 MB'}</span></div>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{config.send || '0 MB'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{networkStats.netmask || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>DNS:</span> <span style={{ color: '#555' }}>{networkStats.dns1} {networkStats.dns2}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '90px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{networkStats.receive || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{networkStats.send || '--'}</span></div>
               
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{config.connTime || '--'}</span></div>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{networkStats.connTime || '--'}</span></div>
             </div>
           </div>
           

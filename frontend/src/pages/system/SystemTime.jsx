@@ -12,7 +12,7 @@ const SystemTime = () => {
   const [config, setConfig] = useState(initialConfig);
   const [deviceTime, setDeviceTime] = useState(new Date().toLocaleString('sv').replace('T', ' '));
   const hasChanges = JSON.stringify(config) !== JSON.stringify(initialConfig);
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
     fetch(`${API_URL}/api/system/time`)

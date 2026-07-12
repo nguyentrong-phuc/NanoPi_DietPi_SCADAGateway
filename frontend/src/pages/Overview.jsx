@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
 const Overview = () => {
   const navigate = useNavigate();

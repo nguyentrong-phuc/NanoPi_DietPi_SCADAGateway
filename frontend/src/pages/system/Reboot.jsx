@@ -5,7 +5,7 @@ const Reboot = () => {
   const [scheduledReboot, setScheduledReboot] = useState(false);
   const [rebootTime, setRebootTime] = useState('04:00');
   const [initialConfig, setInitialConfig] = useState({ enabled: false, time: '04:00' });
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
     fetch(`${API_URL}/api/system/schedule-reboot`)
@@ -22,7 +22,7 @@ const Reboot = () => {
 
   const handleReboot = () => {
     if (window.confirm("Are you sure you want to reboot the device?")) {
-      const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+      const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
       fetch(`${API_URL}/api/system/reboot`, { method: 'POST' })
         .then(() => alert('Device is rebooting...'))
         .catch(console.error);

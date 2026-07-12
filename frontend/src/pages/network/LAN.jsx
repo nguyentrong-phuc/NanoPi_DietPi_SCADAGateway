@@ -16,22 +16,35 @@ const LAN = () => {
     connTime: '--'
   });
   const [lanConfig, setLanConfig] = useState(initialLanConfig);
+  const [networkStats, setNetworkStats] = useState({});
   const hasChanges = JSON.stringify(lanConfig) !== JSON.stringify(initialLanConfig);
 
   const [activeTab, setActiveTab] = useState('Configure');
   const [loading, setLoading] = useState(false);
-  const API_URL = import.meta.env.DEV ? 'http://localhost:3000' : '';
+  const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
-    fetch(`${API_URL}/api/network`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.lan) {
-          setLanConfig(prev => ({ ...prev, ...data.lan }));
-          setInitialLanConfig(prev => ({ ...prev, ...data.lan }));
-        }
-      })
-      .catch(err => console.error("Error fetching network config:", err));
+    let isFirstLoad = true;
+
+    const fetchStats = () => {
+      fetch(`${API_URL}/api/network`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.lan) {
+            setNetworkStats(data.lan);
+            if (isFirstLoad) {
+              setLanConfig(prev => ({ ...prev, ...data.lan }));
+              setInitialLanConfig(prev => ({ ...prev, ...data.lan }));
+              isFirstLoad = false;
+            }
+          }
+        })
+        .catch(err => console.error("Error fetching network config:", err));
+    };
+
+    fetchStats();
+    const timer = setInterval(fetchStats, 5000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleChange = (e, field) => {
@@ -74,17 +87,17 @@ const LAN = () => {
           <div style={{ display: 'flex', alignItems: 'center', paddingBottom: '15px', borderBottom: '1px solid #e0e0e0', marginBottom: '15px' }}>
             <span style={{ display: 'inline-block', width: '3px', height: '16px', backgroundColor: '#003fb4', marginRight: '10px' }}></span>
             <span style={{ fontWeight: 700, fontSize: '16px', color: '#333', marginRight: '10px' }}>Status</span>
-            <span style={{ backgroundColor: (lanConfig.status || 'connected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{lanConfig.status || 'connected'}</span>
+            <span style={{ backgroundColor: (networkStats.status || 'disconnected').toLowerCase() === 'connected' ? '#10b981' : '#ef4444', color: 'white', padding: '3px 8px', borderRadius: '3px', fontSize: '11px', fontWeight: 'bold', textTransform: 'lowercase' }}>{networkStats.status || 'disconnected'}</span>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '15px', padding: '0 15px', fontSize: '13px' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>IP:</span> <span style={{ color: '#555' }}>{lanConfig.ip || '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{lanConfig.netmask || '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{lanConfig.mac && lanConfig.mac !== '--' ? lanConfig.mac.toUpperCase() : '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{lanConfig.connTime || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>IP:</span> <span style={{ color: '#555' }}>{networkStats.liveIp || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Netmask:</span> <span style={{ color: '#555' }}>{networkStats.netmask || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>MAC:</span> <span style={{ color: '#555' }}>{networkStats.mac && networkStats.mac !== '--' ? networkStats.mac.toUpperCase() : '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '120px', flexShrink: 0, whiteSpace: 'nowrap' }}>Connection Time:</span> <span style={{ color: '#555' }}>{networkStats.connTime || '--'}</span></div>
             
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{lanConfig.send || '--'}</span></div>
-            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{lanConfig.receive || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '60px', flexShrink: 0 }}>Send:</span> <span style={{ color: '#555' }}>{networkStats.send || '--'}</span></div>
+            <div style={{ display: 'flex', alignItems: 'flex-start' }}><span style={{ color: '#333', fontWeight: 600, width: '80px', flexShrink: 0 }}>Receive:</span> <span style={{ color: '#555' }}>{networkStats.receive || '--'}</span></div>
           </div>
         </div>
 
