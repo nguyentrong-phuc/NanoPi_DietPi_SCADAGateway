@@ -71,7 +71,7 @@ const Layout = () => {
           <NavLink to="/overview" className={({isActive}) => `top-bar-item ${isActive || topLevel === 'overview' ? 'active' : ''}`}>
             <Globe size={18} /> Overview
           </NavLink>
-          <NavLink to="/network/ethernet-port" className={({isActive}) => `top-bar-item ${topLevel === 'network' ? 'active' : ''}`}>
+          <NavLink to="/network/wan" className={({isActive}) => `top-bar-item ${topLevel === 'network' ? 'active' : ''}`}>
             <Globe size={18} /> Network
           </NavLink>
           <NavLink to="/edge-computing/edge-mode" className={({isActive}) => `top-bar-item ${topLevel === 'edge-computing' ? 'active' : ''}`}>
