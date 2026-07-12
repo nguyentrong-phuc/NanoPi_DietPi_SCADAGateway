@@ -160,7 +160,7 @@ const ModbusConfig = ({ activeTab, config, setConfig, saveConfig }) => {
         </div>
 
         <div className="table-responsive" style={{ marginBottom: '15px' }}>
-          <table className="table table-bordered table-striped" style={{ width: '100%' }}>
+          <table className="table-unified">
             <thead>
               <tr>
                 <th>ID</th>
@@ -346,7 +346,7 @@ const IEC104Config = ({ config, setConfig, saveConfig }) => {
         </div>
 
         <div className="table-responsive" style={{ marginBottom: '15px' }}>
-          <table className="table table-bordered table-striped" style={{ width: '100%' }}>
+          <table className="table-unified">
             <thead>
               <tr>
                 <th>ID</th>
