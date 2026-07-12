@@ -81,7 +81,15 @@ const getNetworkConfig = () => {
     staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
   };
   let lanConfig = {
-    ip: '170.0.0.1', netmask: '255.255.255.0', mac: '', dhcpEnabled: false, dhcpStart: '', dhcpEnd: '', dns: '8.8.8.8', leaseTime: 1440, status: 'Disconnected'
+    ip: '170.0.0.1',
+    netmask: '255.255.255.0',
+    dhcpEnabled: false,
+    dhcpStart: '',
+    dhcpEnd: '',
+    leaseTime: 1440,
+    dns: '8.8.8.8',
+    staticHosts: [],
+    dhcpHosts: []
   };
   let wlanConfig = {
     enabled: false, mode: 'DHCP', ssid: '', password: '', staticIp: '', netmask: '255.255.255.0', gateway: '', mac: '', status: 'Disconnected'
@@ -159,8 +167,37 @@ const getNetworkConfig = () => {
         if (line.trim().startsWith('dhcp-option=eth1,6,')) {
           lanConfig.dns = line.split(',').pop().trim();
         }
+        if (line.trim().startsWith('dhcp-host=')) {
+          const parts = line.split('=')[1].split(',');
+          if (parts.length >= 2) {
+            lanConfig.staticHosts.push({
+              mac: parts[0] || '',
+              ip: parts[1] || '',
+              hostname: parts[2] || ''
+            });
+          }
+        }
       });
     }
+    
+    // Parse dnsmasq.leases for dynamic hosts
+    const leasesPath = '/var/lib/misc/dnsmasq.leases';
+    if (fs.existsSync(leasesPath)) {
+      const leasesContent = fs.readFileSync(leasesPath, 'utf-8');
+      leasesContent.split('\n').forEach(line => {
+        const parts = line.trim().split(/\s+/);
+        if (parts.length >= 4) {
+          const expiresAt = parseInt(parts[0]) * 1000; // js uses ms
+          lanConfig.dhcpHosts.push({
+            mac: parts[1],
+            ip: parts[2],
+            hostname: parts[3] === '*' ? '--' : parts[3],
+            leaseTime: isNaN(expiresAt) ? '--' : new Date(expiresAt).toLocaleString()
+          });
+        }
+      });
+    }
+
   } catch (e) { console.error("Error reading dnsmasq:", e); }
 
   // 3. Map live network interfaces (MAC and Live IP)
@@ -329,6 +366,14 @@ app.post('/api/network', (req, res) => {
         dnsmasqContent += `dhcp-range=eth1,${lanToSave.dhcpStart},${lanToSave.dhcpEnd},${lanToSave.netmask},${lanToSave.leaseTime}m\n`;
         if (lanToSave.dns) {
           dnsmasqContent += `dhcp-option=eth1,6,${lanToSave.dns}\n`;
+        }
+        if (lanToSave.staticHosts && lanToSave.staticHosts.length > 0) {
+          lanToSave.staticHosts.forEach(host => {
+            if (host.mac && host.ip) {
+              const hostname = host.hostname || '*';
+              dnsmasqContent += `dhcp-host=${host.mac},${host.ip},${hostname}\n`;
+            }
+          });
         }
       }
       fs.writeFileSync(dnsmasqPath, dnsmasqContent);

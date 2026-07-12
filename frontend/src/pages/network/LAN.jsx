@@ -22,6 +22,12 @@ const LAN = () => {
 
   const [activeTab, setActiveTab] = useState('Configure');
   const [loading, setLoading] = useState(false);
+  
+  // DHCP Host states
+  const [selectedHosts, setSelectedHosts] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newHost, setNewHost] = useState({ hostname: '', mac: '', ip: '' });
+
   const API_URL = import.meta.env.DEV ? 'http://192.168.41.6' : '';
 
   useEffect(() => {
@@ -75,6 +81,32 @@ const LAN = () => {
     }
     
     setLanConfig(newConfig);
+  };
+
+  const handleToggleHost = (mac) => {
+    setSelectedHosts(prev => prev.includes(mac) ? prev.filter(m => m !== mac) : [...prev, mac]);
+  };
+
+  const handleDeleteSelected = () => {
+    if (selectedHosts.length === 0) return;
+    setLanConfig(prev => ({
+      ...prev,
+      staticHosts: (prev.staticHosts || []).filter(h => !selectedHosts.includes(h.mac))
+    }));
+    setSelectedHosts([]);
+  };
+
+  const handleAddSubmit = () => {
+    if (!newHost.mac || !newHost.ip) {
+      message.error('MAC and IPv4 are required');
+      return;
+    }
+    setLanConfig(prev => ({
+      ...prev,
+      staticHosts: [...(prev.staticHosts || []), { ...newHost }]
+    }));
+    setShowAddModal(false);
+    setNewHost({ hostname: '', mac: '', ip: '' });
   };
 
   const handleApply = (e) => {
@@ -268,9 +300,20 @@ const LAN = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td colSpan="4" style={{ padding: '30px', color: '#999' }}>No data yet</td>
-                    </tr>
+                    {lanConfig.dhcpHosts && lanConfig.dhcpHosts.length > 0 ? (
+                      lanConfig.dhcpHosts.map((host, idx) => (
+                        <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
+                          <td style={{ padding: '12px 15px' }}>{host.hostname}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.ip}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.mac}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.leaseTime}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" style={{ padding: '30px', color: '#999' }}>No data yet</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -284,8 +327,8 @@ const LAN = () => {
                   <span style={{ fontWeight: 700, fontSize: '15px', color: '#333' }}>Static IP List</span>
                 </div>
                 <div>
-                  <button className="btn btn-primary" style={{ marginRight: '10px' }}>Add</button>
-                  <button className="btn btn-danger solid">Delete</button>
+                  <button type="button" className="btn btn-primary" style={{ marginRight: '10px' }} onClick={() => setShowAddModal(true)}>Add</button>
+                  <button type="button" className="btn btn-danger solid" onClick={handleDeleteSelected}>Delete</button>
                 </div>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -302,9 +345,30 @@ const LAN = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td colSpan="5" style={{ padding: '30px', color: '#999' }}>No data yet</td>
-                    </tr>
+                    {lanConfig.staticHosts && lanConfig.staticHosts.length > 0 ? (
+                      lanConfig.staticHosts.map((host, idx) => (
+                        <tr key={idx} style={{ borderBottom: '1px solid #eee' }}>
+                          <td style={{ padding: '12px 15px' }}>
+                            <input 
+                              type="checkbox" 
+                              checked={selectedHosts.includes(host.mac)}
+                              onChange={() => handleToggleHost(host.mac)}
+                              style={{ margin: 0, verticalAlign: 'middle' }} 
+                            />
+                          </td>
+                          <td style={{ padding: '12px 15px' }}>{host.hostname}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.ip}</td>
+                          <td style={{ padding: '12px 15px' }}>{host.mac}</td>
+                          <td style={{ padding: '12px 15px' }}>
+                            <button type="button" className="btn btn-danger" style={{ padding: '2px 10px', height: '24px', fontSize: '12px' }} onClick={() => handleToggleHost(host.mac)}>Select</button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="5" style={{ padding: '30px', color: '#999' }}>No data yet</td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -329,6 +393,43 @@ const LAN = () => {
           </div>
         )}
       </div>
+
+      {/* Add Modal */}
+      {showAddModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ backgroundColor: 'white', padding: '0', borderRadius: '4px', width: '500px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 20px', borderBottom: '1px solid #eee' }}>
+              <span style={{ fontWeight: 700, fontSize: '16px' }}>Add</span>
+              <span style={{ cursor: 'pointer', color: '#999' }} onClick={() => setShowAddModal(false)}>✕</span>
+            </div>
+            <div style={{ padding: '30px 40px' }}>
+              <div className="form-group">
+                <div className="form-label">
+                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>Hostname
+                </div>
+                <input type="text" className="form-control" placeholder="Please enter" value={newHost.hostname} onChange={(e) => setNewHost({...newHost, hostname: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <div className="form-label">
+                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>MAC
+                </div>
+                <input type="text" className="form-control" placeholder="Please enter" value={newHost.mac} onChange={(e) => setNewHost({...newHost, mac: e.target.value})} />
+              </div>
+              <div className="form-group">
+                <div className="form-label">
+                  <span style={{ color: 'red', marginRight: '4px' }}>*</span>IPv4
+                </div>
+                <input type="text" className="form-control" placeholder="Please enter" value={newHost.ip} onChange={(e) => setNewHost({...newHost, ip: e.target.value})} />
+              </div>
+            </div>
+            <div style={{ padding: '15px 20px', borderTop: '1px solid #eee', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button type="button" className="btn" style={{ border: '1px solid #d9d9d9', backgroundColor: 'white', color: '#333' }} onClick={() => setShowAddModal(false)}>cancel</button>
+              <button type="button" className="btn btn-primary active-btn" onClick={handleAddSubmit}>sure</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
